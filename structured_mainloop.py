@@ -4,7 +4,7 @@ class Player(pygame.sprite.Sprite):
     SPEED = 300
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image = pygame.image.load('frog.png')
+        self.image = pygame.image.load('frog.gif')
         self.rect = pygame.rect.Rect((320, 240), self.image.get_size())
 
     def update(self, dt):
