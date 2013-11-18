@@ -22,7 +22,6 @@ class Game():
     def main(self, screen):
         clock = pygame.time.Clock()
         
-        image = pygame.image.load('frog.png')
         sprites = pygame.sprite.Group()
         self.player = Player(sprites)
         while True:
