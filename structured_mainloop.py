@@ -8,23 +8,34 @@ class Player(pygame.sprite.Sprite):
         super().__init__(*groups)
         self.image = pygame.image.load('frog.gif')
         self.rect = pygame.rect.Rect((320, 240), self.image.get_size())
-
+        self.resting = False
+        self.dy = 0
+        
     def update(self, dt, game):
         # last position
         last = self.rect.copy()
         
         key = pygame.key.get_pressed()
         if key[pygame.K_LEFT]:
-            self.rect.x -= self.SPEED * dt
+            self.rect.x -= self.SPEED * dt - 1
         if key[pygame.K_RIGHT]:
             self.rect.x += self.SPEED * dt
         if key[pygame.K_UP]:
-            self.rect.y -= self.SPEED * dt
+            self.rect.y -= self.SPEED * dt - 1
         if key[pygame.K_DOWN]:
             self.rect.y += self.SPEED * dt
-            
+
+        new = self.rect    
         for cell in pygame.sprite.spritecollide(self, game.walls, False):
-            self.rect = last
+            cell = cell.rect
+            if last.right <= cell.left and new.right > cell.left:
+                new.right = cell.left
+            if last.left >= cell.right and new.left < cell.right:
+                new.left = cell.right
+            if last.bottom <= cell.top and new.bottom > cell.top:
+                new.bottom = cell.top
+            if last.top >= cell.bottom and new.top < cell.bottom:
+                new.top = cell.bottom
         
 class Game():
     def main(self, screen):
