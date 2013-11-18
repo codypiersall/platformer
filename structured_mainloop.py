@@ -17,13 +17,13 @@ class Player(pygame.sprite.Sprite):
         
         key = pygame.key.get_pressed()
         if key[pygame.K_LEFT]:
-            self.rect.x -= self.SPEED * dt - 1
+            self.rect.x -= int(self.SPEED * dt)
         if key[pygame.K_RIGHT]:
-            self.rect.x += self.SPEED * dt
+            self.rect.x += int(self.SPEED * dt)
         if key[pygame.K_UP]:
-            self.rect.y -= self.SPEED * dt - 1
+            self.rect.y -= int(self.SPEED * dt)
         if key[pygame.K_DOWN]:
-            self.rect.y += self.SPEED * dt
+            self.rect.y += int(self.SPEED * dt)
 
         new = self.rect    
         for cell in pygame.sprite.spritecollide(self, game.walls, False):
