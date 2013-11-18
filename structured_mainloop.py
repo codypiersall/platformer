@@ -66,9 +66,10 @@ class Game():
             
             sprites.update(dt, self)
             screen.blit(background, (0,0))
+            self.walls.draw(screen)
             sprites.draw(screen)
             pygame.display.flip()
-
+    
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_SIZE)
