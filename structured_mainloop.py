@@ -1,9 +1,12 @@
 import pygame
 
 SCREEN_SIZE = (640, 480)
+GRAVITY = 2400
+MAX_Y_DOWN = 400
 
 class Player(pygame.sprite.Sprite):
     SPEED = 200
+    JUMP_IMPULSE = -600
     def __init__(self, *groups):
         super().__init__(*groups)
         self.image = pygame.image.load('frog.gif')
@@ -20,12 +23,16 @@ class Player(pygame.sprite.Sprite):
             self.rect.x -= int(self.SPEED * dt)
         if key[pygame.K_RIGHT]:
             self.rect.x += int(self.SPEED * dt)
-        if key[pygame.K_UP]:
-            self.rect.y -= int(self.SPEED * dt)
-        if key[pygame.K_DOWN]:
-            self.rect.y += int(self.SPEED * dt)
 
-        new = self.rect    
+        # JUMP!
+        if self.resting and key[pygame.K_SPACE]:
+            self.dy = self.JUMP_IMPULSE
+        self.dy = min(MAX_Y_DOWN, self.dy + GRAVITY * dt)
+        
+        self.rect.y += self.dy * dt
+        new = self.rect
+        self.resting = False
+        
         for cell in pygame.sprite.spritecollide(self, game.walls, False):
             cell = cell.rect
             if last.right <= cell.left and new.right > cell.left:
@@ -33,9 +40,12 @@ class Player(pygame.sprite.Sprite):
             if last.left >= cell.right and new.left < cell.right:
                 new.left = cell.right
             if last.bottom <= cell.top and new.bottom > cell.top:
+                self.resting = True
                 new.bottom = cell.top
+                self.dy = 0
             if last.top >= cell.bottom and new.top < cell.bottom:
                 new.top = cell.bottom
+                self.dy = 0
         
 class Game():
     def main(self, screen):
@@ -55,7 +65,7 @@ class Game():
                     wall.rect = pygame.rect.Rect((x,y), block.get_size())
         
         while True:
-            dt = clock.tick(30) / 1000
+            dt = clock.tick(80) / 1000
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
