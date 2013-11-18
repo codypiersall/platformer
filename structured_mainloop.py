@@ -2,7 +2,7 @@ import pygame
 
 SCREEN_SIZE = (640, 480)
 GRAVITY = 2400
-MAX_Y_DOWN = 400
+MAX_FALL_SPEED = 500
 
 class Player(pygame.sprite.Sprite):
     SPEED = 200
@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         # JUMP!
         if self.resting and key[pygame.K_SPACE]:
             self.dy = self.JUMP_IMPULSE
-        self.dy = min(MAX_Y_DOWN, self.dy + GRAVITY * dt)
+        self.dy = min(MAX_FALL_SPEED, self.dy + GRAVITY * dt)
         
         self.rect.y += self.dy * dt
         new = self.rect
