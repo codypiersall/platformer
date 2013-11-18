@@ -22,6 +22,8 @@ class Game():
     def main(self, screen):
         clock = pygame.time.Clock()
         
+        background = pygame.image.load('Castle.gif')
+        background = pygame.transform.scale(background, (640, 480))
         sprites = pygame.sprite.Group()
         self.player = Player(sprites)
         while True:
@@ -35,7 +37,7 @@ class Game():
 
             
             sprites.update(dt)
-            screen.fill((200,200,200))
+            screen.blit(background, (0,0))
             sprites.draw(screen)
             pygame.display.flip()
 
