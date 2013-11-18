@@ -1,5 +1,7 @@
 import pygame
 
+SCREEN_SIZE = (640, 480)
+
 class Player(pygame.sprite.Sprite):
     SPEED = 300
     def __init__(self, *groups):
@@ -23,7 +25,7 @@ class Game():
         clock = pygame.time.Clock()
         
         background = pygame.image.load('Castle.gif')
-        background = pygame.transform.scale(background, (640, 480))
+        background = pygame.transform.scale(background, SCREEN_SIZE)
         sprites = pygame.sprite.Group()
         self.player = Player(sprites)
         while True:
@@ -43,6 +45,6 @@ class Game():
 
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode((640, 480))
+    screen = pygame.display.set_mode(SCREEN_SIZE)
     game = Game()
     game.main(screen)
