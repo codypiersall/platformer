@@ -3,7 +3,7 @@ import tmx
 
 SCREEN_SIZE = (640, 480)
 GRAVITY = 2400
-MAX_FALL_SPEED = 100000
+MAX_FALL_SPEED = 700
 
 class Bullet(pygame.sprite.Sprite):
     image = pygame.image.load('bullet.gif')
