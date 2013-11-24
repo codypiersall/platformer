@@ -3,8 +3,31 @@ import tmx
 
 SCREEN_SIZE = (640, 480)
 GRAVITY = 2400
-MAX_FALL_SPEED = 500
+MAX_FALL_SPEED = 100000
 
+class Bullet(pygame.sprite.Sprite):
+    image = pygame.image.load('bullet.gif')
+    SPEED = 400
+    # lifespan of bullet in seconds
+    LIFESPAN = 1
+    
+    def __init__(self, location, direction, *groups):
+        super().__init__(*groups)
+        self.rect = pygame.rect.Rect(location, self.image.get_size())
+        self.direction = direction
+        self.lifespan = self.LIFESPAN
+        self.gun_cooldown = 0
+        
+    def update(self, dt, game):
+        self.lifespan -= dt
+        if self.lifespan < 0:
+            self.kill()
+            return
+        self.rect.x += self.direction * self.SPEED * dt
+        
+        if pygame.sprite.spritecollide(self, game.enemies, True):
+            self.kill()
+            
 class Enemy(pygame.sprite.Sprite):
     SPEED = 100
     image = pygame.image.load('Diablos.gif')
@@ -26,6 +49,7 @@ class Enemy(pygame.sprite.Sprite):
         
         if self.rect.colliderect(game.player.rect):
             game.player.is_dead = True
+
 class Player(pygame.sprite.Sprite):
     SPEED = 200
     JUMP_IMPULSE = -700
@@ -40,7 +64,8 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         self.is_dead = False
         self.direction = 1
-        
+        self.gun_cooldown = 0
+    
     def update(self, dt, game):
         # last position
         last = self.rect.copy()
@@ -54,11 +79,18 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += int(self.SPEED * dt)
             self.image = self.right_image
             self.direction = 1
-        # JUMP!
         if self.resting and key[pygame.K_SPACE]:
             self.dy = self.JUMP_IMPULSE
+            
+        if key[pygame.K_LSHIFT] and not self.gun_cooldown:
+            if self.direction > 0:
+                Bullet(self.rect.midright, 1, game.sprites)
+            else:
+                Bullet(self.rect.midright, -1, game.sprites)
+            self.gun_cooldown = 1
+            
+        self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(MAX_FALL_SPEED, self.dy + GRAVITY * dt)
-        
         self.rect.y += self.dy * dt
         
         new = self.rect
