@@ -20,7 +20,7 @@ class Bullet(pygame.sprite.Sprite):
             self.rect = pygame.rect.Rect(location, self.image.get_size())
         else:
             self.image = self.image_left
-            x_ = game.player.image.get_size()[0]
+            x_ = self.image.get_size()[0]
             self.rect = pygame.rect.Rect((location[0] - x_, location[1]), self.image.get_size())
         self.direction = direction
         self.lifespan = self.LIFESPAN
@@ -67,7 +67,7 @@ class Enemy(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     SPEED = 200
     JUMP_IMPULSE = -700
-    COOLDOWN_TIME = 0.125
+    COOLDOWN_TIME = 0.5
     def __init__(self, location, *groups):
         super().__init__(*groups)
         self.left_image = pygame.image.load('Frog-left.gif')
