@@ -20,7 +20,8 @@ class Bullet(pygame.sprite.Sprite):
             self.rect = pygame.rect.Rect(location, self.image.get_size())
         else:
             self.image = self.image_left
-            self.rect = pygame.rect.Rect((location[0] - 74, location[1]), self.image.get_size())
+            x_ = game.player.image.get_size()[0]
+            self.rect = pygame.rect.Rect((location[0] - x_, location[1]), self.image.get_size())
         self.direction = direction
         self.lifespan = self.LIFESPAN
         
@@ -35,7 +36,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
             
 class Enemy(pygame.sprite.Sprite):
-    SPEED = 200
+    SPEED = 100
     image_left = pygame.image.load('Sentry-left.gif')
     image = image_left
     image_right = pygame.transform.flip(image_left, True, False)
@@ -69,9 +70,9 @@ class Player(pygame.sprite.Sprite):
     COOLDOWN_TIME = 0.125
     def __init__(self, location, *groups):
         super().__init__(*groups)
-        self.image = pygame.image.load('Frog-right.gif')
-        self.right_image = self.image
         self.left_image = pygame.image.load('Frog-left.gif')
+        self.right_image = pygame.transform.flip(self.left_image,True, False)
+        self.image = self.right_image
         
         self.rect = pygame.rect.Rect(location, self.image.get_size())
         self.resting = False
