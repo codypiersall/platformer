@@ -117,13 +117,25 @@
    </properties>
   </object>
   <object gid="2" x="64" y="1536"/>
-  <object gid="3" x="480" y="1472"/>
-  <object gid="3" x="608" y="1376"/>
-  <object gid="3" x="352" y="1376"/>
-  <object gid="3" x="224" y="1472"/>
-  <object gid="5" x="128" y="1472"/>
-  <object gid="5" x="608" y="1472"/>
-  <object gid="5" x="736" y="1376"/>
-  <object gid="5" x="288" y="1376"/>
+  <object gid="3" x="479" y="1441"/>
+  <object gid="3" x="611" y="1343"/>
+  <object gid="3" x="353" y="1343"/>
+  <object gid="3" x="238" y="1437"/>
+  <object gid="5" x="128" y="1438"/>
+  <object gid="5" x="609" y="1437"/>
+  <object gid="5" x="737" y="1343"/>
+  <object gid="5" x="287" y="1346"/>
+  <object gid="3" x="523" y="1441"/>
+  <object gid="3" x="416" y="1347"/>
+  <object gid="3" x="175" y="1436"/>
+  <object gid="3" x="305" y="1435"/>
+  <object gid="3" x="359" y="1444"/>
+  <object gid="3" x="327" y="1359"/>
+  <object gid="3" x="427" y="1441"/>
+  <object gid="3" x="319" y="1345"/>
+  <object gid="3" x="464" y="1344"/>
+  <object gid="3" x="685" y="1338"/>
+  <object gid="3" x="535" y="1340"/>
+  <object gid="3" x="169" y="1533"/>
  </objectgroup>
 </map>

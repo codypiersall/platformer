@@ -6,17 +6,23 @@ GRAVITY = 2400
 MAX_FALL_SPEED = 700
 
 class Bullet(pygame.sprite.Sprite):
-    image = pygame.image.load('bullet.gif')
+    image = pygame.image.load('Masamune.gif')
+    image_right = pygame.transform.rotate(image, 270)
+    image_left = pygame.transform.flip(image_right, True, False)
     SPEED = 400
     # lifespan of bullet in seconds
     LIFESPAN = 1
     
     def __init__(self, location, direction, *groups):
         super().__init__(*groups)
-        self.rect = pygame.rect.Rect(location, self.image.get_size())
+        if direction > 0:
+            self.image = self.image_right
+            self.rect = pygame.rect.Rect(location, self.image.get_size())
+        else:
+            self.image = self.image_left
+            self.rect = pygame.rect.Rect((location[0] - 74, location[1]), self.image.get_size())
         self.direction = direction
         self.lifespan = self.LIFESPAN
-        self.gun_cooldown = 0
         
     def update(self, dt, game):
         self.lifespan -= dt
@@ -29,8 +35,10 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
             
 class Enemy(pygame.sprite.Sprite):
-    SPEED = 100
-    image = pygame.image.load('Diablos.gif')
+    SPEED = 200
+    image_left = pygame.image.load('Sentry-left.gif')
+    image = image_left
+    image_right = pygame.transform.flip(image_left, True, False)
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
@@ -39,6 +47,11 @@ class Enemy(pygame.sprite.Sprite):
         
     def update(self, dt, game):
         self.rect.x += int(self.direction * self.SPEED * dt)
+        
+        if self.direction > 0:
+            self.image = self.image_right
+        else:
+            self.image = self.image_left
         for cell in game.tilemap.layers['triggers'].collide(self.rect, 'reverse'):
             if self.direction > 0:
                 self.rect.right = cell.left
@@ -53,6 +66,7 @@ class Enemy(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     SPEED = 200
     JUMP_IMPULSE = -700
+    COOLDOWN_TIME = 0.125
     def __init__(self, location, *groups):
         super().__init__(*groups)
         self.image = pygame.image.load('Frog-right.gif')
@@ -65,6 +79,7 @@ class Player(pygame.sprite.Sprite):
         self.is_dead = False
         self.direction = 1
         self.gun_cooldown = 0
+        self.double_jumped = False
     
     def update(self, dt, game):
         # last position
@@ -79,15 +94,20 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += int(self.SPEED * dt)
             self.image = self.right_image
             self.direction = 1
-        if self.resting and key[pygame.K_SPACE]:
-            self.dy = self.JUMP_IMPULSE
+        
+        if key[pygame.K_SPACE]:
+            if self.resting:
+                self.dy = self.JUMP_IMPULSE
+            elif self.dy > 60 and not self.double_jumped:
+                self.dy = self.JUMP_IMPULSE
+                self.double_jumped = True
             
         if key[pygame.K_LSHIFT] and not self.gun_cooldown:
             if self.direction > 0:
-                Bullet(self.rect.midright, 1, game.sprites)
+                Bullet(self.rect.center, 1, game.sprites)
             else:
-                Bullet(self.rect.midright, -1, game.sprites)
-            self.gun_cooldown = 1
+                Bullet(self.rect.center, -1, game.sprites)
+            self.gun_cooldown = self.COOLDOWN_TIME
             
         self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(MAX_FALL_SPEED, self.dy + GRAVITY * dt)
@@ -103,6 +123,7 @@ class Player(pygame.sprite.Sprite):
                 new.left = cell.right
             if 't' in blockers and last.bottom <= cell.top and new.bottom > cell.top:
                 self.resting = True
+                self.double_jumped = False
                 new.bottom = cell.top
                 self.dy = 0
             if 'b' in blockers and last.top >= cell.bottom and new.top < cell.bottom:
