@@ -31,6 +31,7 @@ class Bullet(pygame.sprite.Sprite):
         
         if pygame.sprite.spritecollide(self, game.enemies, True):
             self.kill()
+            game.explosion.play()
             
 class Enemy(pygame.sprite.Sprite):
     SPEED = 100
@@ -96,16 +97,19 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_SPACE]:
             if self.resting:
                 self.dy = self.JUMP_IMPULSE
+                game.jump.play()
             elif self.dy > 60 and not self.double_jumped:
                 self.dy = self.JUMP_IMPULSE
                 self.double_jumped = True
-            
+                game.jump.play()
+                
         if key[pygame.K_LSHIFT] and not self.gun_cooldown:
             if self.direction > 0:
                 Bullet(self.rect.center, 1, game.sprites)
             else:
                 Bullet(self.rect.center, -1, game.sprites)
             self.gun_cooldown = self.COOLDOWN_TIME
+            game.shoot.play()
             
         self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
@@ -134,6 +138,7 @@ class Game():
     GRAVITY = 2400
     MAX_FALL_SPEED = 700
 
+    
     def main(self, screen):
         clock = pygame.time.Clock()
         
@@ -146,6 +151,11 @@ class Game():
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
         self.player = Player((start_cell.px, start_cell.py), self.sprites)
         self.tilemap.layers.append(self.sprites)
+        
+        # sound effects
+        self.jump = pygame.mixer.Sound('jump.wav')
+        self.shoot = pygame.mixer.Sound('shoot.wav')
+        self.explosion = pygame.mixer.Sound('explosion.wav')
         
         self.enemies = tmx.SpriteLayer()
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
