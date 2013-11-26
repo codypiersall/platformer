@@ -2,9 +2,6 @@ import pygame
 import tmx
 
 SCREEN_SIZE = (640, 480)
-GRAVITY = 2400
-MAX_FALL_SPEED = 700
-
 class Bullet(pygame.sprite.Sprite):
     image = pygame.image.load('Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
@@ -111,7 +108,7 @@ class Player(pygame.sprite.Sprite):
             self.gun_cooldown = self.COOLDOWN_TIME
             
         self.gun_cooldown = max(0, self.gun_cooldown - dt)
-        self.dy = min(MAX_FALL_SPEED, self.dy + GRAVITY * dt)
+        self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
         self.rect.y += self.dy * dt
         
         new = self.rect
@@ -134,6 +131,9 @@ class Player(pygame.sprite.Sprite):
         game.tilemap.set_focus(new.x, new.y)
         
 class Game():
+    GRAVITY = 2400
+    MAX_FALL_SPEED = 700
+
     def main(self, screen):
         clock = pygame.time.Clock()
         
