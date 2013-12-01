@@ -1,5 +1,6 @@
 import pygame
 import tmx
+import pyganim
 
 SCREEN_SIZE = (640, 480)
 
@@ -77,12 +78,17 @@ class Player(pygame.sprite.Sprite):
     COOLDOWN_TIME = 0.5
     MAX_HEALTH = 2
     
+    walk_left_anim = pyganim.PygAnimation([('images/frog-walk-00.gif', .1),
+                                           ('images/frog-walk-01.gif', .1),
+                                           ('images/frog-walk-02.gif', .1),
+                                           ('images/frog-walk-03.gif', .1),
+                                           ('images/frog-walk-04.gif', .1),
+                                           ('images/frog-walk-05.gif', .1)
+                                          ])
     def __init__(self, location, *groups):
         super().__init__(*groups)
-        self.left_image = pygame.image.load('images/Frog-left.gif')
-        self.right_image = pygame.transform.flip(self.left_image,True, False)
-        self.image = self.right_image
-        
+        self.walk_left_anim.play()
+        self.image = self.walk_left_anim.getCurrentFrame()
         self.rect = pygame.rect.Rect(location, self.image.get_size())
         self.resting = False
         self.dy = 0
@@ -94,17 +100,18 @@ class Player(pygame.sprite.Sprite):
         
     def update(self, dt, game):
         # last position
+        self.image = self.walk_left_anim.getCurrentFrame()
         last = self.rect.copy()
         
         key = pygame.key.get_pressed()
         if key[pygame.K_LEFT]:
             self.rect.x -= int(self.SPEED * dt)
-            self.image = self.left_image
+            #self.image = self.left_image
             self.direction = -1
         
         if key[pygame.K_RIGHT]:
             self.rect.x += int(self.SPEED * dt)
-            self.image = self.right_image
+            #self.image = self.right_image
             self.direction = 1
         
         if key[pygame.K_SPACE]:
@@ -149,7 +156,8 @@ class Player(pygame.sprite.Sprite):
         game.tilemap.set_focus(new.x, new.y)
         if new.x < -10 or new.y > game.tilemap.px_height:
             self.is_dead = True
-        
+#        else:
+#            self.rect = pygame.rect.Rect((new.x, new.y), self.image.get_size())
 class Game():
     GRAVITY = 2400
     MAX_FALL_SPEED = 700
