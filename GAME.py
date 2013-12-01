@@ -66,6 +66,7 @@ class Player(pygame.sprite.Sprite):
     SPEED = 200
     JUMP_IMPULSE = -700
     COOLDOWN_TIME = 0.5
+    
     def __init__(self, location, *groups):
         super().__init__(*groups)
         self.left_image = pygame.image.load('Frog-left.gif')
@@ -79,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = 1
         self.gun_cooldown = 0
         self.double_jumped = False
-    
+        
     def update(self, dt, game):
         # last position
         last = self.rect.copy()
@@ -89,6 +90,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x -= int(self.SPEED * dt)
             self.image = self.left_image
             self.direction = -1
+        
         if key[pygame.K_RIGHT]:
             self.rect.x += int(self.SPEED * dt)
             self.image = self.right_image
@@ -145,7 +147,7 @@ class Game():
         background = pygame.image.load('Castle.gif')
         background = pygame.transform.scale(background, SCREEN_SIZE)
         
-        self.tilemap = tmx.load('map.tmx', screen.get_size())
+        self.tilemap = tmx.load('map2.tmx', screen.get_size())
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
@@ -164,9 +166,9 @@ class Game():
         self.tilemap.layers.append(self.enemies)
         
         while True:
-            dt = clock.tick(60) / 1000
-
-            for event in pygame.event.get():
+            dt = clock.tick(120) / 1000
+            events = pygame.event.get()
+            for event in events:
                 if event.type == pygame.QUIT:
                     return
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
