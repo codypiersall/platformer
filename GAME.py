@@ -2,6 +2,13 @@ import pygame
 import tmx
 
 SCREEN_SIZE = (640, 480)
+
+# colors
+GREEN = pygame.Color(0, 200, 0)
+YELLOW = pygame.Color(150, 150, 0)
+RED = pygame.Color(100, 0, 0)
+DARK_GREY = pygame.Color(50, 50, 50)
+
 class Bullet(pygame.sprite.Sprite):
     image = pygame.image.load('images/Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
@@ -68,7 +75,7 @@ class Player(pygame.sprite.Sprite):
     SPEED = 200
     JUMP_IMPULSE = -700
     COOLDOWN_TIME = 0.5
-    MAX_HEALTH = 5
+    MAX_HEALTH = 2
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
@@ -147,6 +154,8 @@ class Game():
     GRAVITY = 2400
     MAX_FALL_SPEED = 700
     FPS = 60
+    LIFEBAR_LENGTH = 250
+    LIFEBAR_WIDTH = 10
     
     def main(self, screen):
         clock = pygame.time.Clock()
@@ -185,11 +194,28 @@ class Game():
             self.tilemap.update(dt, self)
             screen.blit(background, (0,0))
             self.tilemap.draw(screen)
+            self.draw_lifebar(screen, self.player.health, self.player.MAX_HEALTH)
             pygame.display.flip()
             if self.player.is_dead:
                 print('YOU DIED')
                 return
     
+    def draw_lifebar(self, screen, health, max_health):
+        # outline for lifebar
+        pygame.draw.rect(screen, DARK_GREY, (10,10, self.LIFEBAR_LENGTH, 20))
+        
+        ratio = health / max_health
+        if ratio < 0.15:
+            color = RED
+        elif ratio < .7:
+            color = YELLOW
+        else:
+            color = GREEN
+        
+        
+        length = (self.LIFEBAR_LENGTH - 3) * health/max_health 
+        pygame.draw.rect(screen, color, (12,12, (length), 16))
+        
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_SIZE)
