@@ -5,7 +5,7 @@
 # Changes (July 2013 by Renfred Harper):
 # Ported to Python 3
 # Added selective area support SpriteLayer.draw
-
+from os import path
 import sys
 import struct
 import pygame
@@ -63,7 +63,7 @@ class Tileset(object):
         self.properties = {}
 
     @classmethod
-    def fromxml(cls, tag, firstgid=None):
+    def fromxml(cls, tag, xml_filename, firstgid=None):
         if 'source' in tag.attrib:
             firstgid = int(tag.attrib['firstgid'])
             with open(tag.attrib['source']) as f:
@@ -81,8 +81,11 @@ class Tileset(object):
         for c in tag.getchildren():
             if c.tag == "image":
                 # create a tileset
-                tileset.add_image(c.attrib['source'])
+                image = path.join(path.dirname(xml_filename),c.attrib['source'])
+                image = path.normpath(image)
+                tileset.add_image(image)
             elif c.tag == 'tile':
+                
                 gid = tileset.firstgid + int(c.attrib['id'])
                 tileset.get_tile(gid).loadxml(c)
         return tileset
@@ -721,7 +724,7 @@ class TileMap(object):
         tilemap.px_height = tilemap.height * tilemap.tile_height
 
         for tag in map.findall('tileset'):
-            tilemap.tilesets.add(Tileset.fromxml(tag))
+            tilemap.tilesets.add(Tileset.fromxml(tag, filename))
 
         for tag in map.findall('layer'):
             layer = Layer.fromxml(tag, tilemap)
@@ -864,7 +867,7 @@ if __name__ == '__main__':
 
     # Main game loop
     while 1:
-        dt = clock.tick(30)
+        dt = clock.tick(10)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -872,7 +875,7 @@ if __name__ == '__main__':
         
         # tilemap.update calls the update method on each layer in the map.
         # The update method can be customized for each layer to include logic
-        # for animating sprite positions, and detecting collisions.              
+        # for animating sprite positions, and detecting collisions.
         tilemap.update(dt)
         # Fill the screen with an R,G,B color to erase the previous drawings.
         screen.fill((0,0,0))
