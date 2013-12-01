@@ -3,7 +3,7 @@ import tmx
 
 SCREEN_SIZE = (640, 480)
 class Bullet(pygame.sprite.Sprite):
-    image = pygame.image.load('Masamune.gif')
+    image = pygame.image.load('images/Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
     image_left = pygame.transform.flip(image_right, True, False)
     SPEED = 400
@@ -35,7 +35,7 @@ class Bullet(pygame.sprite.Sprite):
             
 class Enemy(pygame.sprite.Sprite):
     SPEED = 100
-    image_left = pygame.image.load('Sentry-left.gif')
+    image_left = pygame.image.load('images/Sentry-left.gif')
     image = image_left
     image_right = pygame.transform.flip(image_left, True, False)
     
@@ -69,7 +69,7 @@ class Player(pygame.sprite.Sprite):
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
-        self.left_image = pygame.image.load('Frog-left.gif')
+        self.left_image = pygame.image.load('images/Frog-left.gif')
         self.right_image = pygame.transform.flip(self.left_image,True, False)
         self.image = self.right_image
         
@@ -144,10 +144,10 @@ class Game():
     def main(self, screen):
         clock = pygame.time.Clock()
         
-        background = pygame.image.load('Castle.gif')
+        background = pygame.image.load('images/Castle.gif')
         background = pygame.transform.scale(background, SCREEN_SIZE)
         
-        self.tilemap = tmx.load('map2.tmx', screen.get_size())
+        self.tilemap = tmx.load('maps/map1.tmx', screen.get_size())
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
@@ -155,9 +155,9 @@ class Game():
         self.tilemap.layers.append(self.sprites)
         
         # sound effects
-        self.jump = pygame.mixer.Sound('jump.wav')
-        self.shoot = pygame.mixer.Sound('shoot.wav')
-        self.explosion = pygame.mixer.Sound('explosion.wav')
+        self.jump = pygame.mixer.Sound('sounds/jump.wav')
+        self.shoot = pygame.mixer.Sound('sounds/shoot.wav')
+        self.explosion = pygame.mixer.Sound('sounds/explosion.wav')
         
         self.enemies = tmx.SpriteLayer()
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
