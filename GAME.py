@@ -100,6 +100,7 @@ class Player(pygame.sprite.Sprite):
             if self.resting:
                 self.dy = self.JUMP_IMPULSE
                 game.jump.play()
+                self.double_jumped=False
             elif self.dy > 60 and not self.double_jumped:
                 self.dy = self.JUMP_IMPULSE
                 self.double_jumped = True
@@ -135,11 +136,14 @@ class Player(pygame.sprite.Sprite):
                 self.dy = 0
         
         game.tilemap.set_focus(new.x, new.y)
+        if new.x < -10 or new.y > 1000:
+            self.is_dead = True
+        
         
 class Game():
     GRAVITY = 2400
     MAX_FALL_SPEED = 700
-
+    FPS = 60
     
     def main(self, screen):
         clock = pygame.time.Clock()
@@ -166,7 +170,7 @@ class Game():
         self.tilemap.layers.append(self.enemies)
         
         while True:
-            dt = clock.tick(120) / 1000
+            dt = clock.tick(self.FPS) / 1000
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
