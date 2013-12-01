@@ -136,7 +136,7 @@ class Player(pygame.sprite.Sprite):
                 self.dy = 0
         
         game.tilemap.set_focus(new.x, new.y)
-        if new.x < -10 or new.y > 1000:
+        if new.x < -10 or new.y > game.tilemap.px_height:
             self.is_dead = True
         
         
@@ -148,7 +148,7 @@ class Game():
     def main(self, screen):
         clock = pygame.time.Clock()
         
-        background = pygame.image.load('images/Castle.gif')
+        background = pygame.image.load('images/background.png')
         background = pygame.transform.scale(background, SCREEN_SIZE)
         
         self.tilemap = tmx.load('maps/map1.tmx', screen.get_size())
