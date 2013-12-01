@@ -19,5 +19,25 @@
     <property name="player" value=""/>
    </properties>
   </object>
+  <object name="enemy" x="864" y="288" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="608" y="288" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="512" y="288" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="928" y="288" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

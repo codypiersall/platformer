@@ -60,12 +60,15 @@ class Enemy(pygame.sprite.Sprite):
             break
         
         if self.rect.colliderect(game.player.rect):
-            game.player.is_dead = True
+            game.player.health -= dt
+            if game.player.health < 0:
+                game.player.is_dead = True
 
 class Player(pygame.sprite.Sprite):
     SPEED = 200
     JUMP_IMPULSE = -700
     COOLDOWN_TIME = 0.5
+    MAX_HEALTH = 5
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
@@ -80,6 +83,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = 1
         self.gun_cooldown = 0
         self.double_jumped = False
+        self.health = self.MAX_HEALTH
         
     def update(self, dt, game):
         # last position
@@ -138,7 +142,6 @@ class Player(pygame.sprite.Sprite):
         game.tilemap.set_focus(new.x, new.y)
         if new.x < -10 or new.y > game.tilemap.px_height:
             self.is_dead = True
-        
         
 class Game():
     GRAVITY = 2400
