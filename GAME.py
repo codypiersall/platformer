@@ -85,6 +85,11 @@ class Player(pygame.sprite.Sprite):
                                            ('images/frog-walk-04.gif', .1),
                                            ('images/frog-walk-05.gif', .1)
                                           ])
+                                          
+    walk_right_anim = walk_left_anim.getCopy()
+    walk_right_anim.flip(True, False)
+    walk_right_anim.makeTransformsPermanent()
+    
     def __init__(self, location, *groups):
         super().__init__(*groups)
         self.walk_left_anim.play()
@@ -97,23 +102,27 @@ class Player(pygame.sprite.Sprite):
         self.gun_cooldown = 0
         self.double_jumped = False
         self.health = self.MAX_HEALTH
+        self.left = False
+        self.right = False
         
     def update(self, dt, game):
         # last position
-        self.image = self.walk_left_anim.getCurrentFrame()
         last = self.rect.copy()
         
-        key = pygame.key.get_pressed()
-        if key[pygame.K_LEFT]:
+        if self.left:
+            self.image = self.walk_left_anim.getCurrentFrame()
+
             self.rect.x -= int(self.SPEED * dt)
             #self.image = self.left_image
             self.direction = -1
         
-        if key[pygame.K_RIGHT]:
+        elif self.right:
+            self.image = self.walk_right_anim.getCurrentFrame()
             self.rect.x += int(self.SPEED * dt)
             #self.image = self.right_image
             self.direction = 1
-        
+            
+        key = pygame.key.get_pressed()
         if key[pygame.K_SPACE]:
             if self.resting:
                 self.dy = self.JUMP_IMPULSE
@@ -191,12 +200,44 @@ class Game():
         
         while True:
             dt = clock.tick(self.FPS) / 1000
+            key = pygame.key.get_pressed()
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
                     return
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    return
+                
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        return
+                        
+                    elif event.key == pygame.K_LEFT:
+                        self.player.left = True
+                        self.player.right = False
+                        self.player.walk_right_anim.stop()
+                        self.player.walk_left_anim.play()
+                        
+                    elif event.key == pygame.K_RIGHT:
+                        self.player.left = False
+                        self.player.right = True                        
+                        self.player.walk_left_anim.stop()
+                        self.player.walk_right_anim.play()
+                
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT:
+                        self.player.left = False
+                        self.player.walk_left_anim.stop()
+                        if key[pygame.K_RIGHT]: 
+                            self.player.right = True
+                            self.player.walk_right_anim.play()
+                        
+                    elif event.key == pygame.K_RIGHT:
+                        self.player.right = False
+                        self.player.walk_right_anim.stop()
+                        if key[pygame.K_LEFT]: 
+                            self.player.left = True
+                            self.player.walk_left_anim.play()
+
+                        self.player.walk_right_anim.stop()
 
             
             self.tilemap.update(dt, self)
