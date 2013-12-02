@@ -85,10 +85,13 @@ class Player(pygame.sprite.Sprite):
                                            ('images/frog-walk-04.gif', .1),
                                            ('images/frog-walk-05.gif', .1)
                                           ])
-                                          
+    
+    
     walk_right_anim = walk_left_anim.getCopy()
     walk_right_anim.flip(True, False)
     walk_right_anim.makeTransformsPermanent()
+    face_left = walk_left_anim.getFrame(0)
+    face_right = walk_right_anim.getFrame(0)
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
@@ -165,8 +168,7 @@ class Player(pygame.sprite.Sprite):
         game.tilemap.set_focus(new.x, new.y)
         if new.x < -10 or new.y > game.tilemap.px_height:
             self.is_dead = True
-#        else:
-#            self.rect = pygame.rect.Rect((new.x, new.y), self.image.get_size())
+
 class Game():
     GRAVITY = 2400
     MAX_FALL_SPEED = 700
