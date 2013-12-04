@@ -130,19 +130,15 @@ class Player(pygame.sprite.Sprite):
         # last position
         last = self.rect.copy()
         
+        self.image = self.animations[self.direction][self.moving].getCurrentFrame()
+        
         if self.direction == self.LEFT:
             if self.moving == self.WALKING:
-                self.image = self.walk_left_anim.getCurrentFrame()
                 self.rect.x -= int(self.SPEED * dt)
-            else:
-                self.image = self.face_left.getCurrentFrame()
                 
         elif self.direction == self.RIGHT:
             if self.moving == self.WALKING:
-                self.image = self.walk_right_anim.getCurrentFrame()
                 self.rect.x += int(self.SPEED * dt)
-            else:
-                self.image = self.face_right.getCurrentFrame()
         
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE]:
