@@ -90,7 +90,8 @@ class Player(pygame.sprite.Sprite):
                                            ('images/frog-walk-02.gif', .1),
                                            ('images/frog-walk-03.gif', .1),
                                            ('images/frog-walk-04.gif', .1),
-                                           ('images/frog-walk-05.gif', .1)
+                                           ('images/frog-walk-05.gif', .1),
+                                           ('images/frog-walk-00.gif', .1)
                                           ])
     
     
@@ -124,21 +125,25 @@ class Player(pygame.sprite.Sprite):
         self.walk_left_anim.play()
         self.image = self.walk_left_anim.getCurrentFrame()
         self.rect = pygame.rect.Rect(location, self.image.get_size())
-
+        self.current_anim = self.face_right
     def update(self, dt, game):
         # last position
         last = self.rect.copy()
         
         if self.direction == self.LEFT:
-            self.image = self.walk_left_anim.getCurrentFrame()
             if self.moving == self.WALKING:
+                self.image = self.walk_left_anim.getCurrentFrame()
                 self.rect.x -= int(self.SPEED * dt)
-            
+            else:
+                self.image = self.face_left.getCurrentFrame()
+                
         elif self.direction == self.RIGHT:
-            self.image = self.walk_right_anim.getCurrentFrame()
             if self.moving == self.WALKING:
+                self.image = self.walk_right_anim.getCurrentFrame()
                 self.rect.x += int(self.SPEED * dt)
-            
+            else:
+                self.image = self.face_right.getCurrentFrame()
+        
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE]:
             if self.resting:
@@ -220,6 +225,7 @@ class Game():
             dt = clock.tick(self.FPS) / 1000
             key = pygame.key.get_pressed()
             events = pygame.event.get()
+            
             for event in events:
                 if event.type == pygame.QUIT:
                     return
