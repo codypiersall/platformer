@@ -125,8 +125,11 @@ class Player(pygame.sprite.Sprite):
         self.walk_left_anim.play()
         self.image = self.walk_left_anim.getCurrentFrame()
         self.rect = pygame.rect.Rect(location, self.image.get_size())
-        self.current_anim = self.face_right
+        self.jump = False
+        
     def update(self, dt, game):
+        global m
+        global n
         # last position
         last = self.rect.copy()
         
@@ -141,7 +144,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x += int(self.SPEED * dt)
         
         key = pygame.key.get_pressed()
-        if key[pygame.K_SPACE]:
+        if self.jump:
             if self.resting:
                 self.dy = self.JUMP_IMPULSE
                 game.jump.play()
@@ -150,7 +153,8 @@ class Player(pygame.sprite.Sprite):
                 self.dy = self.JUMP_IMPULSE
                 self.double_jumped = True
                 game.jump.play()
-                
+            self.jump = False
+            
         if key[pygame.K_LSHIFT] and not self.gun_cooldown:
             if self.direction == self.RIGHT:
                 Bullet(self.rect.center, 1, game.sprites)
@@ -161,8 +165,8 @@ class Player(pygame.sprite.Sprite):
             
         self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
-        self.rect.y += self.dy * dt
         
+        self.rect.y += self.dy * dt
         new = self.rect
         self.resting = False
         for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
@@ -171,7 +175,7 @@ class Player(pygame.sprite.Sprite):
                 new.right = cell.left
             if 'r' in blockers and last.left >= cell.right and new.left < cell.right:
                 new.left = cell.right
-            if 't' in blockers and last.bottom <= cell.top and new.bottom > cell.top:
+            if 't' in blockers and last.bottom <= cell.top and new.bottom >= cell.top:
                 self.resting = True
                 self.double_jumped = False
                 new.bottom = cell.top
@@ -241,7 +245,10 @@ class Game():
                         player.direction = player.RIGHT            
                         player.walk_left_anim.stop()
                         player.walk_right_anim.play()
-                
+                        
+                    elif event.key == pygame.K_SPACE:
+                        player.jump = True
+                        
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         player.walk_left_anim.stop()
@@ -269,7 +276,6 @@ class Game():
             self.draw_lifebar(screen, self.player.health, self.player.MAX_HEALTH)
             pygame.display.flip()
             if self.player.is_dead:
-                print('YOU DIED')
                 return
     
     def draw_lifebar(self, screen, health, max_health):
