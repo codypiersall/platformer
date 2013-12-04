@@ -78,8 +78,15 @@ class Player(pygame.sprite.Sprite):
     COOLDOWN_TIME = 0.5
     MAX_HEALTH = 2
     
-    walk_left_anim = pyganim.PygAnimation([('images/frog-walk-00.gif', .1),
-                                           ('images/frog-walk-01.gif', .1),
+    # Directions
+    LEFT = 'left'
+    RIGHT = 'right'
+    
+    # moving 
+    STILL = 'still'
+    WALKING = 'walking'
+    
+    walk_left_anim = pyganim.PygAnimation([('images/frog-walk-01.gif', .1),
                                            ('images/frog-walk-02.gif', .1),
                                            ('images/frog-walk-03.gif', .1),
                                            ('images/frog-walk-04.gif', .1),
@@ -90,40 +97,47 @@ class Player(pygame.sprite.Sprite):
     walk_right_anim = walk_left_anim.getCopy()
     walk_right_anim.flip(True, False)
     walk_right_anim.makeTransformsPermanent()
-    face_left = walk_left_anim.getFrame(0)
-    face_right = walk_right_anim.getFrame(0)
+
+    face_left = pyganim.PygAnimation([('images/frog-walk-00.gif', 10)])
+
+    face_right = face_left.getCopy()
+    face_right.flip(True, False)
+    face_right.makeTransformsPermanent()
+    
+    animations = {LEFT:  {STILL: face_left,
+                          WALKING: walk_left_anim},
+                  RIGHT: {STILL: face_right,
+                          WALKING: walk_right_anim}
+                 }
+    
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
-        self.walk_left_anim.play()
-        self.image = self.walk_left_anim.getCurrentFrame()
-        self.rect = pygame.rect.Rect(location, self.image.get_size())
         self.resting = False
         self.dy = 0
         self.is_dead = False
-        self.direction = 1
         self.gun_cooldown = 0
         self.double_jumped = False
         self.health = self.MAX_HEALTH
-        self.left = False
-        self.right = False
-        
+        self.direction = self.RIGHT
+        self.moving = self.STILL
+        self.walk_left_anim.play()
+        self.image = self.walk_left_anim.getCurrentFrame()
+        self.rect = pygame.rect.Rect(location, self.image.get_size())
+
     def update(self, dt, game):
         # last position
         last = self.rect.copy()
         
-        if self.left:
+        if self.direction == self.LEFT:
             self.image = self.walk_left_anim.getCurrentFrame()
-
-            self.rect.x -= int(self.SPEED * dt)
-            #self.image = self.left_image
-            self.direction = -1
-        
-        elif self.right:
+            if self.moving == self.WALKING:
+                self.rect.x -= int(self.SPEED * dt)
+            
+        elif self.direction == self.RIGHT:
             self.image = self.walk_right_anim.getCurrentFrame()
-            self.rect.x += int(self.SPEED * dt)
-            #self.image = self.right_image
-            self.direction = 1
+            if self.moving == self.WALKING:
+                self.rect.x += int(self.SPEED * dt)
             
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE]:
@@ -137,7 +151,7 @@ class Player(pygame.sprite.Sprite):
                 game.jump.play()
                 
         if key[pygame.K_LSHIFT] and not self.gun_cooldown:
-            if self.direction > 0:
+            if self.direction == self.RIGHT:
                 Bullet(self.rect.center, 1, game.sprites)
             else:
                 Bullet(self.rect.center, -1, game.sprites)
@@ -187,6 +201,8 @@ class Game():
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
         self.player = Player((start_cell.px, start_cell.py), self.sprites)
+        # make an alias for player so I don't have to type all the time.
+        player = self.player
         self.tilemap.layers.append(self.sprites)
         
         # sound effects
@@ -213,33 +229,36 @@ class Game():
                         return
                         
                     elif event.key == pygame.K_LEFT:
-                        self.player.left = True
-                        self.player.right = False
-                        self.player.walk_right_anim.stop()
-                        self.player.walk_left_anim.play()
+                        player.moving = player.WALKING
+                        player.direction = player.LEFT
+                        player.walk_right_anim.stop()
+                        player.walk_left_anim.play()
                         
                     elif event.key == pygame.K_RIGHT:
-                        self.player.left = False
-                        self.player.right = True                        
-                        self.player.walk_left_anim.stop()
-                        self.player.walk_right_anim.play()
+                        player.moving = player.WALKING
+                        player.direction = player.RIGHT            
+                        player.walk_left_anim.stop()
+                        player.walk_right_anim.play()
                 
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
-                        self.player.left = False
-                        self.player.walk_left_anim.stop()
+                        player.walk_left_anim.stop()
                         if key[pygame.K_RIGHT]: 
-                            self.player.right = True
-                            self.player.walk_right_anim.play()
+                            player.moving = player.WALKING
+                            player.direction = player.RIGHT
+                            player.walk_right_anim.play()
+                        else:
+                            player.moving = player.STILL
                         
                     elif event.key == pygame.K_RIGHT:
-                        self.player.right = False
-                        self.player.walk_right_anim.stop()
+                        player.walk_right_anim.stop()
                         if key[pygame.K_LEFT]: 
-                            self.player.left = True
-                            self.player.walk_left_anim.play()
-
-                        self.player.walk_right_anim.stop()
+                            player.moving = player.WALKING
+                            player.direction = player.LEFT
+                            player.walk_left_anim.play()
+                        else:
+                            player.moving = player.STILL
+                        player.walk_right_anim.stop()
 
             
             self.tilemap.update(dt, self)
