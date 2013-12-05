@@ -79,8 +79,8 @@ class Player(pygame.sprite.Sprite):
     MAX_HEALTH = 2
     
     # Directions
-    LEFT = 'left'
-    RIGHT = 'right'
+    LEFT = -1
+    RIGHT = 1
     
     # moving 
     STILL = 'still'
@@ -151,18 +151,12 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         
     def update(self, dt, game):
-        # last position
-        last = self.rect.copy()
         
         self.image = self.animations[self.direction][self.moving].getCurrentFrame()
-        
-        if self.direction == self.LEFT:
-            if self.moving == self.WALKING:
-                self.rect.x -= int(self.SPEED * dt)
+        last = self.rect.copy()
                 
-        elif self.direction == self.RIGHT:
-            if self.moving == self.WALKING:
-                self.rect.x += int(self.SPEED * dt)
+        if self.moving == self.WALKING:
+            self.rect.x += int(self.direction * self.SPEED * dt)        
         
         key = pygame.key.get_pressed()
         if self.jump:
@@ -190,6 +184,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.dy * dt
         new = self.rect
         self.resting = False
+        # last position
         for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
             blockers = cell['blockers']
             if 'l' in blockers and last.right <= cell.left and new.right > cell.left:
