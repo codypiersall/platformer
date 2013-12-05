@@ -114,22 +114,43 @@ class Player(pygame.sprite.Sprite):
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
+        
+        # True if the player is on a surface, else False.
         self.resting = False
-        self.dy = 0
+        
+        # Set to True only when player dies.
         self.is_dead = False
+        
+        # gun_cooldown is the time left before the player can shoot again.
         self.gun_cooldown = 0
+        
+        # Whether the player has used the double jump.
         self.double_jumped = False
+        
+        # player's health; currently, it goes down based on how long 
+        # the player collides with the enemy.
         self.health = self.MAX_HEALTH
+        
+        # self.direction and self.moving are for determining which way
+        # the player is facing (either self.LEFT or self.RIGHT) and
+        # whether the player is moving (either self.STILL or self.WALK)
         self.direction = self.RIGHT
         self.moving = self.STILL
-        self.walk_left_anim.play()
-        self.image = self.walk_left_anim.getCurrentFrame()
+        
+        # TODO: Find out what is actually displaying the image.
+        # I think the image gets blitted by the tmx module?
+        self.image = self.face_left.getCurrentFrame()
         self.rect = pygame.rect.Rect(location, self.image.get_size())
+        
+        # Whether the character should try to jump.  This gets set to True
+        # when the player hits the jump button (default space) but does not 
+        # necessarily mean the player can actually jump.
         self.jump = False
         
+        # Vertical velocity.  This gets changed by either falling or jumping.
+        self.dy = 0
+        
     def update(self, dt, game):
-        global m
-        global n
         # last position
         last = self.rect.copy()
         
