@@ -73,9 +73,16 @@ class Enemy(pygame.sprite.Sprite):
                 game.player.is_dead = True
 
 class Player(pygame.sprite.Sprite):
+    # Player's left and right speed in pixels per second
     SPEED = 200
-    JUMP_IMPULSE = -700
+
+    # Player's jumping speed in pixels per second.
+    JUMP_SPEED = -700
+    
+    # How much time passes between shots in seconds.
     COOLDOWN_TIME = 0.5
+    
+    # Player's maximum health
     MAX_HEALTH = 2
     
     # Directions
@@ -174,11 +181,11 @@ class Player(pygame.sprite.Sprite):
     def try_to_jump(self, game):
         if self.jump:
             if self.resting:
-                self.dy = self.JUMP_IMPULSE
+                self.dy = self.JUMP_SPEED
                 game.jump.play()
                 self.double_jumped = False
             elif self.dy > 60 and not self.double_jumped:
-                self.dy = self.JUMP_IMPULSE
+                self.dy = self.JUMP_SPEED
                 self.double_jumped = True
                 game.jump.play()
             self.jump = False
