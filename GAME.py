@@ -148,6 +148,9 @@ class Player(pygame.sprite.Sprite):
         # necessarily mean the player can actually jump.
         self.jump = False
         
+        # whether the player should try to shoot.
+        self.shoot = False
+        
         # Vertical velocity.  This gets changed by either falling or jumping.
         self.dy = 0
         
@@ -163,7 +166,6 @@ class Player(pygame.sprite.Sprite):
         
         self.rect.x += int(self.direction * self.SPEED * self.moving * dt)        
         
-        key = pygame.key.get_pressed()
         if self.jump:
             if self.resting:
                 self.dy = self.JUMP_IMPULSE
@@ -175,13 +177,13 @@ class Player(pygame.sprite.Sprite):
                 game.jump.play()
             self.jump = False
             
-        if key[pygame.K_LSHIFT] and not self.gun_cooldown:
-            if self.direction == self.RIGHT:
-                Bullet(self.rect.center, 1, game.sprites)
-            else:
-                Bullet(self.rect.center, -1, game.sprites)
-            self.gun_cooldown = self.COOLDOWN_TIME
-            game.shoot.play()
+        if self.shoot:
+            if not self.gun_cooldown:
+                game.shoot.play()
+                Bullet(self.rect.center, self.direction, game.sprites)
+                self.gun_cooldown = self.COOLDOWN_TIME
+            
+            self.shoot = False
             
         self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
@@ -265,6 +267,9 @@ class Game():
                         
                     elif event.key == pygame.K_SPACE:
                         player.jump = True
+                        
+                    elif event.key == pygame.K_LSHIFT:
+                        player.shoot = True
                         
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
