@@ -154,7 +154,8 @@ class Player(pygame.sprite.Sprite):
         # Vertical velocity.  This gets changed by either falling or jumping.
         self.dy = 0
         
-    def update(self, dt, game):
+
+    def animate(self):
         last_anim = self.current_animation
         next_anim = self.animations[self.direction][self.moving]
         if next_anim != last_anim:
@@ -162,6 +163,9 @@ class Player(pygame.sprite.Sprite):
             next_anim.play()
         self.image = next_anim.getCurrentFrame()
         self.current_animation = next_anim
+
+    def update(self, dt, game):
+        self.animate()
         last = self.rect.copy()
         
         self.rect.x += int(self.direction * self.SPEED * self.moving * dt)        
