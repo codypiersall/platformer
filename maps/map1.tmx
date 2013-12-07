@@ -8,7 +8,7 @@
    eJztwzENAAAIA7CJwb9GTCw8tEkTAAD4ZQ62LdvXA4U=
   </data>
  </layer>
- <objectgroup name="triggers" width="50" height="15">
+ <objectgroup name="triggers" width="50" height="15" visible="0">
   <object name="blockers" x="160" y="448" width="800" height="32">
    <properties>
     <property name="blockers" value="tlbr"/>

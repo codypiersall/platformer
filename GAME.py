@@ -82,9 +82,9 @@ class Player(pygame.sprite.Sprite):
     LEFT = -1
     RIGHT = 1
     
-    # moving 
-    STILL = 'still'
-    WALKING = 'walking'
+    # moving constants
+    STILL = 0
+    WALKING = 1
     
     walk_left_anim = pyganim.PygAnimation([('images/frog-walk-01.gif', .1),
                                            ('images/frog-walk-02.gif', .1),
@@ -111,7 +111,6 @@ class Player(pygame.sprite.Sprite):
                           WALKING: walk_right_anim}
                  }
     
-    
     def __init__(self, location, *groups):
         super().__init__(*groups)
         
@@ -137,9 +136,11 @@ class Player(pygame.sprite.Sprite):
         self.direction = self.RIGHT
         self.moving = self.STILL
         
+        # the current animation that is playing
+        self.current_animation = self.face_right
         # TODO: Find out what is actually displaying the image.
         # I think the image gets blitted by the tmx module?
-        self.image = self.face_left.getCurrentFrame()
+        self.image = self.face_right.getCurrentFrame()
         self.rect = pygame.rect.Rect(location, self.image.get_size())
         
         # Whether the character should try to jump.  This gets set to True
@@ -151,12 +152,16 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
         
     def update(self, dt, game):
-        
-        self.image = self.animations[self.direction][self.moving].getCurrentFrame()
+        last_anim = self.current_animation
+        next_anim = self.animations[self.direction][self.moving]
+        if next_anim != last_anim:
+            last_anim.stop()
+            next_anim.play()
+        self.image = next_anim.getCurrentFrame()
+        self.current_animation = next_anim
         last = self.rect.copy()
-                
-        if self.moving == self.WALKING:
-            self.rect.x += int(self.direction * self.SPEED * dt)        
+        
+        self.rect.x += int(self.direction * self.SPEED * self.moving * dt)        
         
         key = pygame.key.get_pressed()
         if self.jump:
@@ -253,42 +258,34 @@ class Game():
                     elif event.key == pygame.K_LEFT:
                         player.moving = player.WALKING
                         player.direction = player.LEFT
-                        player.walk_right_anim.stop()
-                        player.walk_left_anim.play()
                         
                     elif event.key == pygame.K_RIGHT:
                         player.moving = player.WALKING
                         player.direction = player.RIGHT            
-                        player.walk_left_anim.stop()
-                        player.walk_right_anim.play()
                         
                     elif event.key == pygame.K_SPACE:
                         player.jump = True
                         
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
-                        player.walk_left_anim.stop()
                         if key[pygame.K_RIGHT]: 
                             player.moving = player.WALKING
                             player.direction = player.RIGHT
-                            player.walk_right_anim.play()
                         else:
                             player.moving = player.STILL
                         
                     elif event.key == pygame.K_RIGHT:
-                        player.walk_right_anim.stop()
                         if key[pygame.K_LEFT]: 
                             player.moving = player.WALKING
                             player.direction = player.LEFT
-                            player.walk_left_anim.play()
                         else:
                             player.moving = player.STILL
-                        player.walk_right_anim.stop()
 
             
-            self.tilemap.update(dt, self)
             screen.blit(background, (0,0))
+            self.tilemap.update(dt, self)
             self.tilemap.draw(screen)
+            
             self.draw_lifebar(screen, self.player.health, self.player.MAX_HEALTH)
             pygame.display.flip()
             if self.player.is_dead:
