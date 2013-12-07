@@ -5,7 +5,7 @@
  </tileset>
  <layer name="set" width="50" height="15">
   <data encoding="base64" compression="zlib">
-   eJztwzENAAAIA7CJwb9GTCw8tEkTAAD4ZQ62LdvXA4U=
+   eJxjYBgFo2AUkAI4B9oBVAKj/hhcYNQfgwuM+mNwmE8PezhpbD66XbQyd6j7g5NhYPxBa0xtAADtagGW
   </data>
  </layer>
  <objectgroup name="triggers" width="50" height="15" visible="0">
@@ -19,24 +19,49 @@
     <property name="player" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="864" y="288" width="32" height="32">
+  <object name="enemy" x="640" y="384" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="608" y="288" width="32" height="32">
+  <object name="enemy" x="544" y="384" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="512" y="288" width="32" height="32">
+  <object name="reverse" x="480" y="384" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="928" y="288" width="32" height="32">
+  <object name="reverse" x="768" y="384" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="blockers" x="160" y="128" width="32" height="320">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="blockers" x="832" y="416" width="128" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="blockers" x="864" y="384" width="96" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="blockers" x="896" y="352" width="64" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="blockers" x="928" y="320" width="32" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
    </properties>
   </object>
  </objectgroup>

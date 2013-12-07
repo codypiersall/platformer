@@ -170,9 +170,8 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, dt, game):
         self.animate()
-        last = self.rect.copy()
+        last_position = self.rect.copy()
         
-        self.rect.x += int(self.direction * self.SPEED * self.moving * dt)        
         
         if self.jump:
             if self.resting:
@@ -193,25 +192,26 @@ class Player(pygame.sprite.Sprite):
             
             self.shoot = False
             
+        self.rect.x += int(self.direction * self.SPEED * self.moving * dt)        
         self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
         
         self.rect.y += self.dy * dt
         new = self.rect
         self.resting = False
-        # last position
+        # last_position position
         for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
             blockers = cell['blockers']
-            if 'l' in blockers and last.right <= cell.left and new.right > cell.left:
+            if 'l' in blockers and last_position.right <= cell.left and new.right > cell.left:
                 new.right = cell.left
-            if 'r' in blockers and last.left >= cell.right and new.left < cell.right:
+            if 'r' in blockers and last_position.left >= cell.right and new.left < cell.right:
                 new.left = cell.right
-            if 't' in blockers and last.bottom <= cell.top and new.bottom >= cell.top:
+            if 't' in blockers and last_position.bottom <= cell.top and new.bottom >= cell.top:
                 self.resting = True
                 self.double_jumped = False
                 new.bottom = cell.top
                 self.dy = 0
-            if 'b' in blockers and last.top >= cell.bottom and new.top < cell.bottom:
+            if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom:
                 new.top = cell.bottom
                 self.dy = 0
         
