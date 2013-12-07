@@ -138,6 +138,7 @@ class Player(pygame.sprite.Sprite):
         
         # the current animation that is playing
         self.current_animation = self.face_right
+        
         # TODO: Find out what is actually displaying the image.
         # I think the image gets blitted by the tmx module?
         self.image = self.face_right.getCurrentFrame()
@@ -168,30 +169,42 @@ class Player(pygame.sprite.Sprite):
 
         self.image = next_anim.getCurrentFrame()
 
-    def update(self, dt, game):
-        self.animate()
-        last_position = self.rect.copy()
-        
-        
+
+
+    def try_to_jump(self, game):
         if self.jump:
             if self.resting:
                 self.dy = self.JUMP_IMPULSE
                 game.jump.play()
-                self.double_jumped=False
+                self.double_jumped = False
             elif self.dy > 60 and not self.double_jumped:
                 self.dy = self.JUMP_IMPULSE
                 self.double_jumped = True
                 game.jump.play()
             self.jump = False
-            
+
+
+    def try_to_shoot(self, game):
         if self.shoot:
             if not self.gun_cooldown:
                 game.shoot.play()
                 Bullet(self.rect.center, self.direction, game.sprites)
                 self.gun_cooldown = self.COOLDOWN_TIME
-            
             self.shoot = False
-            
+
+    def do_actions(self, game):
+        self.try_to_jump(game)
+        self.try_to_shoot(game)
+
+    def update(self, dt, game):
+        
+        # finds the right animation and displays it.
+        self.animate()
+        
+        # jump, shoot, whatever.
+        self.do_actions(game)
+        
+        last_position = self.rect.copy()            
         self.rect.x += int(self.direction * self.SPEED * self.moving * dt)        
         self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
@@ -206,11 +219,11 @@ class Player(pygame.sprite.Sprite):
                 new.right = cell.left
             if 'r' in blockers and last_position.left >= cell.right and new.left < cell.right:
                 new.left = cell.right
-            if 't' in blockers and last_position.bottom <= cell.top and new.bottom >= cell.top:
+            if 't' in blockers and last_position.bottom <= cell.top and new.bottom > cell.top:
                 self.resting = True
                 self.double_jumped = False
                 new.bottom = cell.top
-                self.dy = 0
+                self.dy = game.GRAVITY * dt
             if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom:
                 new.top = cell.bottom
                 self.dy = 0
