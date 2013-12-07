@@ -156,13 +156,17 @@ class Player(pygame.sprite.Sprite):
         
 
     def animate(self):
+        """Animate the player based on direction and movement.
+           
+        If the animation that should be playing is already playing, this basically does nothing."""
         last_anim = self.current_animation
         next_anim = self.animations[self.direction][self.moving]
         if next_anim != last_anim:
             last_anim.stop()
             next_anim.play()
+            self.current_animation = next_anim
+
         self.image = next_anim.getCurrentFrame()
-        self.current_animation = next_anim
 
     def update(self, dt, game):
         self.animate()
