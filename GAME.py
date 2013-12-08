@@ -2,6 +2,7 @@ import glob
 from os import path
 import sys
 
+from keymap import km1, km2
 import pygame
 import tmx
 import pyganim
@@ -123,8 +124,13 @@ class Player(pygame.sprite.Sprite):
                           WALKING: walk_right_anim}
                  }
     
-    def __init__(self, location, *groups):
+    def __init__(self, location, keymap, *groups):
         super().__init__(*groups)
+        
+        self.K_LEFT = keymap.LEFT
+        self.K_RIGHT = keymap.RIGHT
+        self.K_JUMP = keymap.JUMP
+        self.K_SHOOT = keymap.SHOOT
         
         # True if the player is on a surface, else False.
         self.resting = False
@@ -263,9 +269,10 @@ class Game():
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
         
         self.players = []
-        self.players.append(Player((start_cell.px, start_cell.py), self.sprites))
-        # make an alias for player so I don't have to type all the time.
-        player = self.players[0]
+        self.players.append(Player((start_cell.px, start_cell.py), km1, self.sprites))
+        if players == '2':
+            self.players.append(Player((start_cell.px, start_cell.py), km2, self.sprites))
+
         self.tilemap.layers.append(self.sprites)
         
         # sound effects
@@ -292,34 +299,36 @@ class Game():
                     if event.key == pygame.K_ESCAPE:
                         return
                         
-                    elif event.key == pygame.K_LEFT:
-                        player.moving = player.WALKING
-                        player.direction = player.LEFT
-                        
-                    elif event.key == pygame.K_RIGHT:
-                        player.moving = player.WALKING
-                        player.direction = player.RIGHT            
-                        
-                    elif event.key == pygame.K_SPACE:
-                        player.jump = True
-                        
-                    elif event.key == pygame.K_LSHIFT:
-                        player.shoot = True
-                        
-                elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT:
-                        if key[pygame.K_RIGHT]: 
-                            player.moving = player.WALKING
-                            player.direction = player.RIGHT
-                        else:
-                            player.moving = player.STILL
-                        
-                    elif event.key == pygame.K_RIGHT:
-                        if key[pygame.K_LEFT]: 
+                    for player in self.players:
+                        if event.key == pygame.K_LEFT:
                             player.moving = player.WALKING
                             player.direction = player.LEFT
-                        else:
-                            player.moving = player.STILL
+                            
+                        elif event.key == pygame.K_RIGHT:
+                            player.moving = player.WALKING
+                            player.direction = player.RIGHT            
+                            
+                        elif event.key == pygame.K_SPACE:
+                            player.jump = True
+                            
+                        elif event.key == pygame.K_LSHIFT:
+                            player.shoot = True
+                        
+                elif event.type == pygame.KEYUP:
+                    for player in self.players:
+                        if event.key == pygame.K_LEFT:
+                            if key[pygame.K_RIGHT]: 
+                                player.moving = player.WALKING
+                                player.direction = player.RIGHT
+                            else:
+                                player.moving = player.STILL
+                        
+                        elif event.key == pygame.K_RIGHT:
+                            if key[pygame.K_LEFT]: 
+                                player.moving = player.WALKING
+                                player.direction = player.LEFT
+                            else:
+                                player.moving = player.STILL
 
             
             screen.blit(background, (0,0))
