@@ -19,7 +19,7 @@ class Bullet(pygame.sprite.Sprite):
     image = pygame.image.load('images/Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
     image_left = pygame.transform.flip(image_right, True, False)
-    SPEED = 400
+    SPEED = 500
     # lifespan of bullet in seconds
     LIFESPAN = 1
     
@@ -71,15 +71,15 @@ class Enemy(pygame.sprite.Sprite):
                 self.rect.left = cell.right
             self.direction *= -1
             break
-        
-        if self.rect.colliderect(game.player.rect):
-            game.player.health -= dt
-            if game.player.health < 0:
-                game.player.is_dead = True
+        for player in game.players:
+            if self.rect.colliderect(player.rect):
+                player.health -= dt
+                if player.health < 0:
+                    player.is_dead = True
 
 class Player(pygame.sprite.Sprite):
     # Player's left and right speed in pixels per second
-    SPEED = 200
+    SPEED = 300
 
     # Player's jumping speed in pixels per second.
     JUMP_SPEED = -700
@@ -245,13 +245,13 @@ class Player(pygame.sprite.Sprite):
             self.is_dead = True
 
 class Game():
-    GRAVITY = 2400
-    MAX_FALL_SPEED = 700
+    GRAVITY = 2000
+    MAX_FALL_SPEED = 600
     FPS = 60
     LIFEBAR_LENGTH = 250
     LIFEBAR_WIDTH = 10
     
-    def main(self, screen, level):
+    def main(self, screen, level, players):
         clock = pygame.time.Clock()
         
         background = pygame.image.load('images/background.png')
@@ -261,9 +261,11 @@ class Game():
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
-        self.player = Player((start_cell.px, start_cell.py), self.sprites)
+        
+        self.players = []
+        self.players.append(Player((start_cell.px, start_cell.py), self.sprites))
         # make an alias for player so I don't have to type all the time.
-        player = self.player
+        player = self.players[0]
         self.tilemap.layers.append(self.sprites)
         
         # sound effects
@@ -323,12 +325,12 @@ class Game():
             screen.blit(background, (0,0))
             self.tilemap.update(dt, self)
             self.tilemap.draw(screen)
-            
-            self.draw_lifebar(screen, self.player.health, self.player.MAX_HEALTH)
+            for player in self.players:
+                self.draw_lifebar(screen, player.health, player.MAX_HEALTH)
+                if player.is_dead:
+                    return
             pygame.display.flip()
-            if self.player.is_dead:
-                return
-    
+            
     def draw_lifebar(self, screen, health, max_health):
         # outline for lifebar
         pygame.draw.rect(screen, DARK_GREY, (10,10, self.LIFEBAR_LENGTH, 20))
@@ -346,26 +348,26 @@ class Game():
         pygame.draw.rect(screen, color, (12,12, (length), 16))
 
 def level_menu(screen, default_level='maps/map1.tmx'):
-    m = menu.Menu()
+    levels_menu = menu.Menu()
     levels = glob.glob('maps/*.tmx')
     display = [path.splitext(path.basename(l))[0] for l in levels]
-    m.init(display + ['Back'], screen)
+    levels_menu.init(display + ['Back'], screen)
     
     while True:
         screen.fill((51, 51, 51))
-        m.draw()
+        levels_menu.draw()
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    m.draw(-1) #here is the Menu class function
+                    levels_menu.draw(-1) #here is the Menu class function
                 elif event.key == pygame.K_DOWN:
-                    m.draw(1) #here is the Menu class function
-                elif event.key == pygame.K_RETURN:
-                    if m.get_position() == len(levels): #here is the Menu class function
+                    levels_menu.draw(1) #here is the Menu class function
+                elif event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    if levels_menu.get_position() == len(levels): #here is the Menu class function
                         return default_level
                     else:
-                        return levels[m.get_position()]
+                        return levels[levels_menu.get_position()]
                 elif event.key == pygame.K_ESCAPE:
                     return default_level
                 pygame.display.update()
@@ -374,32 +376,100 @@ def level_menu(screen, default_level='maps/map1.tmx'):
                 sys.exit()
         
         pygame.time.wait(8)
+
+def player_menu(screen, players):
+    options_menu = menu.Menu()
+    options_menu.init(['1', '2', 'Back'], screen)    
     
-def main_menu(screen):
-    m = menu.Menu()
-    m.init(['Start', 'Levels', 'Quit'], screen)
-    pygame.key.set_repeat(199, 69) #(delay,interval)
-    level = 'maps/map1.tmx'
     while True:
-        screen.fill((51, 51, 51))
-        m.draw()
+        screen.fill((51,51,51))
+        options_menu.draw()
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    m.draw(-1) #here is the Menu class function
+                    options_menu.draw(-1) #here is the Menu class function
                 elif event.key == pygame.K_DOWN:
-                    m.draw(1) #here is the Menu class function
-                elif event.key == pygame.K_RETURN:
-                    if m.get_position() == 0:
+                    options_menu.draw(1) #here is the Menu class function
+                elif event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    if options_menu.get_position() == 0:
+                        return '1'
+                    elif options_menu.get_position() == 1:
+                        return '2'
+
+                    elif options_menu.get_position() == 2: #here is the Menu class function
+                        return players
+
+                elif event.key == pygame.K_ESCAPE:
+                    return players
+            
+            elif event.type == pygame.QUIT:
+                pygame.display.quit()
+                sys.exit()
+        
+        pygame.time.wait(8)
+
+def options_menu(screen, level, players):
+    """Options for the game """
+    options_menu = menu.Menu()
+    options_menu.init(['Levels', 'Players', 'Back'], screen)    
+    
+    while True:
+        screen.fill((51,51,51))
+        options_menu.draw()
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    options_menu.draw(-1) #here is the Menu class function
+                elif event.key == pygame.K_DOWN:
+                    options_menu.draw(1) #here is the Menu class function
+                elif event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    if options_menu.get_position() == 0:
+                        level = level_menu(screen, level)
+                    elif options_menu.get_position() == 1:
+                        players = player_menu(screen, players)
+
+                    elif options_menu.get_position() == 2: #here is the Menu class function
+                        return level, players
+
+                elif event.key == pygame.K_ESCAPE:
+                    return level, players
+            
+            elif event.type == pygame.QUIT:
+                pygame.display.quit()
+                sys.exit()
+        
+        pygame.time.wait(8)
+        
+def main_menu(screen):
+    main_menu = menu.Menu()
+    main_menu.init(['Start', 'Options', 'Quit'], screen)
+    pygame.key.set_repeat(199, 69) #(delay,interval)
+    
+    # set the defaults
+    level = 'maps/map1.tmx'
+    players = '1'
+    while True:
+        screen.fill((51, 51, 51))
+        main_menu.draw()
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    main_menu.draw(-1) #here is the Menu class function
+                elif event.key == pygame.K_DOWN:
+                    main_menu.draw(1) #here is the Menu class function
+                elif event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    if main_menu.get_position() == 0:
                         pygame.key.set_repeat()
                         game = Game()
-                        game.main(screen, level)
+                        game.main(screen, level, players)
                         
-                    elif m.get_position() == 1:
-                        level = level_menu(screen, level)
+                    elif main_menu.get_position() == 1:
+                        level, players = options_menu(screen, level, players)
 
-                    elif m.get_position() == 2: #here is the Menu class function
+                    elif main_menu.get_position() == 2: #here is the Menu class function
                         pygame.display.quit()
                         return
 
