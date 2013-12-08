@@ -20,9 +20,7 @@ if not pygame.font.get_init():
     pygame.font.init()
 
 
-class Menu:
-    lista = []
-    pola = []
+class Menu(object):
     rozmiar_fontu = 32
     font_path = 'coders_crux.ttf'
     font = pygame.font.Font
@@ -61,6 +59,7 @@ class Menu:
     
     def init(self, lista, dest_surface):
         self.lista = lista
+        self.pola = []
         self.dest_surface = dest_surface
         self.ilosc_pol = len(self.lista)
         self.stworz_strukture()        

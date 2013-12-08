@@ -345,7 +345,6 @@ class Game():
         pygame.draw.rect(screen, color, (12,12, (length), 16))
 
 def level_menu(screen, default_level='map1.tmx'):
-    screen.fill((51, 51, 51))
     m = menu.Menu()
     levels = glob.glob('maps/*.tmx')
     m.init(levels + ['Back'], screen)
@@ -358,14 +357,14 @@ def level_menu(screen, default_level='map1.tmx'):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     m.draw(-1) #here is the Menu class function
-                if event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN:
                     m.draw(1) #here is the Menu class function
-                if event.key == pygame.K_RETURN:
+                elif event.key == pygame.K_RETURN:
                     if m.get_position() == len(levels): #here is the Menu class function
                         return default_level
                     else:
                         return levels[m.get_position()]
-                if event.key == pygame.K_ESCAPE:
+                elif event.key == pygame.K_ESCAPE:
                     return default_level
                 pygame.display.update()
             elif event.type == pygame.QUIT:
@@ -387,9 +386,9 @@ def main_menu(screen):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     m.draw(-1) #here is the Menu class function
-                if event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN:
                     m.draw(1) #here is the Menu class function
-                if event.key == pygame.K_RETURN:
+                elif event.key == pygame.K_RETURN:
                     if m.get_position() == 0:
                         pygame.key.set_repeat()
                         game = Game()
@@ -397,12 +396,15 @@ def main_menu(screen):
                         
                     elif m.get_position() == 1:
                         level = level_menu(screen, level)
+
                     elif m.get_position() == 2: #here is the Menu class function
                         pygame.display.quit()
                         return
-                if event.key == pygame.K_ESCAPE:
+
+                elif event.key == pygame.K_ESCAPE:
                     pygame.display.quit()
                     return
+            
             elif event.type == pygame.QUIT:
                 pygame.display.quit()
                 sys.exit()
