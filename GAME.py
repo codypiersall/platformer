@@ -275,14 +275,10 @@ class Game():
         
         self.players = []
         
-        # the last player added to the list of self.players is basically player 1.
-        if players == '1':
-            self.players.append(Player((start_cell.px, start_cell.py), km1, self.sprites))
-        elif players == '2':
-            
+        self.players.append(Player((start_cell.px, start_cell.py), km1, self.sprites))
+        if players == '2':    
             self.players.append(Player((start_cell.px, start_cell.py), km2, self.sprites))
-            self.players.append(Player((start_cell.px, start_cell.py), km1, self.sprites))
-
+ 
         self.tilemap.layers.append(self.sprites)
         
         # sound effects

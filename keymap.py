@@ -9,4 +9,4 @@ class KeyMap(object):
         self.SHOOT = shoot
         
 km1 = KeyMap(pygame.K_LEFT, pygame.K_RIGHT, pygame.K_SPACE, pygame.K_LSHIFT)
-km2 = KeyMap(pygame.K_a, pygame.K_d, pygame.K_TAB, pygame.K_BACKQUOTE)
+km2 = KeyMap(pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_TAB)
