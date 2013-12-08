@@ -300,31 +300,31 @@ class Game():
                         return
                         
                     for player in self.players:
-                        if event.key == pygame.K_LEFT:
+                        if event.key == player.K_LEFT:
                             player.moving = player.WALKING
                             player.direction = player.LEFT
                             
-                        elif event.key == pygame.K_RIGHT:
+                        elif event.key == player.K_RIGHT:
                             player.moving = player.WALKING
-                            player.direction = player.RIGHT            
+                            player.direction = player.RIGHT
                             
-                        elif event.key == pygame.K_SPACE:
+                        elif event.key == player.K_JUMP:
                             player.jump = True
                             
-                        elif event.key == pygame.K_LSHIFT:
+                        elif event.key == player.K_SHOOT:
                             player.shoot = True
                         
                 elif event.type == pygame.KEYUP:
                     for player in self.players:
-                        if event.key == pygame.K_LEFT:
-                            if key[pygame.K_RIGHT]: 
+                        if event.key == player.K_LEFT:
+                            if key[player.K_RIGHT]: 
                                 player.moving = player.WALKING
                                 player.direction = player.RIGHT
                             else:
                                 player.moving = player.STILL
                         
-                        elif event.key == pygame.K_RIGHT:
-                            if key[pygame.K_LEFT]: 
+                        elif event.key == player.K_RIGHT:
+                            if key[player.K_LEFT]: 
                                 player.moving = player.WALKING
                                 player.direction = player.LEFT
                             else:
