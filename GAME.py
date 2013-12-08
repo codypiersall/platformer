@@ -14,7 +14,7 @@ SCREEN_SIZE = (640, 480)
 PLAYERS = '2'
 
 # Default map
-DEFAULT_MAP = 'maps/map1.tmx'
+DEFAULT_MAP = 'maps/bad dreams.tmx'
 # colors
 GREEN = pygame.Color(0, 200, 0)
 YELLOW = pygame.Color(150, 150, 0)
@@ -104,31 +104,6 @@ class Player(pygame.sprite.Sprite):
     STILL = 0
     WALKING = 1
     
-    walk_left_anim = pyganim.PygAnimation([('images/frog-walk-01.gif', .1),
-                                           ('images/frog-walk-02.gif', .1),
-                                           ('images/frog-walk-03.gif', .1),
-                                           ('images/frog-walk-04.gif', .1),
-                                           ('images/frog-walk-05.gif', .1),
-                                           ('images/frog-walk-00.gif', .1)
-                                          ])
-    
-    
-    walk_right_anim = walk_left_anim.getCopy()
-    walk_right_anim.flip(True, False)
-    walk_right_anim.makeTransformsPermanent()
-
-    face_left = pyganim.PygAnimation([('images/frog-walk-00.gif', 10)])
-
-    face_right = face_left.getCopy()
-    face_right.flip(True, False)
-    face_right.makeTransformsPermanent()
-    
-    animations = {LEFT:  {STILL: face_left,
-                          WALKING: walk_left_anim},
-                  RIGHT: {STILL: face_right,
-                          WALKING: walk_right_anim}
-                 }
-    
     def __init__(self, location, keymap, *groups):
         super().__init__(*groups)
         
@@ -159,14 +134,6 @@ class Player(pygame.sprite.Sprite):
         self.direction = self.RIGHT
         self.moving = self.STILL
         
-        # the current animation that is playing
-        self.current_animation = self.face_right
-        
-        # TODO: Find out what is actually displaying the image.
-        # I think the image gets blitted by the tmx module?
-        self.image = self.face_right.getCurrentFrame()
-        self.rect = pygame.rect.Rect(location, self.image.get_size())
-        
         # Whether the character should try to jump.  This gets set to True
         # when the player hits the jump button (default space) but does not 
         # necessarily mean the player can actually jump.
@@ -178,6 +145,38 @@ class Player(pygame.sprite.Sprite):
         # Vertical velocity.  This gets changed by either falling or jumping.
         self.dy = 0
         
+        self.walk_left_anim = pyganim.PygAnimation([('images/frog-walk-01.gif', .1),
+                                           ('images/frog-walk-02.gif', .1),
+                                           ('images/frog-walk-03.gif', .1),
+                                           ('images/frog-walk-04.gif', .1),
+                                           ('images/frog-walk-05.gif', .1),
+                                           ('images/frog-walk-00.gif', .1)
+                                          ])
+    
+    
+        self.walk_right_anim = self.walk_left_anim.getCopy()
+        self.walk_right_anim.flip(True, False)
+        self.walk_right_anim.makeTransformsPermanent()
+
+        self.face_left = pyganim.PygAnimation([('images/frog-walk-00.gif', 10)])
+
+        self.face_right = self.face_left.getCopy()
+        self.face_right.flip(True, False)
+        self.face_right.makeTransformsPermanent()
+
+        self.animations = {self.LEFT:  {self.STILL: self.face_left,
+                                        self.WALKING: self.walk_left_anim},
+                           self.RIGHT: {self.STILL: self.face_right,
+                                        self.WALKING: self.walk_right_anim}
+                           }
+        
+        # the current animation that is playing
+        self.current_animation = self.face_right
+        
+        # TODO: Find out what is actually displaying the image.
+        # I think the image gets blitted by the tmx module?
+        self.image = self.face_right.getCurrentFrame()
+        self.rect = pygame.rect.Rect(location, self.image.get_size())
 
     def animate(self):
         """Animate the player based on direction and movement.
