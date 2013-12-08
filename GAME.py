@@ -1,4 +1,5 @@
 import glob
+from os import path
 import sys
 
 import pygame
@@ -344,10 +345,11 @@ class Game():
         length = (self.LIFEBAR_LENGTH - 3) * health/max_health 
         pygame.draw.rect(screen, color, (12,12, (length), 16))
 
-def level_menu(screen, default_level='map1.tmx'):
+def level_menu(screen, default_level='maps/map1.tmx'):
     m = menu.Menu()
     levels = glob.glob('maps/*.tmx')
-    m.init(levels + ['Back'], screen)
+    display = [path.splitext(path.basename(l))[0] for l in levels]
+    m.init(display + ['Back'], screen)
     
     while True:
         screen.fill((51, 51, 51))
