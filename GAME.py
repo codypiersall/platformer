@@ -1,6 +1,7 @@
 import pygame
 import tmx
 import pyganim
+import menu
 
 SCREEN_SIZE = (640, 480)
 
@@ -341,7 +342,37 @@ class Game():
         pygame.draw.rect(screen, color, (12,12, (length), 16))
         
 if __name__ == '__main__':
+    import sys
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    game = Game()
-    game.main(screen)
+    screen.fill((51,51,51))
+    m = menu.Menu()
+    m.init(['Start','Options','Quit'], screen)
+    m.draw()
+    pygame.key.set_repeat(199,69)#(delay,interval)
+    pygame.display.update()
+    while 1:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    m.draw(-1) #here is the Menu class function
+                if event.key == pygame.K_DOWN:
+                    m.draw(1) #here is the Menu class function
+                if event.key == pygame.K_RETURN:
+                    if m.get_position() == 2:#here is the Menu class function
+                        pygame.display.quit()
+                        sys.exit()
+                    elif m.get_position() == 0:
+                        game = Game()
+                        game.main(screen)
+                        screen.fill((51,51,51))
+                        m.draw()
+                if event.key == pygame.K_ESCAPE:
+                    pygame.display.quit()
+                    sys.exit()
+                pygame.display.update()
+            elif event.type == pygame.QUIT:
+                pygame.display.quit()
+                sys.exit()
+        pygame.time.wait(8)
+    
