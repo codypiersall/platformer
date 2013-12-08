@@ -114,7 +114,7 @@ class Menu:
 
 if __name__ == "__main__":
     import sys
-    surface = pygame.display.set_mode((854,480)) #0,6671875 and 0,(6) of HD resoultion
+    surface = pygame.display.set_mode((854,480)) #0,6671875 and 0,(6) of HD resoulution
     surface.fill((51,51,51))
     '''First you have to make an object of a *Menu class.
     *init take 2 arguments. List of fields and destination surface.
@@ -122,14 +122,14 @@ if __name__ == "__main__":
     *set_colors will set colors of menu (text, selection, background)
     *set_fontsize will set size of font.
     *set_font take a path to font you choose.
-    *move_menu is quite interseting. It is only option which you can use before 
+    *move_menu is quite interesting. It is only option which you can use before 
     and after *init statement. When you use it before you will move menu from 
     center of your surface. When you use it after it will set constant coordinates. 
     Uncomment every one and check what is result!
-    *draw will blit menu on the surface. Be carefull better set only -1 and 1 
+    *draw will blit menu on the surface. Be careful better set only -1 and 1 
     arguments to move selection or nothing. This function will return actual 
     position of selection.
-    *get_postion will return actual position of seletion. '''
+    *get_postion will return actual position of selection. '''
     menu = Menu()#necessary
     #menu.set_colors((255,255,255), (0,0,255), (0,0,0))#optional
     #menu.set_fontsize(64)#optional

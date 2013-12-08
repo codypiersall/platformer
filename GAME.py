@@ -1,3 +1,6 @@
+import glob
+import sys
+
 import pygame
 import tmx
 import pyganim
@@ -247,13 +250,13 @@ class Game():
     LIFEBAR_LENGTH = 250
     LIFEBAR_WIDTH = 10
     
-    def main(self, screen):
+    def main(self, screen, level):
         clock = pygame.time.Clock()
         
         background = pygame.image.load('images/background.png')
         background = pygame.transform.scale(background, SCREEN_SIZE)
         
-        self.tilemap = tmx.load('maps/map1.tmx', screen.get_size())
+        self.tilemap = tmx.load(level, screen.get_size())
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
@@ -340,18 +343,17 @@ class Game():
         
         length = (self.LIFEBAR_LENGTH - 3) * health/max_health 
         pygame.draw.rect(screen, color, (12,12, (length), 16))
-        
-if __name__ == '__main__':
-    import sys
-    pygame.init()
-    screen = pygame.display.set_mode(SCREEN_SIZE)
-    screen.fill((51,51,51))
+
+def level_menu(screen, default_level='map1.tmx'):
+    screen.fill((51, 51, 51))
     m = menu.Menu()
-    m.init(['Start','Options','Quit'], screen)
-    m.draw()
-    pygame.key.set_repeat(199,69)#(delay,interval)
-    pygame.display.update()
-    while 1:
+    levels = glob.glob('maps/*.tmx')
+    m.init(levels + ['Back'], screen)
+    
+    while True:
+        screen.fill((51, 51, 51))
+        m.draw()
+        pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -359,20 +361,56 @@ if __name__ == '__main__':
                 if event.key == pygame.K_DOWN:
                     m.draw(1) #here is the Menu class function
                 if event.key == pygame.K_RETURN:
-                    if m.get_position() == 2:#here is the Menu class function
-                        pygame.display.quit()
-                        sys.exit()
-                    elif m.get_position() == 0:
-                        game = Game()
-                        game.main(screen)
-                        screen.fill((51,51,51))
-                        m.draw()
+                    if m.get_position() == len(levels): #here is the Menu class function
+                        return default_level
+                    else:
+                        return levels[m.get_position()]
                 if event.key == pygame.K_ESCAPE:
-                    pygame.display.quit()
-                    sys.exit()
+                    return default_level
                 pygame.display.update()
             elif event.type == pygame.QUIT:
                 pygame.display.quit()
                 sys.exit()
+        
         pygame.time.wait(8)
+    
+def main_menu(screen):
+    m = menu.Menu()
+    m.init(['Start', 'Levels', 'Quit'], screen)
+    pygame.key.set_repeat(199, 69) #(delay,interval)
+    level = 'maps/map1.tmx'
+    while True:
+        screen.fill((51, 51, 51))
+        m.draw()
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    m.draw(-1) #here is the Menu class function
+                if event.key == pygame.K_DOWN:
+                    m.draw(1) #here is the Menu class function
+                if event.key == pygame.K_RETURN:
+                    if m.get_position() == 0:
+                        pygame.key.set_repeat()
+                        game = Game()
+                        game.main(screen, level)
+                        
+                    elif m.get_position() == 1:
+                        level = level_menu(screen, level)
+                    elif m.get_position() == 2: #here is the Menu class function
+                        pygame.display.quit()
+                        return
+                if event.key == pygame.K_ESCAPE:
+                    pygame.display.quit()
+                    return
+            elif event.type == pygame.QUIT:
+                pygame.display.quit()
+                sys.exit()
+        
+        pygame.time.wait(8)
+        
+if __name__ == '__main__':
+    pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE)
+    main_menu(screen)
     
