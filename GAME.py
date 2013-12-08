@@ -10,6 +10,11 @@ import menu
 
 SCREEN_SIZE = (640, 480)
 
+# Number of players by default.
+PLAYERS = '2'
+
+# Default map
+DEFAULT_MAP = 'maps/map1.tmx'
 # colors
 GREEN = pygame.Color(0, 200, 0)
 YELLOW = pygame.Color(150, 150, 0)
@@ -269,9 +274,14 @@ class Game():
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
         
         self.players = []
-        self.players.append(Player((start_cell.px, start_cell.py), km1, self.sprites))
-        if players == '2':
+        
+        # the last player added to the list of self.players is basically player 1.
+        if players == '1':
+            self.players.append(Player((start_cell.px, start_cell.py), km1, self.sprites))
+        elif players == '2':
+            
             self.players.append(Player((start_cell.px, start_cell.py), km2, self.sprites))
+            self.players.append(Player((start_cell.px, start_cell.py), km1, self.sprites))
 
         self.tilemap.layers.append(self.sprites)
         
@@ -334,15 +344,15 @@ class Game():
             screen.blit(background, (0,0))
             self.tilemap.update(dt, self)
             self.tilemap.draw(screen)
-            for player in self.players:
-                self.draw_lifebar(screen, player.health, player.MAX_HEALTH)
+            for offset, player in enumerate(self.players):
+                self.draw_lifebar(screen, player.health, player.MAX_HEALTH, offset)
                 if player.is_dead:
                     return
             pygame.display.flip()
             
-    def draw_lifebar(self, screen, health, max_health):
+    def draw_lifebar(self, screen, health, max_health, offset):
         # outline for lifebar
-        pygame.draw.rect(screen, DARK_GREY, (10,10, self.LIFEBAR_LENGTH, 20))
+        pygame.draw.rect(screen, DARK_GREY, (10,10 + offset*25, self.LIFEBAR_LENGTH, 20))
         
         ratio = health / max_health
         if ratio < 0.15:
@@ -354,7 +364,7 @@ class Game():
         
         
         length = (self.LIFEBAR_LENGTH - 3) * health/max_health 
-        pygame.draw.rect(screen, color, (12,12, (length), 16))
+        pygame.draw.rect(screen, color, (12,12 + offset*25, (length), 16))
 
 def level_menu(screen, default_level='maps/map1.tmx'):
     levels_menu = menu.Menu()
@@ -457,8 +467,8 @@ def main_menu(screen):
     pygame.key.set_repeat(199, 69) #(delay,interval)
     
     # set the defaults
-    level = 'maps/map1.tmx'
-    players = '1'
+    level = DEFAULT_MAP
+    players = PLAYERS
     while True:
         screen.fill((51, 51, 51))
         main_menu.draw()
