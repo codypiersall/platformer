@@ -11,10 +11,10 @@ import menu
 SCREEN_SIZE = (640, 480)
 
 # Number of players by default.
-PLAYERS = '2'
+PLAYERS = '1'
 
 # Default map
-DEFAULT_MAP = 'maps/bad dreams.tmx'
+DEFAULT_MAP = 'maps/map1.tmx'
 # colors
 GREEN = pygame.Color(0, 200, 0)
 YELLOW = pygame.Color(150, 150, 0)
@@ -104,6 +104,22 @@ class Player(pygame.sprite.Sprite):
     STILL = 0
     WALKING = 1
     
+
+    def init_animations(self):
+        self.walk_left_anim = pyganim.PygAnimation([('images/frog-walk-01.gif', .1), 
+                ('images/frog-walk-02.gif', .1), 
+                ('images/frog-walk-03.gif', .1), 
+                ('images/frog-walk-04.gif', .1), 
+                ('images/frog-walk-05.gif', .1), 
+                ('images/frog-walk-00.gif', .1)])
+        self.walk_right_anim = self.walk_left_anim.getCopy()
+        self.walk_right_anim.flip(True, False)
+        self.walk_right_anim.makeTransformsPermanent()
+        self.face_left = pyganim.PygAnimation([('images/frog-walk-00.gif', 10)])
+        self.face_right = self.face_left.getCopy()
+        self.face_right.flip(True, False)
+        self.face_right.makeTransformsPermanent()
+
     def __init__(self, location, keymap, *groups):
         super().__init__(*groups)
         
@@ -145,25 +161,9 @@ class Player(pygame.sprite.Sprite):
         # Vertical velocity.  This gets changed by either falling or jumping.
         self.dy = 0
         
-        self.walk_left_anim = pyganim.PygAnimation([('images/frog-walk-01.gif', .1),
-                                           ('images/frog-walk-02.gif', .1),
-                                           ('images/frog-walk-03.gif', .1),
-                                           ('images/frog-walk-04.gif', .1),
-                                           ('images/frog-walk-05.gif', .1),
-                                           ('images/frog-walk-00.gif', .1)
-                                          ])
-    
-    
-        self.walk_right_anim = self.walk_left_anim.getCopy()
-        self.walk_right_anim.flip(True, False)
-        self.walk_right_anim.makeTransformsPermanent()
-
-        self.face_left = pyganim.PygAnimation([('images/frog-walk-00.gif', 10)])
-
-        self.face_right = self.face_left.getCopy()
-        self.face_right.flip(True, False)
-        self.face_right.makeTransformsPermanent()
-
+        self.init_animations()
+        
+        # assign all the animations that belong to the player.
         self.animations = {self.LEFT:  {self.STILL: self.face_left,
                                         self.WALKING: self.walk_left_anim},
                            self.RIGHT: {self.STILL: self.face_right,
@@ -194,6 +194,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def try_to_jump(self, game):
+        """Tries to jump."""
         if self.jump:
             if self.resting:
                 self.dy = self.JUMP_SPEED
@@ -207,6 +208,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def try_to_shoot(self, game):
+        """Tries to shoot."""
         if self.shoot:
             if not self.gun_cooldown:
                 game.shoot.play()
@@ -218,23 +220,16 @@ class Player(pygame.sprite.Sprite):
         self.try_to_jump(game)
         self.try_to_shoot(game)
 
-    def update(self, dt, game):
-        
-        # finds the right animation and displays it.
-        self.animate()
-        
-        # jump, shoot, whatever.
-        self.do_actions(game)
-        
-        last_position = self.rect.copy()            
-        self.rect.x += int(self.direction * self.SPEED * self.moving * dt)        
+
+    def move(self, dt, game):
+        last_position = self.rect.copy()
+        self.rect.x += int(self.direction * self.SPEED * self.moving * dt)
         self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
-        
         self.rect.y += self.dy * dt
         new = self.rect
         self.resting = False
-        # last_position position
+    # last_position position
         for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
             blockers = cell['blockers']
             if 'l' in blockers and last_position.right <= cell.left and new.right > cell.left:
@@ -249,6 +244,18 @@ class Player(pygame.sprite.Sprite):
             if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom:
                 new.top = cell.bottom
                 self.dy = 0
+        
+        return new
+
+    def update(self, dt, game):
+        
+        # finds the right animation and displays it.
+        self.animate()
+        
+        # jump, shoot, whatever.
+        self.do_actions(game)
+        
+        new = self.move(dt, game)
         
         game.tilemap.set_focus(new.x, new.y)
         if new.x < -10 or new.y > game.tilemap.px_height:
