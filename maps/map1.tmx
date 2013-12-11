@@ -134,5 +134,10 @@
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
+  <object name="blockers" x="576" y="320" width="32" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
