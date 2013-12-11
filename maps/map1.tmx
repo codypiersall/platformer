@@ -129,7 +129,7 @@
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
-  <object name="blockers" x="192" y="336" width="64" height="32">
+  <object name="blockers" x="192" y="352" width="64" height="32">
    <properties>
     <property name="blockers" value="tlbr"/>
    </properties>
