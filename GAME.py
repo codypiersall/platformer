@@ -233,9 +233,11 @@ class Player(pygame.sprite.Sprite):
         for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
             blockers = cell['blockers']
             if 'l' in blockers and last_position.right <= cell.left and new.right > cell.left:
+                # this check is important because it lets you walk along blocks.
                 if not last_position.bottom == cell.top:
                     new.right = cell.left
             if 'r' in blockers and last_position.left >= cell.right and new.left < cell.right:
+                # this check is important because it lets you walk along blocks.
                 if not last_position.bottom == cell.top:
                     new.left = cell.right
             if 't' in blockers and last_position.bottom <= cell.top and new.bottom > cell.top:
