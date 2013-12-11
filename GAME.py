@@ -233,17 +233,23 @@ class Player(pygame.sprite.Sprite):
         for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
             blockers = cell['blockers']
             if 'l' in blockers and last_position.right <= cell.left and new.right > cell.left:
-                new.right = cell.left
+                if not last_position.bottom == cell.top:
+                    new.right = cell.left
             if 'r' in blockers and last_position.left >= cell.right and new.left < cell.right:
-                new.left = cell.right
-            if 't' in blockers and last_position.bottom <= cell.top and new.bottom > cell.top and new.right > cell.left and new.left < cell.right:
-                self.resting = True
-                self.double_jumped = False
-                new.bottom = cell.top
-                self.dy = game.GRAVITY * dt
-            if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom and new.right > cell.left and new.left < cell.right:
-                new.top = cell.bottom
-                self.dy = 0
+                if not last_position.bottom == cell.top:
+                    new.left = cell.right
+            if 't' in blockers and last_position.bottom <= cell.top and new.bottom > cell.top:
+                # this check makes sure you can't cling to blocks that you shouldn't be able to.
+                if new.right > cell.left and new.left < cell.right:
+                    self.resting = True
+                    self.double_jumped = False
+                    new.bottom = cell.top
+                    self.dy = game.GRAVITY * dt
+            if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom: 
+                # this check makes sure you can't cling to blocks that you shouldn't be able to.
+                if new.right > cell.left and new.left < cell.right:
+                    new.top = cell.bottom
+                    self.dy = 0
         
         return new
 
