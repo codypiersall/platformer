@@ -222,21 +222,21 @@ class Player(pygame.sprite.Sprite):
 
 
     def move(self, dt, game):
+        """Movement and collision stuff"""
         last_position = self.rect.copy()
         self.rect.x += int(self.direction * self.SPEED * self.moving * dt)
-        self.gun_cooldown = max(0, self.gun_cooldown - dt)
         self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
         self.rect.y += self.dy * dt
         new = self.rect
         self.resting = False
-    # last_position position
+    
         for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
             blockers = cell['blockers']
             if 'l' in blockers and last_position.right <= cell.left and new.right > cell.left:
                 new.right = cell.left
             if 'r' in blockers and last_position.left >= cell.right and new.left < cell.right:
                 new.left = cell.right
-            if 't' in blockers and last_position.bottom <= cell.top and new.bottom > cell.top:
+            if 't' in blockers and last_position.bottom <= cell.top and new.bottom > cell.top and new.right > cell.left and new.left < cell.right:
                 self.resting = True
                 self.double_jumped = False
                 new.bottom = cell.top
@@ -255,6 +255,7 @@ class Player(pygame.sprite.Sprite):
         # jump, shoot, whatever.
         self.do_actions(game)
         
+        self.gun_cooldown = max(0, self.gun_cooldown - dt)
         new = self.move(dt, game)
         
         game.tilemap.set_focus(new.x, new.y)
