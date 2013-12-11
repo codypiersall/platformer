@@ -241,7 +241,7 @@ class Player(pygame.sprite.Sprite):
                 self.double_jumped = False
                 new.bottom = cell.top
                 self.dy = game.GRAVITY * dt
-            if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom:
+            if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom and new.right > cell.left and new.left < cell.right:
                 new.top = cell.bottom
                 self.dy = 0
         
