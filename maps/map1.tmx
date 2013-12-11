@@ -44,22 +44,22 @@
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
-  <object name="blockers" x="832" y="416" width="128" height="32">
+  <object name="blockers" x="896" y="352" width="32" height="96">
    <properties>
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
-  <object name="blockers" x="864" y="384" width="96" height="32">
+  <object name="blockers" x="864" y="384" width="32" height="64">
    <properties>
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
-  <object name="blockers" x="896" y="352" width="64" height="32">
+  <object name="blockers" x="832" y="416" width="32" height="32">
    <properties>
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
-  <object name="blockers" x="928" y="320" width="32" height="32">
+  <object name="blockers" x="928" y="320" width="32" height="128">
    <properties>
     <property name="blockers" value="tlbr"/>
    </properties>
