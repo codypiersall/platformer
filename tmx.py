@@ -725,7 +725,6 @@ class TileMap(object):
             for prop in tag.findall('property'):
                 tilemap.properties[prop.attrib['name']] = prop.attrib['value']
         
-        print(tilemap.properties)        
         for tag in level.findall('tileset'):
             tilemap.tilesets.add(Tileset.fromxml(tag, filename))
 
