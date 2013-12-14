@@ -15,6 +15,13 @@ PLAYERS = '1'
 
 # Default map
 DEFAULT_MAP = 'maps/map1.tmx'
+
+# Path to backgrounds directory
+BACKGROUNDS = path.join('images', 'backgrounds')
+
+#
+DEFAULT_BACKGROUND = 'black.bmp'
+
 # colors
 GREEN = pygame.Color(0, 200, 0)
 YELLOW = pygame.Color(150, 150, 0)
@@ -280,10 +287,16 @@ class Game():
     def main(self, screen, level, players):
         clock = pygame.time.Clock()
         
-        background = pygame.image.load('images/backgrounds/background.png')
-        background = pygame.transform.scale(background, SCREEN_SIZE)
         
         self.tilemap = tmx.load(level, screen.get_size())
+        try:
+            background_file = self.tilemap.properties['background']
+            
+        except KeyError:
+            background_file = DEFAULT_BACKGROUND
+        
+        background = pygame.image.load(path.join(BACKGROUNDS, background_file))
+        background = pygame.transform.scale(background, SCREEN_SIZE)
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
