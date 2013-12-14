@@ -1,9 +1,14 @@
+# builtins
+
 import glob
 from os import path
 import sys
 
-from keymap import km1, km2
+# Third-party
 import pygame
+
+# First-party
+from keymap import km1, km2
 import tmx
 import pyganim
 import menu
@@ -380,13 +385,30 @@ class Game():
             # this is how you beat the level.
             try:
                 if self.tilemap.properties['type'] == 'exit':
-                    for c in self.tilemap.layers['triggers'].collide(self.players[0].rect, 'exit'):
-                        self.level_beaten = True
+                    for player in self.players:
+                        if self.tilemap.layers['triggers'].collide(player.rect, 'exit'):
+                            self.level_beaten = True
                         
             except KeyError:
                 pass
             # level finished.  better do something better.
-            if self.level_beaten: return
+            if self.level_beaten: 
+                self.beat_level(screen, clock)
+                return
+            
+    def beat_level(self, screen, clock):
+        font = pygame.font.Font(None, 150)
+        label = font.render('You win!!!', 1, (255,0,0))
+        
+        time_passed = 0
+        dt = clock.tick() / 1000
+ 
+        while time_passed < 0.5:
+            dt = clock.tick() / 1000                
+            screen.blit(label, (100,100))
+            time_passed += dt
+            
+            pygame.display.flip()
             
     def draw_lifebar(self, screen, health, max_health, offset):
         # outline for lifebar
