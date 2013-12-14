@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="150" height="40" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="cave" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/pubdlcnt.php.png" width="320" height="224"/>
+ </tileset>
+ <tileset firstgid="71" name="open rpg.php" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/open rpg.php.png" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="971" name="open rpg2" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/open rpg2.png" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="1871" name="open rpg3" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/open rpg3.png" width="960" height="960"/>
+ </tileset>
+ <layer name="tile layer" width="150" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztmEFOwzAQRZ0FB2iheyg7SEShYssBQHAWzsFBgPsA98FRY2n4HadNpKI0eU/6Sj11XFd5st2GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACwm2XMpbn2SSVtb6yqyVLaqZbqDz0Dw8J6pVFHqrDtROXU1aU6ZfjrVSnv4dW4SA6Vkjbf2uKtRdYjzyvrL16Ng+SQOmFr3t6mHqqLpTOO55X6hlfjIDmga86uc5G3nqlzuhbh1XTw1h17XsrtX7Zt1yp7n/bFq+ngncHVmS6e2fO9vRevpkUXh3Je2fetPzqed97Cq3Fifw/quWkfr7yzfRm2vWpb17p6dW6CV8PE/seQ86puPxchvBR5r3L75yzeM485jTlred3Fq6sm1wGvhsrjySZPB0w9vvql7TSPXOpxkkPr5nof8GqorOT5Lswz1+t7fLYfMZ8nm/42M8m8GWthxk1+1P3t56pjaQ6rpoZXx8dr8f/5ip/73eRH5qBuW9cuAl4dC2/FNAOHZd9zde5cpHtlrl9uDepbU0/2vdfO15uz930O/V3q2k2x2fdvY+5i1uZqa14/re1q9xmzrebVfwHrnbVm
+  </data>
+ </layer>
+ <objectgroup name="triggers" width="150" height="40">
+  <object name="blockers" x="0" y="1184" width="4800" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="reverse" x="0" y="1088" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="player" x="0" y="1024" width="32" height="32">
+   <properties>
+    <property name="player" value=""/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Tile Layer 2" width="150" height="40" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt1j1OwgAchvF/wQRN1FkF3ZAjqDjq4A3EU9DEzzO4KKjH0It4BhXddFB3BX0baEyaUqjQUs3zS55AqG2BvDGYAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOk5c8zO1Z26Vw+q5Uz6XeGvu9aGbtSH+lRt1UlhV6282aN6yid/L6TvVhtayJktqiVVVKVcsvdsa0sd9eVtairZe2EynrWrF7WmLa2rDVVNeFdFbamkltUKu/qXCtrQtLrqtatqCe/KU9WeNtlUZtT1v8Ud4++fsja0qvbVgTpURxG78vc3qpo2tReyK+/zBXN71Qc8uiHnhl0r6vzg63GuMej64zonznfwm/czyuv+8y1tZFs1VFNdqEt1qmMzTvdxmHYijsW5zqu29abebfhzKHsdW7em/Tz3qzj9jwUrO/2PVQLHwq53ogr6u1k1p+ZVY8h7U/b6BsKc4kw=
+  </data>
+ </layer>
+</map>

@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="25" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/PencilMan.png" width="512" height="256"/>
+ </tileset>
+ <tileset firstgid="129" name="cave" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/pubdlcnt.php.png" width="320" height="224"/>
+ </tileset>
+ <tileset firstgid="199" name="open rpg" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/open rpg.php.png" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="1099" name="open rpg2" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/open rpg2.png" width="960" height="960"/>
+ </tileset>
+ <tileset firstgid="1999" name="open rpg3" tilewidth="32" tileheight="32">
+  <image source="../images/tilesets/open rpg3.png" width="960" height="960"/>
+ </tileset>
+ <layer name="set" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztl71PFEEUwGf3bkW4GEgsNEJrZSBGQeAK/gEBS64Q0Gg8tLCxRNBDQRu/Gjub46QCbU20wNPEP0BpTNSVCj+aQ2Ow8PRN9r3c28fs3p4QWMi95Je5nZnbuXu/nZkdpepRj3rUox712L7oBwaAQeDUNv+WoMgmlRpD4holy2PV2th94uSD593EzA7xEUSUqNXHZj0HMrIi7yYKMfbRbHu0hBAlavXBx5Whc8qJur5IF4UAijH20W57dIQQJWr1wceloPxPC6SfMPi6VAzARR/HE0p1VqErUVs+NxonbY/+EGZVOAtqvQ9TH00er/m4eayn/M8KpJ8wZtj8GMPcS8roo8NR6mcynKPOFonAuGh7XApBr/GUU55bzmlgGBgBRg395pXfBx93nuox/y8F0k8YBfRQQCdlA22YY+3jSsLLe1C51T5u2R63Q2ixK3s77cH0TEukB6qTPvi4s1hP+f8kkH44a5b/uogeiuhE516SZj7iNj8e2x5zAsr7nNjvycs85rjErinXeZF/7ok+83GpnvL/RyD9cLQPfu2iBxed6LmSdvxkYuzjle3xWkAO6LN8BysZ5gvtFeSK1jeTDz4u1VP+Wx0/0g9H++DXZfRQRid6rmQcPxRxXK8OQD4OMn7D/1tm7z7L6ILOC+SFXJh80H4h16i3DUq9C2CpoZL/KbjfWeB8ALrtnOX1XbP87vR65OI6VU6GnzXiOD+6ILfdQCeWJ4CvwDfgO5BrhPwYuNHoPzNKH3zPoPpqPnodjyHgmuWVQ06lntBt+jf2og/elkYPaXQTdtaIq49OhvRxr0mp+wYeNPnXL+5hX0qpI8AAMJiqtFXzQfnXXLcq5wVeT236Nw6hD96WQQ8ZdONW8RG39crk4w0jzAffYzhnoG0YGAFGmypzJYqPDD7fOuems4ObrPhwcf/g5wq+Z9O9giLu88O0XlWbH8sGyMcw+iBPUX204RwwnR3KzEcZffBzBXng9woK7kO/65nKrfahPTSnPBfH0Ifeo+ndJ8wH7R2HoF8rexeWPqg+qo80+rgAZIExy39+IB9tuF7pchzKq8AEMGn57xUU3MdmrleP7P/3oR20p7ySfOh16DM+6wuQzycGnrL9o0fvrUAaryehbRyZYP1KkPPVAH4wH5oc5PQmMA3MWP7zQw59pNHHFHv30u9d74HnBmT0w/cHqjAY4ONyyDq4kcjCc9AH/22Rwa91u6zrY/WL4vNfy99PX/M63r9orx+beBFQHwUXKOhnC3LWDfQAzxI7g7vW7uQOsB88LMF//KX97/XIx5wVmI9fHH+54qyvl322u6zW5/Aes4+489DavXAfH+C/ftwB/AP3MlcZ
+  </data>
+ </layer>
+ <objectgroup name="triggers" width="100" height="25" visible="0">
+  <object name="blockers" x="0" y="672" width="1728" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="reverse" x="512" y="608" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="player" x="32" y="64" width="32" height="32">
+   <properties>
+    <property name="player" value=""/>
+   </properties>
+  </object>
+  <object name="blockers" x="-32" y="448" width="192" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="256" y="512" width="224" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="864" y="448" width="256" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="672" y="512" width="128" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="544" y="640" width="64" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="1184" y="448" width="320" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="1248" y="608" width="96" height="64">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="blockers" x="1600" y="608" width="96" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="1568" y="640" width="128" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="1728" y="672" width="160" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="reverse" x="608" y="608" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="544" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="640" width="32" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="blockers" x="1888" y="672" width="1312" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="608" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="640" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="576" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="544" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="512" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="480" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="448" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="416" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="384" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="352" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="320" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2304" y="288" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2016" y="256" width="320" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2432" y="480" width="128" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2592" y="512" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2656" y="544" width="32" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="blockers" x="2432" y="448" width="320" height="32">
+   <properties>
+    <property name="blockers" value="t"/>
+   </properties>
+  </object>
+  <object name="enemy" x="288" y="448" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="352" y="448" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="416" y="448" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="224" y="448" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="480" y="448" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="928" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="992" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1056" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1216" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="832" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="32" y="608" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="480" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="416" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="352" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="1248" y="640" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="1152" y="384" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="1152" y="384" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1248" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1312" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1344" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1440" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1408" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="1504" y="384" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="1536" y="576" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1632" y="576" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="1664" y="544" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="1696" y="576" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="1984" y="192" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="2336" y="192" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2048" y="192" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2112" y="192" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2176" y="192" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2240" y="192" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="2400" y="384" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2464" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="2016" y="608" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2560" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2656" y="384" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="2688" y="480" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="2624" y="480" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2656" y="480" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="3008" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="2752" y="384" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="3168" y="608" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="3072" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="3136" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2944" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2816" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2752" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2688" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2624" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2560" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2496" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2368" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2272" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="enemy" x="2208" y="608" width="32" height="32">
+   <properties>
+    <property name="enemy" value=""/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="set 2" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJztlbFOwzAQhq9NTCGdGXiBDrDxCLRIsDJ17ghsSGygjoBEQWImEgzsMDOABA/RwMQzIJUycafYkps0iWniUJT7pF9/asVx4r++A2AYhmEYhmEYhmGYatDyzNR1ADZr4TVjD9rfjoEOZR4dzsMqlEdPasdJd8qjx3lYhfLoG0jVqz7nYRXKwzeQqld+iXlsibhsseKkqyz0nk11Kc0pj0ctjw383c5Qq5bv/W7EpN9azORj0WzMJia9vKPVq0DLw68DnOP4AHWR8B+ie/Jw4Ez6k8U8YMlwzCKql2dJ1Ssd2utLuU/Ko7nkzSOLexfgwY1f/1f0nk11Kc1N8ojmUlQeValX03r3pxv3ruH5iDrdszxjPwxw7hWu/V6fXq/u8HoPtY9aawCsorYb6c/c1ebEwNo0xLXepGjdsusV9eehF367egcai8q0XkV9vTl7Hl8yy++EM/aCe/q6AHD2izNzgveeiuQ5I1xrLJW0rk2oP4+88NvVO1B9Cry4J+XxLJLzuM5xPqpEu1mcjkTox6LY5zLMXzJw5tuZ+eIH8J+XTQ==
+  </data>
+ </layer>
+</map>
