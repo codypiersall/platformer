@@ -280,7 +280,7 @@ class Game():
     def main(self, screen, level, players):
         clock = pygame.time.Clock()
         
-        background = pygame.image.load('images/background.png')
+        background = pygame.image.load('images/backgrounds/background.png')
         background = pygame.transform.scale(background, SCREEN_SIZE)
         
         self.tilemap = tmx.load(level, screen.get_size())

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="50" height="15" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="background" value="background.png"/>
+ </properties>
  <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
   <image source="../images/tilesets/PencilMan.png" width="512" height="256"/>
  </tileset>

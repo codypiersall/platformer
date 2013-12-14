@@ -94,13 +94,13 @@ class Tileset(object):
         image = pygame.image.load(file).convert_alpha()
         if not image:
             sys.exit("Error creating new Tileset: file %s not found" % file)
-        id = self.firstgid
+        id_ = self.firstgid
         for line in range(image.get_height() // self.tile_height):
             for column in range(image.get_width() // self.tile_width):
                 pos = Rect(column * self.tile_width, line * self.tile_height,
                     self.tile_width, self.tile_height)
-                self.tiles.append(Tile(id, image.subsurface(pos), self))
-                id += 1
+                self.tiles.append(Tile(id_, image.subsurface(pos), self))
+                id_ += 1
 
     def get_tile(self, gid):
         return self.tiles[gid - self.firstgid]
@@ -219,18 +219,18 @@ class Layer(object):
 
     Note that empty cells will be set to None instead of a Cell instance.
     '''
-    def __init__(self, name, visible, map):
+    def __init__(self, name, visible, level):
         self.name = name
         self.visible = visible
         self.position = (0, 0)
         # TODO get from TMX?
-        self.px_width = map.px_width
-        self.px_height = map.px_height
-        self.tile_width = map.tile_width
-        self.tile_height = map.tile_height
-        self.width = map.width
-        self.height = map.height
-        self.tilesets = map.tilesets
+        self.px_width = level.px_width
+        self.px_height = level.px_height
+        self.tile_width = level.tile_width
+        self.tile_height = level.tile_height
+        self.width = level.width
+        self.height = level.height
+        self.tilesets = level.tilesets
         self.group = pygame.sprite.Group()
         self.properties = {}
         self.cells = {}
@@ -251,8 +251,8 @@ class Layer(object):
         return LayerIterator(self)
 
     @classmethod
-    def fromxml(cls, tag, map):
-        layer = cls(tag.attrib['name'], int(tag.attrib.get('visible', 1)), map)
+    def fromxml(cls, tag, level):
+        layer = cls(tag.attrib['name'], int(tag.attrib.get('visible', 1)), level)
 
         data = tag.find('data')
         if data is None:
@@ -266,10 +266,10 @@ class Layer(object):
         assert len(data) == layer.width * layer.height
         for i, gid in enumerate(data):
             if gid < 1: continue   # not set
-            tile = map.tilesets[gid]
+            tile = level.tilesets[gid]
             x = i % layer.width
             y = i // layer.width
-            layer.cells[x,y] = Cell(x, y, x*map.tile_width, y*map.tile_height, tile)
+            layer.cells[x,y] = Cell(x, y, x*level.tile_width, y*level.tile_height, tile)
 
         return layer
 
@@ -379,7 +379,7 @@ class Layer(object):
 class Object(object):
     '''An object in a TMX object layer.
 name: The name of the object. An arbitrary string.
-type: The type of the object. An arbitrary string.
+object_type: The type of the object. An arbitrary string.
 x: The x coordinate of the object in pixels.
 y: The y coordinate of the object in pixels.
 width: The width of the object in pixels (defaults to 0).
@@ -387,9 +387,9 @@ height: The height of the object in pixels (defaults to 0).
 gid: An reference to a tile (optional).
 visible: Whether the object is shown (1) or hidden (0). Defaults to 1.
     '''
-    def __init__(self, type, x, y, width=0, height=0, name=None,
+    def __init__(self, object_type, x, y, width=0, height=0, name=None,
             gid=None, tile=None, visible=1):
-        self.type = type
+        self.type = object_type
         self.px = x
         self.left = x
         if tile:
@@ -454,10 +454,10 @@ visible: Whether the object is shown (1) or hidden (0). Defaults to 1.
             pygame.draw.rect(surface, (255, 100, 100), r, 2)
 
     @classmethod
-    def fromxml(cls, tag, map):
+    def fromxml(cls, tag, level):
         if 'gid' in tag.attrib:
             gid = int(tag.attrib['gid'])
-            tile = map.tilesets[gid]
+            tile = level.tilesets[gid]
             w = tile.tile_width
             h = tile.tile_height
         else:
@@ -526,12 +526,12 @@ class ObjectLayer(object):
         return '<ObjectLayer "%s" at 0x%x>' % (self.name, id(self))
 
     @classmethod
-    def fromxml(cls, tag, map):
+    def fromxml(cls, tag, level):
         layer = cls(tag.attrib['name'], tag.attrib.get('color'), [],
             float(tag.attrib.get('opacity', 1)),
             int(tag.attrib.get('visible', 1)))
-        for object in tag.findall('object'):
-            layer.objects.append(Object.fromxml(object, map))
+        for obj in tag.findall('object'):
+            layer.objects.append(Object.fromxml(obj, level))
         for c in tag.findall('property'):
             # store additional properties.
             name = c.attrib['name']
@@ -558,19 +558,17 @@ class ObjectLayer(object):
         '''
         if not self.visible:
             return
-        ox, oy = self.position
-        w, h = self.view_w, self.view_h
-        for object in self.objects:
-            object.draw(surface, self.view_x, self.view_y)
+        for obj in self.objects:
+            obj.draw(surface, self.view_x, self.view_y)
 
     def find(self, *properties):
         '''Find all cells with the given properties set.
         '''
         r = []
         for propname in properties:
-            for object in self.objects:
-                if object and propname in object or propname in self.properties:
-                    r.append(object)
+            for obj in self.objects:
+                if obj and propname in obj or propname in self.properties:
+                    r.append(obj)
         return r
 
     def match(self, **properties):
@@ -578,15 +576,15 @@ class ObjectLayer(object):
         '''
         r = []
         for propname in properties:
-            for object in self.objects:
-                if propname in object:
-                    val = object[propname]
+            for obj in self.objects:
+                if propname in obj:
+                    val = obj[propname]
                 elif propname in self.properties:
                     val = self.properties[propname]
                 else:
                     continue
                 if properties[propname] == val:
-                    r.append(object)
+                    r.append(obj)
         return r
 
     def collide(self, rect, propname):
@@ -594,10 +592,10 @@ class ObjectLayer(object):
         property name set.
         '''
         r = []
-        for object in self.get_in_region(rect.left, rect.top, rect.right,
+        for obj in self.get_in_region(rect.left, rect.top, rect.right,
                 rect.bottom):
-            if propname in object or propname in self.properties:
-                r.append(object)
+            if propname in obj or propname in self.properties:
+                r.append(obj)
         return r
 
     def get_in_region(self, x1, y1, x2, y2):
@@ -610,13 +608,13 @@ class ObjectLayer(object):
         return [obj for obj in self.objects if obj.intersects(x1, y1, x2, y2)]
 
     def get_at(self, x, y):
-        '''Return the first object found at the nominated (x, y) coordinate.
+        '''Return the first obj found at the nominated (x, y) coordinate.
 
         Return an Object instance or None.
         '''
-        for object in self.objects:
-            if object.contains(x,y):
-                return object
+        for obj in self.objects:
+            if obj.contains(x,y):
+                return obj
 
 
 class SpriteLayer(pygame.sprite.AbstractGroup):
@@ -635,7 +633,6 @@ class SpriteLayer(pygame.sprite.AbstractGroup):
 
     def draw(self, screen):
         ox, oy = self.position
-        w, h = self.view_w, self.view_h
         
         for sprite in self.sprites():
             sx, sy = sprite.rect.topleft
@@ -712,25 +709,25 @@ class TileMap(object):
     @classmethod
     def load(cls, filename, viewport):
         with open(filename) as f:
-            map = ElementTree.fromstring(f.read())
+            level = ElementTree.fromstring(f.read())
 
-        # get most general map informations and create a surface
+        # get most general level informations and create a surface
         tilemap = TileMap(viewport)
-        tilemap.width = int(map.attrib['width'])
-        tilemap.height  = int(map.attrib['height'])
-        tilemap.tile_width = int(map.attrib['tilewidth'])
-        tilemap.tile_height = int(map.attrib['tileheight'])
+        tilemap.width = int(level.attrib['width'])
+        tilemap.height  = int(level.attrib['height'])
+        tilemap.tile_width = int(level.attrib['tilewidth'])
+        tilemap.tile_height = int(level.attrib['tileheight'])
         tilemap.px_width = tilemap.width * tilemap.tile_width
         tilemap.px_height = tilemap.height * tilemap.tile_height
 
-        for tag in map.findall('tileset'):
+        for tag in level.findall('tileset'):
             tilemap.tilesets.add(Tileset.fromxml(tag, filename))
 
-        for tag in map.findall('layer'):
+        for tag in level.findall('layer'):
             layer = Layer.fromxml(tag, tilemap)
             tilemap.layers.add_named(layer, layer.name)
 
-        for tag in map.findall('objectgroup'):
+        for tag in level.findall('objectgroup'):
             layer = ObjectLayer.fromxml(tag, tilemap)
             tilemap.layers.add_named(layer, layer.name)
 
