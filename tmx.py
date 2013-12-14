@@ -710,7 +710,7 @@ class TileMap(object):
     def load(cls, filename, viewport):
         with open(filename) as f:
             level = ElementTree.fromstring(f.read())
-
+            
         # get most general level informations and create a surface
         tilemap = TileMap(viewport)
         tilemap.width = int(level.attrib['width'])
@@ -720,6 +720,12 @@ class TileMap(object):
         tilemap.px_width = tilemap.width * tilemap.tile_width
         tilemap.px_height = tilemap.height * tilemap.tile_height
 
+        # append the map's properties to self.properties.    
+        for tag in level.findall('properties'):
+            for prop in tag.findall('property'):
+                tilemap.properties[prop.attrib['name']] = prop.attrib['value']
+        
+        print(tilemap.properties)        
         for tag in level.findall('tileset'):
             tilemap.tilesets.add(Tileset.fromxml(tag, filename))
 
