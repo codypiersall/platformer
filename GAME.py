@@ -277,6 +277,7 @@ class Player(pygame.sprite.Sprite):
         if new.x < -10 or new.y > game.tilemap.px_height:
             self.is_dead = True
 
+        
 class Game():
     GRAVITY = 2000
     MAX_FALL_SPEED = 600
@@ -284,7 +285,9 @@ class Game():
     LIFEBAR_LENGTH = 250
     LIFEBAR_WIDTH = 10
     
+    
     def main(self, screen, level, players):
+        self.level_beaten = False
         clock = pygame.time.Clock()
         
         
@@ -373,6 +376,13 @@ class Game():
                 if player.is_dead:
                     return
             pygame.display.flip()
+            
+            # this is how you beat the level.
+            if self.tilemap.properties['type'] == 'exit':
+                for cell in self.tilemap.layers['triggers'].collide(self.players[0].rect, 'exit'):
+                    self.level_beaten = True
+            # level finished.  better do something better.
+            if self.level_beaten: return
             
     def draw_lifebar(self, screen, health, max_health, offset):
         # outline for lifebar

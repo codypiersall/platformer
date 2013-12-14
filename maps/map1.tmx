@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="50" height="15" tilewidth="32" tileheight="32">
  <properties>
-  <property name="background" value="black.bmp"/>
+  <property name="background" value="white.bmp"/>
   <property name="type" value="exit"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
@@ -12,7 +12,7 @@
    eJzt0kEKACAIRFG33v/C7UNoRqUk5kGrIPyVmYgw/PUATdQxizpm+anj1OLBYs6/AZlt30NnY5srkHvOdGTergL5M2xH9g9WRB3dq9sCzDgCUw==
   </data>
  </layer>
- <objectgroup name="triggers" width="50" height="15">
+ <objectgroup name="triggers" width="50" height="15" visible="0">
   <object name="blockers" x="160" y="448" width="800" height="32">
    <properties>
     <property name="blockers" value="tlbr"/>
