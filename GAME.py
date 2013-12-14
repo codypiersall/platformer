@@ -378,9 +378,13 @@ class Game():
             pygame.display.flip()
             
             # this is how you beat the level.
-            if self.tilemap.properties['type'] == 'exit':
-                for cell in self.tilemap.layers['triggers'].collide(self.players[0].rect, 'exit'):
-                    self.level_beaten = True
+            try:
+                if self.tilemap.properties['type'] == 'exit':
+                    for c in self.tilemap.layers['triggers'].collide(self.players[0].rect, 'exit'):
+                        self.level_beaten = True
+                        
+            except KeyError:
+                pass
             # level finished.  better do something better.
             if self.level_beaten: return
             
