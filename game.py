@@ -40,10 +40,11 @@ class Bullet(pygame.sprite.Sprite):
     SPEED = 500
     # lifespan of bullet in seconds
     LIFESPAN = 1
-    
+    LEFT = -1
+    RIGHT = 1
     def __init__(self, location, direction, *groups):
         super().__init__(*groups)
-        if direction > 0:
+        if direction == self.RIGHT:
             self.image = self.image_right
             self.rect = pygame.rect.Rect(location, self.image.get_size())
         else:
@@ -60,9 +61,18 @@ class Bullet(pygame.sprite.Sprite):
             return
         self.rect.x += self.direction * self.SPEED * dt
         
-        if pygame.sprite.spritecollide(self, game.enemies, True):
+        collided = pygame.sprite.spritecollide(self, game.enemies, False)
+        if collided:
+            self.kill_nearest(collided)
             self.kill()
-            game.explosion.play()
+                
+    def kill_nearest(self, sprites):
+        """Kill the nearest sprite in sprites."""
+        x_positions = sorted(sprite.rect.x for sprite in sprites)
+        if self.direction == self.RIGHT:
+            sprites[-1].kill()
+        else:
+            sprites[0].kill()
             
 class Enemy(pygame.sprite.Sprite):
     SPEED = 100
@@ -90,7 +100,7 @@ class Enemy(pygame.sprite.Sprite):
             self.direction *= -1
             break
         for player in game.players:
-            if self.rect.colliderect(player.rect):
+            if not player.invincible and self.rect.colliderect(player.rect):
                 player.health -= dt
                 if player.health < 0:
                     player.is_dead = True
@@ -139,7 +149,7 @@ class Player(pygame.sprite.Sprite):
         self.K_RIGHT = keymap.RIGHT
         self.K_JUMP = keymap.JUMP
         self.K_SHOOT = keymap.SHOOT
-        
+        self.K_INVINCIBLE = keymap.INVINCIBLE
         # True if the player is on a surface, else False.
         self.resting = False
         
@@ -169,6 +179,9 @@ class Player(pygame.sprite.Sprite):
         
         # whether the player should try to shoot.
         self.shoot = False
+        
+        # hit some key to become invincible.
+        self.invincible = False
         
         # Vertical velocity.  This gets changed by either falling or jumping.
         self.dy = 0
@@ -355,6 +368,9 @@ class Game():
                             
                         elif event.key == player.K_SHOOT:
                             player.shoot = True
+                        
+                        elif event.key == player.K_INVINCIBLE:
+                            player.invincible = True
                         
                 elif event.type == pygame.KEYUP:
                     for player in self.players:
