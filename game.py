@@ -375,7 +375,7 @@ class Game():
                             player.shoot = True
                         
                         elif event.key == player.K_INVINCIBLE:
-                            player.invincible = True
+                            player.invincible = not player.invincible
                         
                 elif event.type == pygame.KEYUP:
                     for player in self.players:
