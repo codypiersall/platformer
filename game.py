@@ -61,6 +61,7 @@ class Bullet(pygame.sprite.Sprite):
             return
         self.rect.x += self.direction * self.SPEED * dt
         
+        # get all collided sprites, to kill only the nearest one.
         collided = pygame.sprite.spritecollide(self, game.enemies, False)
         if collided:
             self.kill_nearest(collided)
@@ -69,12 +70,9 @@ class Bullet(pygame.sprite.Sprite):
     def kill_nearest(self, sprites):
         """Kill the nearest sprite in sprites."""
         sprites = sorted(sprites, key=lambda s: s.rect.x)
-        print([sprite.rect.x for sprite in sprites])
         if self.direction == self.RIGHT:
-            print(sprites[0].rect.x)
             sprites[0].kill()
         else:
-            print(sprites[-1].rect.x)
             sprites[-1].kill()
             
             
@@ -111,7 +109,7 @@ class Enemy(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
     # Player's left and right speed in pixels per second
-    SPEED = 300
+    SPEED = 200
 
     # Player's jumping speed in pixels per second.
     JUMP_SPEED = -700
@@ -129,7 +127,8 @@ class Player(pygame.sprite.Sprite):
     # moving constants
     STILL = 0
     WALKING = 1
-    
+    RUNNING = 1.5
+    NOT_RUNNING = 1.0
 
     def init_animations(self):
         self.walk_left_anim = pyganim.PygAnimation([('images/frog-walk-01.gif', .1), 
@@ -175,6 +174,7 @@ class Player(pygame.sprite.Sprite):
         # whether the player is moving (either self.STILL or self.WALK)
         self.direction = self.RIGHT
         self.moving = self.STILL
+        self.running = self.NOT_RUNNING
         
         # Whether the character should try to jump.  This gets set to True
         # when the player hits the jump button (default space) but does not 
@@ -226,11 +226,11 @@ class Player(pygame.sprite.Sprite):
         """Tries to jump."""
         if self.jump:
             if self.resting:
-                self.dy = self.JUMP_SPEED
+                self.dy = self.JUMP_SPEED * self.running
                 game.jump.play()
                 self.double_jumped = False
             elif self.dy > 60 and not self.double_jumped:
-                self.dy = self.JUMP_SPEED
+                self.dy = self.JUMP_SPEED * self.running
                 self.double_jumped = True
                 game.jump.play()
             self.jump = False
@@ -253,7 +253,7 @@ class Player(pygame.sprite.Sprite):
     def move(self, dt, game):
         """Movement and collision stuff"""
         last_position = self.rect.copy()
-        self.rect.x += int(self.direction * self.SPEED * self.moving * dt)
+        self.rect.x += int(self.direction * self.SPEED * self.moving * self.running * dt)
         self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
         self.rect.y += self.dy * dt
         new = self.rect
@@ -371,6 +371,7 @@ class Game():
                             player.jump = True
                             
                         elif event.key == player.K_SHOOT:
+                            player.running = player.RUNNING
                             player.shoot = True
                         
                         elif event.key == player.K_INVINCIBLE:
@@ -391,6 +392,9 @@ class Game():
                                 player.direction = player.LEFT
                             else:
                                 player.moving = player.STILL
+                                
+                        elif event.key == player.K_SHOOT:
+                            player.running = player.NOT_RUNNING
 
             
             screen.blit(background, (0,0))
