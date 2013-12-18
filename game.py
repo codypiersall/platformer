@@ -68,11 +68,15 @@ class Bullet(pygame.sprite.Sprite):
                 
     def kill_nearest(self, sprites):
         """Kill the nearest sprite in sprites."""
-        x_positions = sorted(sprite.rect.x for sprite in sprites)
+        sprites = sorted(sprites, key=lambda s: s.rect.x)
+        print([sprite.rect.x for sprite in sprites])
         if self.direction == self.RIGHT:
-            sprites[-1].kill()
-        else:
+            print(sprites[0].rect.x)
             sprites[0].kill()
+        else:
+            print(sprites[-1].rect.x)
+            sprites[-1].kill()
+            
             
 class Enemy(pygame.sprite.Sprite):
     SPEED = 100
