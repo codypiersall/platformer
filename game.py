@@ -8,10 +8,10 @@ import sys
 import pygame
 
 # First-party
-from keymap import km1, km2
-import tmx
-import pyganim
-import menu
+from lib.keymap import km1, km2
+from lib import tmx
+from lib import pyganim
+from lib import menu
 
 SCREEN_SIZE = (640, 480)
 
