@@ -1,8 +1,6 @@
 # builtins
-
 import glob
 from os import path
-import sys
 
 # Third-party
 import pygame
@@ -23,9 +21,10 @@ DEFAULT_MAP = 'maps/map1.tmx'
 
 # Path to backgrounds directory
 BACKGROUNDS = path.join('images', 'backgrounds')
-
-#
 DEFAULT_BACKGROUND = 'black.bmp'
+
+# Path to sprites directory
+SPRITES = path.join('images','sprites')
 
 # colors
 GREEN = pygame.Color(0, 200, 0)
@@ -108,6 +107,17 @@ class Enemy(pygame.sprite.Sprite):
                     player.is_dead = True
 
 class Player(pygame.sprite.Sprite):
+    """
+    Create a player instance.
+    Args:
+        location: (x,y) pixel location.  Where to place the player.
+        keymap: a keymap.Keys instance specifying which keys the player uses.
+        character: images to use for the player instance.  As long.
+                   A folder with the name character must exist in images/sprites.
+                   Right now this has to be frog, since that is the only folder in
+                   images/sprites.
+        *groups: sprite group that the player belongs to.
+    """
     # Player's left and right speed in pixels per second
     SPEED = 200
 
@@ -130,22 +140,23 @@ class Player(pygame.sprite.Sprite):
     RUNNING = 1.5
     NOT_RUNNING = 1.0
 
-    def init_animations(self):
-        self.walk_left_anim = pyganim.PygAnimation([('images/sprites/frog/walk-01.gif', .1), 
-                ('images/sprites/frog/walk-02.gif', .1), 
-                ('images/sprites/frog/walk-03.gif', .1), 
-                ('images/sprites/frog/walk-04.gif', .1), 
-                ('images/sprites/frog/walk-05.gif', .1), 
-                ('images/sprites/frog/walk-00.gif', .1)])
+    def init_animations(self, character):
+        # folder containing the character images.
+        p = path.join(SPRITES, character)
+        walk_anim_files = sorted(glob.glob(path.join(p, 'walk-[0-9][0-9].gif')))
+        
+        self.walk_left_anim = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])
         self.walk_right_anim = self.walk_left_anim.getCopy()
         self.walk_right_anim.flip(True, False)
         self.walk_right_anim.makeTransformsPermanent()
-        self.face_left = pyganim.PygAnimation([('images/sprites/frog/walk-00.gif', 10)])
+        self.face_left = pyganim.PygAnimation([(walk_anim_files[0], 10)])
         self.face_right = self.face_left.getCopy()
         self.face_right.flip(True, False)
         self.face_right.makeTransformsPermanent()
 
-    def __init__(self, location, keymap, *groups):
+    def __init__(self, location, keymap, character, *groups):
+        """Create a player object.
+            :args: """
         super().__init__(*groups)
         
         self.K_LEFT = keymap.LEFT
@@ -190,7 +201,7 @@ class Player(pygame.sprite.Sprite):
         # Vertical velocity.  This gets changed by either falling or jumping.
         self.dy = 0
         
-        self.init_animations()
+        self.init_animations(character)
         
         # assign all the animations that belong to the player.
         self.animations = {self.LEFT:  {self.STILL: self.face_left,
@@ -328,9 +339,9 @@ class Game():
         
         self.players = []
         
-        self.players.append(Player((start_cell.px, start_cell.py), km1, self.sprites))
+        self.players.append(Player((start_cell.px, start_cell.py), km1, 'frog', self.sprites))
         if players == '2':    
-            self.players.append(Player((start_cell.px, start_cell.py), km2, self.sprites))
+            self.players.append(Player((start_cell.px, start_cell.py), km2, 'frog', self.sprites))
  
         self.tilemap.layers.append(self.sprites)
         
