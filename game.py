@@ -34,7 +34,7 @@ RED = pygame.Color(100, 0, 0)
 DARK_GREY = pygame.Color(50, 50, 50)
 
 class Bullet(pygame.sprite.Sprite):
-    image = pygame.image.load('images/Masamune.gif')
+    image = pygame.image.load('images/sprites/frog/Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
     image_left = pygame.transform.flip(image_right, True, False)
     SPEED = 500
@@ -78,7 +78,7 @@ class Bullet(pygame.sprite.Sprite):
             
 class Enemy(pygame.sprite.Sprite):
     SPEED = 100
-    image_left = pygame.image.load('images/Sentry-left.gif')
+    image_left = pygame.image.load('images/sprites/enemies/Sentry-left.gif')
     image = image_left
     image_right = pygame.transform.flip(image_left, True, False)
     
@@ -131,16 +131,16 @@ class Player(pygame.sprite.Sprite):
     NOT_RUNNING = 1.0
 
     def init_animations(self):
-        self.walk_left_anim = pyganim.PygAnimation([('images/frog-walk-01.gif', .1), 
-                ('images/frog-walk-02.gif', .1), 
-                ('images/frog-walk-03.gif', .1), 
-                ('images/frog-walk-04.gif', .1), 
-                ('images/frog-walk-05.gif', .1), 
-                ('images/frog-walk-00.gif', .1)])
+        self.walk_left_anim = pyganim.PygAnimation([('images/sprites/frog/walk-01.gif', .1), 
+                ('images/sprites/frog/walk-02.gif', .1), 
+                ('images/sprites/frog/walk-03.gif', .1), 
+                ('images/sprites/frog/walk-04.gif', .1), 
+                ('images/sprites/frog/walk-05.gif', .1), 
+                ('images/sprites/frog/walk-00.gif', .1)])
         self.walk_right_anim = self.walk_left_anim.getCopy()
         self.walk_right_anim.flip(True, False)
         self.walk_right_anim.makeTransformsPermanent()
-        self.face_left = pyganim.PygAnimation([('images/frog-walk-00.gif', 10)])
+        self.face_left = pyganim.PygAnimation([('images/sprites/frog/walk-00.gif', 10)])
         self.face_right = self.face_left.getCopy()
         self.face_right.flip(True, False)
         self.face_right.makeTransformsPermanent()
