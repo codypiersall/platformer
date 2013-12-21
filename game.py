@@ -262,11 +262,11 @@ class Player(BaseSprite):
         """Tries to jump."""
         if self.jump:
             if self.resting:
-                self.dy = self.JUMP_SPEED * self.running
+                self.dy = self.JUMP_SPEED
                 game.jump.play()
                 self.double_jumped = False
             elif self.dy > 60 and not self.double_jumped:
-                self.dy = self.JUMP_SPEED * self.running
+                self.dy = self.JUMP_SPEED
                 self.double_jumped = True
                 game.jump.play()
             self.jump = False
