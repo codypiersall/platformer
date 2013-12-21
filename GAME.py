@@ -13,7 +13,7 @@ import tmx
 import pyganim
 import menu
 
-SCREEN_SIZE = (640, 480)
+SCREEN_SIZE = (840, 680)
 
 # Number of players by default.
 PLAYERS = '1'

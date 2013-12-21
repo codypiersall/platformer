@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="125" height="15" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="type" value="exit"/>
+ </properties>
  <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
   <image source="../images/tilesets/PencilMan.png" width="512" height="256"/>
  </tileset>
@@ -315,6 +318,11 @@
   <object name="reverse" x="2144" y="32" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="exit" x="3936" y="64" width="32" height="32">
+   <properties>
+    <property name="exit" value=""/>
    </properties>
   </object>
  </objectgroup>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="25" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="background" value="cityscape.jpeg"/>
+  <property name="type" value="exit"/>
+ </properties>
  <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
   <image source="../images/tilesets/PencilMan.png" width="512" height="256"/>
  </tileset>
@@ -96,22 +100,12 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="blockers" x="2304" y="640" width="32" height="32">
-   <properties>
-    <property name="blockers" value="tlbr"/>
-   </properties>
-  </object>
   <object name="blockers" x="1888" y="672" width="1312" height="32">
    <properties>
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
   <object name="blockers" x="2304" y="608" width="32" height="32">
-   <properties>
-    <property name="blockers" value="t"/>
-   </properties>
-  </object>
-  <object name="blockers" x="2304" y="640" width="32" height="32">
    <properties>
     <property name="blockers" value="t"/>
    </properties>
@@ -321,7 +315,7 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="1696" y="576" width="32" height="32">
+  <object name="reverse" x="1696" y="544" width="32" height="64">
    <properties>
     <property name="reverse" value=""/>
    </properties>
@@ -469,6 +463,16 @@
   <object name="enemy" x="2208" y="608" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
+   </properties>
+  </object>
+  <object name="reverse" x="1568" y="544" width="32" height="32">
+   <properties>
+    <property name="reverse" value=""/>
+   </properties>
+  </object>
+  <object name="exit" x="3168" y="0" width="32" height="672">
+   <properties>
+    <property name="exit" value=""/>
    </properties>
   </object>
  </objectgroup>
