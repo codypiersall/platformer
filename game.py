@@ -32,20 +32,31 @@ YELLOW = pygame.Color(150, 150, 0)
 RED = pygame.Color(100, 0, 0)
 DARK_GREY = pygame.Color(50, 50, 50)
 
-class Bullet(pygame.sprite.Sprite):
+class BaseSprite(pygame.sprite.Sprite):
+    RIGHT = 1
+    LEFT= -1
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def hit(self, other):
+        """ This is a lame, unsophisticated way to do attacks."""
+        other.health -= self.attack / other.defense
+
+class Bullet(BaseSprite):
     image = pygame.image.load('images/sprites/frog/Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
     image_left = pygame.transform.flip(image_right, True, False)
     SPEED = 500
     # lifespan of bullet in seconds
     LIFESPAN = 1
-    LEFT = -1
-    RIGHT = 1
+    
     def __init__(self, location, direction, *groups):
         super().__init__(*groups)
         if direction == self.RIGHT:
             self.image = self.image_right
             self.rect = pygame.rect.Rect(location, self.image.get_size())
+        
         else:
             self.image = self.image_left
             x_ = self.image.get_size()[0]
@@ -75,7 +86,7 @@ class Bullet(pygame.sprite.Sprite):
             sprites[-1].kill()
             
             
-class Enemy(pygame.sprite.Sprite):
+class Enemy(BaseSprite):
     SPEED = 100
     image_left = pygame.image.load('images/sprites/enemies/Sentry-left.gif')
     image = image_left
@@ -84,7 +95,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, location, *groups):
         super().__init__(*groups)
         self.rect = pygame.rect.Rect(location, self.image.get_size())
-        self.direction = 1
+        self.direction = self.RIGHT
         
     def update(self, dt, game):
         self.rect.x += int(self.direction * self.SPEED * dt)
@@ -100,13 +111,12 @@ class Enemy(pygame.sprite.Sprite):
                 self.rect.left = cell.right
             self.direction *= -1
             break
+        
         for player in game.players:
             if not player.invincible and self.rect.colliderect(player.rect):
-                player.health -= dt
-                if player.health < 0:
-                    player.is_dead = True
+                self.hit(player)
 
-class Player(pygame.sprite.Sprite):
+class Player(BaseSprite):
     """
     Create a player instance.
     Args:
@@ -120,7 +130,7 @@ class Player(pygame.sprite.Sprite):
     """
     # Player's left and right speed in pixels per second
     SPEED = 200
-
+    
     # Player's jumping speed in pixels per second.
     JUMP_SPEED = -700
     
@@ -154,49 +164,53 @@ class Player(pygame.sprite.Sprite):
         self.face_right.flip(True, False)
         self.face_right.makeTransformsPermanent()
 
-    def __init__(self, location, keymap, character, *groups):
-        """Create a player object.
-            :args: """
-        super().__init__(*groups)
-        
+
+    def init_keys(self, keymap):
+        """Set player keys based on keymap."""
         self.K_LEFT = keymap.LEFT
         self.K_RIGHT = keymap.RIGHT
         self.K_JUMP = keymap.JUMP
         self.K_SHOOT = keymap.SHOOT
         self.K_INVINCIBLE = keymap.INVINCIBLE
+
+
+    def init_state(self):
+        """Initialize the players state."""
+        
         # True if the player is on a surface, else False.
         self.resting = False
-        
         # Set to True only when player dies.
         self.is_dead = False
-        
         # gun_cooldown is the time left before the player can shoot again.
         self.gun_cooldown = 0
-        
         # Whether the player has used the double jump.
         self.double_jumped = False
-        
-        # player's health; currently, it goes down based on how long 
+        # player's health; currently, it goes down based on how long
         # the player collides with the enemy.
         self.health = self.MAX_HEALTH
-        
         # self.direction and self.moving are for determining which way
         # the player is facing (either self.LEFT or self.RIGHT) and
         # whether the player is moving (either self.STILL or self.WALK)
         self.direction = self.RIGHT
         self.moving = self.STILL
         self.running = self.NOT_RUNNING
-        
         # Whether the character should try to jump.  This gets set to True
-        # when the player hits the jump button (default space) but does not 
+        # when the player hits the jump button (default space) but does not
         # necessarily mean the player can actually jump.
         self.jump = False
-        
         # whether the player should try to shoot.
         self.shoot = False
-        
-        # hit some key to become invincible.
+        # hit some key to become invincible permanently.
         self.invincible = False
+
+    def __init__(self, location, keymap, character, *groups):
+        """Create a player object."""
+        
+        super().__init__(*groups)
+        
+        self.init_keys(keymap)
+        
+        self.init_state()
         
         # Vertical velocity.  This gets changed by either falling or jumping.
         self.dy = 0
