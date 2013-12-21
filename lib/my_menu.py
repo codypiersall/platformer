@@ -12,7 +12,9 @@ class Menu(object):
     SPACE = 10
     UP = pygame.K_UP
     DOWN = pygame.K_DOWN
-    
+    BG_COLOR = (0,0,0)
+    FONT_COLOR = (255,0,0)
+    SELECTOR_COLOR = (0,255,0)
     def __init__(self, screen, items, font=FONT):
         self.screen = screen
         self.items = items
@@ -26,11 +28,27 @@ class Menu(object):
         self.mainloop()
         
     def draw(self):
-        self.surfaces.extend([self.font.render(str(i), 1, (255, 255, 255)) for i in self.items])
-        self.screen.fill((0, 0, 0))
-        self.screen.blit(self.surfaces[0], (25, 25))
-        self.screen.blit(self.surfaces[1], (25, 75))
-    
+        self.surfaces = [self.font.render(str(i), 1, self.FONT_COLOR) for i in self.items]
+        
+        num_items = len(self.items)
+        ind_height = self.surfaces[0].get_height()
+        height = self.surfaces[0].get_height() * num_items + self.SPACE * (num_items - 1)
+        width = max(s.get_width() for s in self.surfaces)
+        draw_surf  = pygame.Surface((width, height))
+        draw_surf.fill(self.BG_COLOR)
+        for i, item in enumerate(self.surfaces):
+            draw_surf.blit(item, (0, ind_height*i + self.SPACE*i))
+        
+        menu_x = (self.screen.get_width() - width) / 2
+        menu_y = (self.screen.get_height() - height) / 2
+        
+        sy = menu_y + ind_height*self.selected + self.SPACE * self.selected
+        sx = menu_x - 20
+        
+        self.screen.fill(self.BG_COLOR)
+        self.screen.blit(draw_surf, (menu_x, menu_y))
+        pygame.draw.polygon(self.screen, self.SELECTOR_COLOR, ([sx,sy], [sx, sy + ind_height], [sx + 15, (2 *sy + ind_height) / 2]))
+            
     def change_select(self, direction):
         if direction == self.UP:
             if self.selected == 0:
@@ -44,7 +62,7 @@ class Menu(object):
             else:
                 self.selected += 1
         
-        print(self.selected)
+        
     
 
     def seeya(self):
@@ -73,8 +91,8 @@ class Menu(object):
                         self.change_select(e.key)
             
             self.draw()
-            
+            pygame.display.update()
 if __name__ == '__main__':
     screen = pygame.display.set_mode((640, 480))
-    menu = Menu(screen, 'this that theother'.split())
+    menu = Menu(screen, 'this that the other'.split())
     
