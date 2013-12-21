@@ -36,13 +36,37 @@ class BaseSprite(pygame.sprite.Sprite):
     RIGHT = 1
     LEFT= -1
     
+    # moving constants
+    STILL = 0
+    WALKING = 1
+    RUNNING = 1.5
+    NOT_RUNNING = 1.0
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.moving = self.WALKING
+        self.direction = self.RIGHT
+        self.is_dead = False
 
     def hit(self, other):
         """ This is a lame, unsophisticated way to do attacks."""
         other.health -= self.attack / other.defense
+        if other.health < 0:
+            other.is_dead = True
 
+    def animate(self):
+        """Animate the player based on direction and movement.
+           
+        If the animation that should be playing is already playing, this basically does nothing."""
+        last_anim = self.current_animation
+        next_anim = self.animations[self.direction][self.moving]
+        if next_anim != last_anim:
+            last_anim.stop()
+            next_anim.play()
+            self.current_animation = next_anim
+
+        self.image = next_anim.getCurrentFrame()
+        
 class Bullet(BaseSprite):
     image = pygame.image.load('images/sprites/frog/Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
@@ -94,6 +118,7 @@ class Enemy(BaseSprite):
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
+        self.attack = 1
         self.rect = pygame.rect.Rect(location, self.image.get_size())
         self.direction = self.RIGHT
         
@@ -139,16 +164,6 @@ class Player(BaseSprite):
     
     # Player's maximum health
     MAX_HEALTH = 2
-    
-    # Directions
-    LEFT = -1
-    RIGHT = 1
-    
-    # moving constants
-    STILL = 0
-    WALKING = 1
-    RUNNING = 1.5
-    NOT_RUNNING = 1.0
 
     def init_animations(self, character):
         # folder containing the character images.
@@ -179,8 +194,6 @@ class Player(BaseSprite):
         
         # True if the player is on a surface, else False.
         self.resting = False
-        # Set to True only when player dies.
-        self.is_dead = False
         # gun_cooldown is the time left before the player can shoot again.
         self.gun_cooldown = 0
         # Whether the player has used the double jump.
@@ -215,6 +228,7 @@ class Player(BaseSprite):
         # Vertical velocity.  This gets changed by either falling or jumping.
         self.dy = 0
         
+        self.defense = 1 
         self.init_animations(character)
         
         # assign all the animations that belong to the player.
@@ -227,25 +241,8 @@ class Player(BaseSprite):
         # the current animation that is playing
         self.current_animation = self.face_right
         
-        # TODO: Find out what is actually displaying the image.
-        # I think the image gets blitted by the tmx module?
         self.image = self.face_right.getCurrentFrame()
         self.rect = pygame.rect.Rect(location, self.image.get_size())
-
-    def animate(self):
-        """Animate the player based on direction and movement.
-           
-        If the animation that should be playing is already playing, this basically does nothing."""
-        last_anim = self.current_animation
-        next_anim = self.animations[self.direction][self.moving]
-        if next_anim != last_anim:
-            last_anim.stop()
-            next_anim.play()
-            self.current_animation = next_anim
-
-        self.image = next_anim.getCurrentFrame()
-
-
 
     def try_to_jump(self, game):
         """Tries to jump."""
