@@ -115,7 +115,7 @@ class Menu(object):
 
 def level_menu(screen, default_level='../maps/map1.tmx'):
     levels_menu = Menu()
-    levels = glob.glob('../maps/*.tmx')
+    levels = glob.glob('maps/*.tmx')
     display = [path.splitext(path.basename(l))[0] for l in levels]
     levels_menu.init(display + ['Back'], screen)
     
@@ -171,7 +171,7 @@ def player_menu(screen, players):
             
             elif event.type == pygame.QUIT:
                 pygame.display.quit()
-                sys.exit()
+                return
         
         pygame.time.wait(8)
 
