@@ -41,18 +41,26 @@ class BaseSprite(pygame.sprite.Sprite):
     WALKING = 1
     RUNNING = 1.5
     NOT_RUNNING = 1.0
+    # 1 second of invincibility after been hit.
+    BEEN_HIT_TIME = 1
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.moving = self.WALKING
         self.direction = self.RIGHT
         self.is_dead = False
+        self.been_hit = False
 
     def hit(self, other):
         """ This is a lame, unsophisticated way to do attacks."""
-        other.health -= self.attack / other.defense
-        if other.health < 0:
-            other.is_dead = True
+        if other.been_hit <= 0:
+            other.health -= self.attack / other.defense
+            other.been_hit = self.BEEN_HIT_TIME
+            if other.health <= 0:
+                other.is_dead = True
+        
+    def update_hit_timer(self, dt):
+        self.been_hit = max(self.been_hit - dt, 0)
 
     def animate(self):
         """Animate the player based on direction and movement.
@@ -163,7 +171,7 @@ class Player(BaseSprite):
     COOLDOWN_TIME = 0.5
     
     # Player's maximum health
-    MAX_HEALTH = 2
+    MAX_HEALTH = 5
 
     def init_animations(self, character):
         # folder containing the character images.
@@ -194,28 +202,34 @@ class Player(BaseSprite):
         
         # True if the player is on a surface, else False.
         self.resting = False
+
         # gun_cooldown is the time left before the player can shoot again.
         self.gun_cooldown = 0
+
         # Whether the player has used the double jump.
         self.double_jumped = False
         # player's health; currently, it goes down based on how long
         # the player collides with the enemy.
         self.health = self.MAX_HEALTH
+        
         # self.direction and self.moving are for determining which way
         # the player is facing (either self.LEFT or self.RIGHT) and
         # whether the player is moving (either self.STILL or self.WALK)
         self.direction = self.RIGHT
         self.moving = self.STILL
         self.running = self.NOT_RUNNING
+        
         # Whether the character should try to jump.  This gets set to True
         # when the player hits the jump button (default space) but does not
         # necessarily mean the player can actually jump.
         self.jump = False
+        
         # whether the player should try to shoot.
         self.shoot = False
+        
         # hit some key to become invincible permanently.
         self.invincible = False
-
+        
     def __init__(self, location, keymap, character, *groups):
         """Create a player object."""
         
@@ -311,6 +325,7 @@ class Player(BaseSprite):
         # finds the right animation and displays it.
         self.animate()
         
+        self.update_hit_timer(dt)
         # jump, shoot, whatever.
         self.do_actions(game)
         
@@ -320,7 +335,6 @@ class Player(BaseSprite):
         game.tilemap.set_focus(new.x, new.y)
         if new.x < -10 or new.y > game.tilemap.px_height:
             self.is_dead = True
-
         
 class Game():
     GRAVITY = 2000
