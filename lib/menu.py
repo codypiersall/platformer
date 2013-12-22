@@ -84,12 +84,16 @@ class Menu(object):
             else:
                 self.selected += 1
 
-    def seeya(self):
-        """Clean up code when the menu is destroyed."""
+
+    def reset_repeat(self):
         if self.initial_repeat == (0, 0):
             pygame.key.set_repeat()
         else:
             pygame.key.set_repeat(*self.initial_repeat)
+
+    def seeya(self):
+        """Clean up code when the menu is destroyed."""
+        self.reset_repeat()
     
     def on_enter(self):        
         action = self.actions[self.selected]
@@ -107,8 +111,10 @@ class Menu(object):
             
             if action[0] == 'start':
                 game = action[1]()
+                self.reset_repeat()
                 game.main(self.screen, self.settings)
-    
+                pygame.key.set_repeat(*self.repeat)
+                
     def add_action(self, index, action):
         """
         Supported actions:
