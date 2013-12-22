@@ -360,7 +360,7 @@ class Game():
             background_file = DEFAULT_BACKGROUND
         
         background = pygame.image.load(path.join(BACKGROUNDS, background_file))
-        background = pygame.transform.scale(background, SCREEN_SIZE)
+        background = pygame.transform.scale(background, screen.get_size())
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
@@ -491,6 +491,6 @@ class Game():
         
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode(SCREEN_SIZE)
+    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
     menu.main_menu(screen, Game)
     
