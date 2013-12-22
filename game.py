@@ -9,7 +9,7 @@ import pygame
 from lib.keymap import km1, km2
 from lib import tmx
 from lib import pyganim
-from lib import menu
+from lib import my_menu
 
 SCREEN_SIZE = (840, 680)
 
@@ -344,7 +344,10 @@ class Game():
     LIFEBAR_WIDTH = 10
     
     
-    def main(self, screen, level, players):
+    def main(self, screen, settings):
+        level = settings['level']
+        players = settings['players']
+        
         self.level_beaten = False
         clock = pygame.time.Clock()
         
@@ -482,7 +485,6 @@ class Game():
         else:
             color = GREEN
         
-        
         length = (self.LIFEBAR_LENGTH - 3) * health/max_health 
         pygame.draw.rect(screen, color, (12,12 + offset*25, (length), 16))
 
@@ -490,5 +492,5 @@ class Game():
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    menu.main_menu(screen, Game, DEFAULT_MAP, PLAYERS)
+    my_menu.main_menu(screen, Game)
     

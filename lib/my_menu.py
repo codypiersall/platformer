@@ -7,11 +7,14 @@ if not pygame.display.get_init():
 if not pygame.font.get_init():
     pygame.font.init()    
 
+# This silly Exception is used to return from a menu.
 class ReturnError(Exception):
     pass
 
+class ExitError(Exception):
+    pass
+
 class Menu(object):
-    FONT = pygame.font.Font('../coders_crux.ttf', 32)
     SPACE = 10
     UP = pygame.K_UP
     DOWN = pygame.K_DOWN
@@ -21,7 +24,7 @@ class Menu(object):
     SELECTOR_COLOR = (0,255,0)
     DEFAULT_SETTINGS = {'players': 1, 'level': 'maps/map1.tmx'}
     
-    def __init__(self, screen, items, font=FONT, settings=DEFAULT_SETTINGS):
+    def __init__(self, screen, items, font, settings=DEFAULT_SETTINGS):
         self.settings = settings
         self.screen = screen
         self.items = items
@@ -36,12 +39,15 @@ class Menu(object):
     def add_item(self, item):
         self.items.append(item)
     
-    def add_submenu(self, index, menu):
-        menu.settings = self.settings
-        menu.initial_repeat = self.repeat
-        menu.repeat = self.repeat
-
-        self.add_action(index, menu)
+    def add_submenu(self, index, items):
+        
+        submenu = Menu(self.screen, items, self.font, self.settings)
+        
+        self.add_action(index, submenu)
+        return submenu
+    
+    def change_settings(self, index, setting, value):
+        self.add_action(index, ('settings', setting, value))
     
     def draw(self):
         self.surfaces = [self.font.render(str(i), 1, self.FONT_COLOR) for i in self.items]
@@ -63,7 +69,7 @@ class Menu(object):
         
         self.screen.fill(self.BG_COLOR)
         self.screen.blit(draw_surf, (menu_x, menu_y))
-        pygame.draw.polygon(self.screen, self.SELECTOR_COLOR, ([sx,sy], [sx, sy + ind_height], [sx + 15, (2 *sy + ind_height) / 2]))
+        pygame.draw.polygon(self.screen, self.SELECTOR_COLOR, ([sx,sy], [sx, sy + ind_height], [sx + 10, (2 *sy + ind_height) / 2]))
             
     def change_select(self, direction):
         if direction == self.UP:
@@ -94,9 +100,14 @@ class Menu(object):
             raise ReturnError
         
         elif isinstance(action, (tuple, list)):
-            if action[0] == 'toggle':
-                pass
+            if action[0] == 'settings':
+                self.settings[action[1]] = action[2]
+                print(self.settings)
+                raise ReturnError
             
+            if action[0] == 'start':
+                game = action[1]()
+                game.main(self.screen, self.settings)
     
     def add_action(self, index, action):
         """
@@ -104,6 +115,8 @@ class Menu(object):
             Change a value in the settings dict.
             Change the displayed item.
         """
+        if index < 0:
+            index = len(self.items) + index
         self.actions.update({index: action})
     
     def mainloop(self):
@@ -114,8 +127,7 @@ class Menu(object):
             clock.tick(30)
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
-                    self.seeya()
-                    return
+                    raise ExitError
                 
                 if e.type == pygame.KEYDOWN:
                     if e.key == pygame.K_ESCAPE:
@@ -132,17 +144,45 @@ class Menu(object):
                         
             self.draw()
             pygame.display.update()
-            
-            
-if __name__ == '__main__':
-    screen = pygame.display.set_mode((640, 480))
-    main_menu = Menu(screen, 'Start Options Quit'.split())
-    options_menu = Menu(screen, 'Levels Players Back'.split())
+
+def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level': 'maps/map1.tmx', 'players': 1},
+              font='coders_crux.ttf'):
     
-    main_menu.add_action(0, 'start')
-    main_menu.add_submenu(1, options_menu)
+    import glob
+    import os
+    font = pygame.font.Font(font, 32)
+    main_menu = Menu(screen, 'Start Options Quit'.split(), font=font)
+    options_menu = main_menu.add_submenu(1,'Levels Players Back'.split())
+    # options_menu = Menu(screen, 'Levels Players Back'.split())
+    
+    levels = glob.glob(level_glob)
+    level_items = [os.path.splitext(os.path.basename(l))[0] for l in levels] + ['Back']
+    levels_menu = options_menu.add_submenu(0, level_items)
+    
+    players_menu = options_menu.add_submenu(1, [1, 2, 'Back'])
+    
+    main_menu.add_action(0, ('start', Game))
     main_menu.add_action(2, 'return')
     
-    options_menu.add_action(2, 'return')
-    main_menu.mainloop()
+    options_menu.add_action(-1, 'return')
+    
+    levels_menu.add_action(-1, 'return')
+    players_menu.add_action(-1, 'return')
+
+    [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
+    [players_menu.change_settings(i, 'players', i+1) for i in range(2)]
+
+    try:
+        main_menu.mainloop()
+    except ExitError:
+        pygame.quit()
+            
+if __name__ == '__main__':
+    """Minimalist example for creating a menu."""
+    screen = pygame.display.set_mode((640, 480))
+    font = pygame.font.Font('../coders_crux.ttf', 48)
+    menu = Menu(screen, 'Some Good Items Exit'.split(), font)
+    menu.add_action(-1, 'return')
+    menu.mainloop()
+    
     
