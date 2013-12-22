@@ -9,7 +9,7 @@ import pygame
 from lib.keymap import km1, km2
 from lib import tmx
 from lib import pyganim
-from lib import my_menu
+from lib import menu
 
 SCREEN_SIZE = (840, 680)
 
@@ -492,5 +492,5 @@ class Game():
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    my_menu.main_menu(screen, Game)
+    menu.main_menu(screen, Game)
     
