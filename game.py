@@ -1,4 +1,5 @@
 # builtins
+import argparse
 import glob
 from os import path
 
@@ -11,7 +12,7 @@ from lib import tmx
 from lib import pyganim
 from lib import menu
 
-SCREEN_SIZE = (840, 680)
+SCREEN_SIZE = (640, 480)
 
 # Number of players by default.
 PLAYERS = '1'
@@ -488,9 +489,19 @@ class Game():
         length = (self.LIFEBAR_LENGTH - 3) * health/max_health 
         pygame.draw.rect(screen, color, (12,12 + offset*25, (length), 16))
 
-        
+
+def get_clargs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--small',
+                        action='store_true',
+                        default=False)
+    return parser.parse_args()
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+    args = get_clargs()
+    if args.small:
+        screen = pygame.display.set_mode(SCREEN_SIZE)
+    else:
+        screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
     menu.main_menu(screen, Game)
     
