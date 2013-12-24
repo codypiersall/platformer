@@ -79,7 +79,7 @@ class Bullet(BaseSprite):
     image = pygame.image.load('images/sprites/frog/Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
     image_left = pygame.transform.flip(image_right, True, False)
-    SPEED = 500
+    SPEED = 600
     # lifespan of bullet in seconds
     LIFESPAN = 1
     
@@ -162,13 +162,13 @@ class Player(BaseSprite):
         *groups: sprite group that the player belongs to.
     """
     # Player's left and right speed in pixels per second
-    SPEED = 200
+    SPEED = 250
     
     # Player's jumping speed in pixels per second.
     JUMP_SPEED = -700
     
     # How much time passes between shots in seconds.
-    COOLDOWN_TIME = 0.5
+    COOLDOWN_TIME = 0.3
     
     # Player's maximum health
     MAX_HEALTH = 5
