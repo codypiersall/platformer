@@ -345,6 +345,44 @@ class Game():
     LIFEBAR_WIDTH = 10
     
     
+
+    def change_state(self, key, event):
+        """Change game's states based on player input"""
+        if event.type == pygame.KEYDOWN:
+            for player in self.players:
+                if event.key == player.K_LEFT:
+                    player.moving = player.WALKING
+                    player.direction = player.LEFT
+                elif event.key == player.K_RIGHT:
+                    player.moving = player.WALKING
+                    player.direction = player.RIGHT
+                elif event.key == player.K_JUMP:
+                    player.jump = True
+                elif event.key == player.K_SHOOT:
+                    player.running = player.RUNNING
+                    player.shoot = True
+                elif event.key == player.K_INVINCIBLE:
+                    player.invincible = not player.invincible
+        
+        elif event.type == pygame.KEYUP:
+            for player in self.players:
+                if event.key == player.K_LEFT:
+                    if key[player.K_RIGHT]:
+                        player.moving = player.WALKING
+                        player.direction = player.RIGHT
+                    else:
+                        player.moving = player.STILL
+                elif event.key == player.K_RIGHT:
+                    if key[player.K_LEFT]:
+                        player.moving = player.WALKING
+                        player.direction = player.LEFT
+                    else:
+                        player.moving = player.STILL
+                elif event.key == player.K_SHOOT:
+                    player.running = player.NOT_RUNNING
+        
+        return player
+
     def main(self, screen, settings):
         level = settings['level']
         players = settings['players']
@@ -369,7 +407,7 @@ class Game():
         self.players = []
         
         self.players.append(Player((start_cell.px, start_cell.py), km1, 'frog', self.sprites))
-        if players == '2':    
+        if players == 2:    
             self.players.append(Player((start_cell.px, start_cell.py), km2, 'frog', self.sprites))
  
         self.tilemap.layers.append(self.sprites)
@@ -394,49 +432,12 @@ class Game():
                 if event.type == pygame.QUIT:
                     return
                 
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         return
                         
-                    for player in self.players:
-                        if event.key == player.K_LEFT:
-                            player.moving = player.WALKING
-                            player.direction = player.LEFT
-                            
-                        elif event.key == player.K_RIGHT:
-                            player.moving = player.WALKING
-                            player.direction = player.RIGHT
-                            
-                        elif event.key == player.K_JUMP:
-                            player.jump = True
-                            
-                        elif event.key == player.K_SHOOT:
-                            player.running = player.RUNNING
-                            player.shoot = True
-                        
-                        elif event.key == player.K_INVINCIBLE:
-                            player.invincible = not player.invincible
-                        
-                elif event.type == pygame.KEYUP:
-                    for player in self.players:
-                        if event.key == player.K_LEFT:
-                            if key[player.K_RIGHT]: 
-                                player.moving = player.WALKING
-                                player.direction = player.RIGHT
-                            else:
-                                player.moving = player.STILL
-                        
-                        elif event.key == player.K_RIGHT:
-                            if key[player.K_LEFT]: 
-                                player.moving = player.WALKING
-                                player.direction = player.LEFT
-                            else:
-                                player.moving = player.STILL
-                                
-                        elif event.key == player.K_SHOOT:
-                            player.running = player.NOT_RUNNING
+                else:
+                    self.change_state(key, event)
 
-            
             screen.blit(background, (0,0))
             self.tilemap.update(dt, self)
             self.tilemap.draw(screen)
