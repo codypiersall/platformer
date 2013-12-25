@@ -400,6 +400,7 @@ class Game():
         
         background = pygame.image.load(path.join(BACKGROUNDS, background_file))
         background = pygame.transform.scale(background, screen.get_size())
+        background = background.convert()
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
