@@ -1,7 +1,7 @@
 # builtins
 import argparse
 import glob
-from os import path
+import os
 
 # Third-party
 import pygame
@@ -11,6 +11,7 @@ from lib.keymap import km1, km2
 from lib import tmx
 from lib import pyganim
 from lib import menu
+from lib import images
 
 SCREEN_SIZE = (640, 480)
 
@@ -21,11 +22,11 @@ PLAYERS = '1'
 DEFAULT_MAP = 'maps/map1.tmx'
 
 # Path to backgrounds directory
-BACKGROUNDS = path.join('images', 'backgrounds')
+BACKGROUNDS = os.path.join('images', 'backgrounds')
 DEFAULT_BACKGROUND = 'black.bmp'
 
 # Path to sprites directory
-SPRITES = path.join('images','sprites')
+SPRITES = os.path.join('images','sprites')
 
 # colors
 GREEN = pygame.Color(0, 200, 0)
@@ -77,7 +78,7 @@ class BaseSprite(pygame.sprite.Sprite):
         self.image = next_anim.getCurrentFrame()
         
 class Bullet(BaseSprite):
-    image = pygame.image.load('images/sprites/frog/Masamune.gif')
+    image = images.load('images/sprites/frog/Masamune.gif')
     image_right = pygame.transform.rotate(image, 270)
     image_left = pygame.transform.flip(image_right, True, False)
     SPEED = 500
@@ -121,7 +122,7 @@ class Bullet(BaseSprite):
             
 class Enemy(BaseSprite):
     SPEED = 100
-    image_left = pygame.image.load('images/sprites/enemies/Sentry-left.gif')
+    image_left = images.load('images/sprites/enemies/Sentry-left.gif')
     image = image_left
     image_right = pygame.transform.flip(image_left, True, False)
     
@@ -176,8 +177,8 @@ class Player(BaseSprite):
 
     def init_animations(self, character):
         # folder containing the character images.
-        p = path.join(SPRITES, character)
-        walk_anim_files = sorted(glob.glob(path.join(p, 'walk-[0-9][0-9].gif')))
+        p = os.path.join(SPRITES, character)
+        walk_anim_files = sorted(glob.glob(os.path.join(p, 'walk-[0-9][0-9].gif')))
         
         self.walk_left_anim = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])
         self.walk_right_anim = self.walk_left_anim.getCopy()
@@ -398,9 +399,7 @@ class Game():
         except KeyError:
             background_file = DEFAULT_BACKGROUND
         
-        background = pygame.image.load(path.join(BACKGROUNDS, background_file))
-        background = pygame.transform.scale(background, screen.get_size())
-        background = background.convert()
+        background = images.load(os.path.join(BACKGROUNDS, background_file), convert=True, size=screen.get_size())
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
