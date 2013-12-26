@@ -78,15 +78,16 @@ class BaseSprite(pygame.sprite.Sprite):
         self.image = next_anim.getCurrentFrame()
         
 class Bullet(BaseSprite):
-    image = images.load('images/sprites/frog/Masamune.gif')
-    image_right = pygame.transform.rotate(image, 270)
-    image_left = pygame.transform.flip(image_right, True, False)
     SPEED = 500
     # lifespan of bullet in seconds
     LIFESPAN = 1
     
     def __init__(self, location, direction, *groups):
         super().__init__(*groups)
+        bullet_path = 'images/sprites/frog/Masamune.gif'
+        self.image_right = images.load(bullet_path, rotate=270)
+        self.image_left = images.load(bullet_path, rotate=270, flip=(True, False))
+    
         if direction == self.RIGHT:
             self.image = self.image_right
             self.rect = pygame.rect.Rect(location, self.image.get_size())
@@ -122,15 +123,17 @@ class Bullet(BaseSprite):
             
 class Enemy(BaseSprite):
     SPEED = 100
-    image_left = images.load('images/sprites/enemies/Sentry-left.gif')
-    image = image_left
-    image_right = pygame.transform.flip(image_left, True, False)
     
     def __init__(self, location, *groups):
         super().__init__(*groups)
         self.attack = 1
-        self.rect = pygame.rect.Rect(location, self.image.get_size())
         self.direction = self.RIGHT
+        image_path = 'images/sprites/enemies/Sentry-left.gif'
+        self.image_left = images.load(image_path)
+        self.image = self.image_left
+        self.image_right = images.load(image_path, flip=(True, False))
+        self.rect = pygame.rect.Rect(location, self.image.get_size())
+        
         
     def update(self, dt, game):
         self.rect.x += int(self.direction * self.SPEED * dt)
@@ -381,8 +384,6 @@ class Game():
                         player.moving = player.STILL
                 elif event.key == player.K_SHOOT:
                     player.running = player.NOT_RUNNING
-        
-        return player
 
     def main(self, screen, settings):
         level = settings['level']
