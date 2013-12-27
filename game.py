@@ -1,4 +1,5 @@
 # builtins
+import argparse
 import glob
 from os import path
 
@@ -11,7 +12,7 @@ from lib import tmx
 from lib import pyganim
 from lib import menu
 
-SCREEN_SIZE = (840, 680)
+SCREEN_SIZE = (640, 480)
 
 # Number of players by default.
 PLAYERS = '1'
@@ -162,7 +163,7 @@ class Player(BaseSprite):
         *groups: sprite group that the player belongs to.
     """
     # Player's left and right speed in pixels per second
-    SPEED = 250
+    SPEED = 200
     
     # Player's jumping speed in pixels per second.
     JUMP_SPEED = -700
@@ -337,14 +338,17 @@ class Player(BaseSprite):
             self.is_dead = True
         
 class Game():
-    GRAVITY = 2000
+    GRAVITY = 1800
     MAX_FALL_SPEED = 600
     FPS = 60
     LIFEBAR_LENGTH = 250
     LIFEBAR_WIDTH = 10
     
     
-    def main(self, screen, level, players):
+    def main(self, screen, settings):
+        level = settings['level']
+        players = settings['players']
+        
         self.level_beaten = False
         clock = pygame.time.Clock()
         
@@ -357,7 +361,7 @@ class Game():
             background_file = DEFAULT_BACKGROUND
         
         background = pygame.image.load(path.join(BACKGROUNDS, background_file))
-        background = pygame.transform.scale(background, SCREEN_SIZE)
+        background = pygame.transform.scale(background, screen.get_size())
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
@@ -482,13 +486,22 @@ class Game():
         else:
             color = GREEN
         
-        
         length = (self.LIFEBAR_LENGTH - 3) * health/max_health 
         pygame.draw.rect(screen, color, (12,12 + offset*25, (length), 16))
 
-        
+
+def get_clargs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--small',
+                        action='store_true',
+                        default=False)
+    return parser.parse_args()
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode(SCREEN_SIZE)
-    menu.main_menu(screen, Game, DEFAULT_MAP, PLAYERS)
+    args = get_clargs()
+    if args.small:
+        screen = pygame.display.set_mode(SCREEN_SIZE)
+    else:
+        screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+    menu.main_menu(screen, Game)
     
