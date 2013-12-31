@@ -8,14 +8,14 @@ import os
 import pygame
 
 # first-party imports
-from .base import BaseSprite
+from .base import AffectedByGravitySprite
 from .objects import Bullet
 from .. import pyganim
 
 # Path to sprites directory
 SPRITES = os.path.join('images','sprites')
 
-class Player(BaseSprite):
+class Player(AffectedByGravitySprite):
     """
     Create a player instance.
     Args:
@@ -151,40 +151,6 @@ class Player(BaseSprite):
         self.try_to_jump(game)
         self.try_to_shoot(game)
 
-
-    def move(self, dt, game):
-        """Movement and collision stuff"""
-        last_position = self.rect.copy()
-        self.rect.x += int(self.direction * self.SPEED * self.moving * self.running * dt)
-        self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
-        self.rect.y += self.dy * dt
-        new = self.rect
-        self.resting = False
-    
-        for cell in game.tilemap.layers['triggers'].collide(new, 'blockers'):
-            blockers = cell['blockers']
-            if 'l' in blockers and last_position.right <= cell.left and new.right > cell.left:
-                # this check is important because it lets you walk along blocks.
-                if not last_position.bottom == cell.top:
-                    new.right = cell.left
-            if 'r' in blockers and last_position.left >= cell.right and new.left < cell.right:
-                # this check is important because it lets you walk along blocks.
-                if not last_position.bottom == cell.top:
-                    new.left = cell.right
-            if 't' in blockers and last_position.bottom <= cell.top and new.bottom > cell.top:
-                # this check makes sure you can't cling to blocks that you shouldn't be able to.
-                if new.right > cell.left and new.left < cell.right:
-                    self.resting = True
-                    self.double_jumped = False
-                    new.bottom = cell.top
-                    self.dy = game.GRAVITY * dt
-            if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom: 
-                # this check makes sure you can't cling to blocks that you shouldn't be able to.
-                if new.right > cell.left and new.left < cell.right:
-                    new.top = cell.bottom
-                    self.dy = 0
-        
-        return new
 
     def update(self, dt, game):
         

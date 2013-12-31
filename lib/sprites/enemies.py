@@ -4,15 +4,15 @@
 import pygame
 
 # first-party imports
-from .base import BaseSprite
+from .base import AffectedByGravitySprite
 from .. import images
 
-class Knight(BaseSprite):
+class Knight(AffectedByGravitySprite):
     SPEED = 100
-    
+    attack = 1
     def __init__(self, location, *groups):
         super().__init__(*groups)
-        self.attack = 1
+        self.running = 1
         self.direction = self.RIGHT
         image_path = 'images/sprites/enemies/Sentry-left.gif'
         self.image_left = images.load(image_path)
@@ -22,12 +22,8 @@ class Knight(BaseSprite):
         
         
     def update(self, dt, game):
-        self.rect.x += int(self.direction * self.SPEED * dt)
         
-        if self.direction > 0:
-            self.image = self.image_right
-        else:
-            self.image = self.image_left
+        self.move(dt, game)
         for cell in game.tilemap.layers['triggers'].collide(self.rect, 'reverse'):
             if self.direction > 0:
                 self.rect.right = cell.left
