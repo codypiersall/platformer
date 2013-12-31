@@ -7,6 +7,7 @@ class Bullet(BaseSprite):
     # lifespan of bullet in seconds
     LIFESPAN = 1
     AFFECTED_BY_BLOCKERS = False
+    AFFECTED_BY_GRAVITY = False
     
     def __init__(self, location, direction, *groups):
         super().__init__(*groups)
@@ -30,7 +31,7 @@ class Bullet(BaseSprite):
         if self.lifespan < 0:
             self.kill()
             return
-        self.rect.x += self.direction * self.SPEED * dt
+        self.move(dt, game)
         
         # get all collided sprites, to kill only the nearest one.
         collided = pygame.sprite.spritecollide(self, game.enemies, False)

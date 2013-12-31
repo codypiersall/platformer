@@ -31,7 +31,6 @@ DARK_GREY = pygame.Color(50, 50, 50)
 
 class Game():
     GRAVITY = 2000
-    MAX_FALL_SPEED = 600
     FPS = 60
     LIFEBAR_LENGTH = 250
     LIFEBAR_WIDTH = 10
@@ -50,7 +49,7 @@ class Game():
                 elif event.key == player.K_JUMP:
                     player.jump = True
                 elif event.key == player.K_SHOOT:
-                    player.running = player.RUNNING
+                    player.x_multiplier = player.RUNNING
                     player.shoot = True
                 elif event.key == player.K_INVINCIBLE:
                     player.invincible = not player.invincible
@@ -70,7 +69,7 @@ class Game():
                     else:
                         player.moving = player.STILL
                 elif event.key == player.K_SHOOT:
-                    player.running = player.NOT_RUNNING
+                    player.x_multiplier = player.NOT_RUNNING
 
     def main(self, screen, settings):
         level = settings['level']

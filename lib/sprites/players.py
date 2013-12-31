@@ -83,7 +83,7 @@ class Player(BaseSprite):
         # whether the player is moving (either self.STILL or self.WALK)
         self.direction = self.RIGHT
         self.moving = self.STILL
-        self.running = self.NOT_RUNNING
+        self.x_multiplier = self.NOT_RUNNING
         
         # Whether the character should try to jump.  This gets set to True
         # when the player hits the jump button (default space) but does not

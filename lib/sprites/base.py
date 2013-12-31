@@ -16,6 +16,8 @@ class BaseSprite(pygame.sprite.Sprite):
     AFFECTED_BY_BLOCKERS = True
     REVERSED_BY_BLOCKERS = False
     
+    MAX_FALL_SPEED = 600
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.moving = self.WALKING
@@ -23,7 +25,8 @@ class BaseSprite(pygame.sprite.Sprite):
         self.is_dead = False
         self.been_hit = False
         self.dy = 0
-
+        self.x_multiplier = 1
+        
     def hit(self, other):
         """ This is a lame, unsophisticated way to do attacks."""
         if other.been_hit <= 0:
@@ -51,7 +54,7 @@ class BaseSprite(pygame.sprite.Sprite):
 
     def react_to_gravity(self, dt, game):
         """Adjust y direction and position based on game's gravity."""
-        self.dy = min(game.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
+        self.dy = min(self.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)
         self.rect.y += self.dy * dt
 
 
@@ -86,11 +89,18 @@ class BaseSprite(pygame.sprite.Sprite):
                     if self.AFFECTED_BY_GRAVITY:
                         self.dy = 0
 
+
+    def move_x(self, dt):
+        """Move in the x direction."""
+        return self.direction * self.SPEED * self.moving * self.x_multiplier * dt
+
     def move(self, dt, game):
-        """Movement and collision stuff, for sprites affected by gravity"""
+        """Movement and collision stuff"""
         last_position = self.rect.copy()
-        self.react_to_gravity(dt, game)
-        self.rect.x += int(self.direction * self.SPEED * self.moving * self.running * dt)
+        if self.AFFECTED_BY_GRAVITY:
+            self.react_to_gravity(dt, game)
+        
+        self.rect.x += int(self.move_x(dt))
         
         new = self.rect
         self.resting = False

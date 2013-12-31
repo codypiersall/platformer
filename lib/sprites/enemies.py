@@ -13,7 +13,7 @@ class Knight(BaseSprite):
     REVERSED_BY_BLOCKERS = True
     def __init__(self, location, *groups):
         super().__init__(*groups)
-        self.running = 1
+        self.x_multiplier = 1
         self.direction = self.RIGHT
         image_path = 'images/sprites/enemies/Sentry-left.gif'
         self.image_left = images.load(image_path)
