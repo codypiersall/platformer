@@ -110,7 +110,7 @@
   </object>
   <object name="enemy" x="320" y="4320" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="player" x="0" y="4256" width="32" height="32">
@@ -175,7 +175,7 @@
   </object>
   <object name="enemy" x="256" y="4640" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="96" y="4640" width="32" height="32">
@@ -185,27 +185,27 @@
   </object>
   <object name="enemy" x="352" y="4640" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="512" y="4640" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="608" y="4640" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="800" y="4640" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="1056" y="4640" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="1088" y="4640" width="32" height="32">
@@ -215,7 +215,7 @@
   </object>
   <object name="enemy" x="672" y="4384" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="736" y="4384" width="32" height="32">
@@ -230,17 +230,17 @@
   </object>
   <object name="enemy" x="256" y="4320" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="64" y="4192" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="704" y="4096" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="736" y="3744" width="32" height="32">
@@ -250,12 +250,12 @@
   </object>
   <object name="enemy" x="640" y="3744" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="544" y="3744" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="384" y="3744" width="32" height="32">
@@ -275,22 +275,22 @@
   </object>
   <object name="enemy" x="64" y="3648" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="160" y="3648" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="288" y="3456" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="352" y="3456" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="224" y="3456" width="32" height="32">
@@ -315,12 +315,12 @@
   </object>
   <object name="enemy" x="576" y="3200" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="672" y="3200" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="64" y="2944" width="32" height="32">
@@ -335,7 +335,7 @@
   </object>
   <object name="enemy" x="128" y="2944" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="blockers" x="928" y="2560" width="160" height="32">
@@ -390,7 +390,7 @@
   </object>
   <object name="enemy" x="64" y="2144" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="128" y="2144" width="32" height="32">
@@ -405,17 +405,17 @@
   </object>
   <object name="enemy" x="768" y="1888" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="832" y="1888" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="896" y="1888" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="928" y="1888" width="32" height="32">
@@ -435,17 +435,17 @@
   </object>
   <object name="enemy" x="800" y="1504" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="448" y="1504" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="224" y="1504" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="blockers" x="320" y="1408" width="128" height="32">
@@ -475,12 +475,12 @@
   </object>
   <object name="enemy" x="864" y="1184" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="864" y="1184" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="800" y="1184" width="32" height="32">
@@ -490,7 +490,7 @@
   </object>
   <object name="enemy" x="96" y="1408" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="64" y="1408" width="32" height="32">
@@ -510,7 +510,7 @@
   </object>
   <object name="enemy" x="416" y="1056" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="544" y="1056" width="32" height="32">
@@ -590,12 +590,12 @@
   </object>
   <object name="enemy" x="864" y="768" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="704" y="768" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="896" y="768" width="32" height="32">

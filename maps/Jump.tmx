@@ -34,12 +34,12 @@
   </object>
   <object name="enemy" x="992" y="480" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="448" y="480" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="384" y="480" width="32" height="32">
@@ -189,17 +189,17 @@
   </object>
   <object name="enemy" x="1824" y="800" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="1696" y="608" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="1696" y="608" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="1792" y="608" width="32" height="32">

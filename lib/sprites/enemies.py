@@ -7,7 +7,7 @@ import pygame
 from .base import BaseSprite
 from .. import images
 
-class Enemy(BaseSprite):
+class Knight(BaseSprite):
     SPEED = 100
     
     def __init__(self, location, *groups):

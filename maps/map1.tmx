@@ -25,12 +25,12 @@
   </object>
   <object name="enemy" x="736" y="320" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="enemy" x="672" y="320" width="32" height="32">
    <properties>
-    <property name="enemy" value=""/>
+    <property name="enemy" value="Knight"/>
    </properties>
   </object>
   <object name="reverse" x="576" y="320" width="32" height="32">

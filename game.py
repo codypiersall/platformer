@@ -10,6 +10,7 @@ from lib.keymap import km1, km2
 from lib import tmx, menu, images 
 from lib import sprites
 
+ENEMY_MAP = {'Knight': sprites.Knight}
 SCREEN_SIZE = (640, 480)
 
 # Number of players by default.
@@ -77,8 +78,6 @@ class Game():
         players = settings['players']
         
         self.level_beaten = False
-        clock = pygame.time.Clock()
-        
         
         self.tilemap = tmx.load(level, screen.get_size())
         try:
@@ -107,10 +106,12 @@ class Game():
         
         self.enemies = tmx.SpriteLayer()
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
-            sprites.Enemy((enemy.px, enemy.py), self.enemies)
+            
+            ENEMY_MAP[enemy['enemy']]((enemy.px, enemy.py), self.enemies)
         
         self.tilemap.layers.append(self.enemies)
         
+        clock = pygame.time.Clock()
         while True:
             dt = clock.tick(self.FPS) / 1000
             key = pygame.key.get_pressed()
