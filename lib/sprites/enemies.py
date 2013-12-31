@@ -4,12 +4,13 @@
 import pygame
 
 # first-party imports
-from .base import AffectedByGravitySprite
+from .base import BaseSprite
 from .. import images
 
-class Knight(AffectedByGravitySprite):
+class Knight(BaseSprite):
     SPEED = 100
     attack = 1
+    REVERSED_BY_BLOCKERS = True
     def __init__(self, location, *groups):
         super().__init__(*groups)
         self.running = 1

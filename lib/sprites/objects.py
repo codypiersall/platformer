@@ -6,6 +6,7 @@ class Bullet(BaseSprite):
     SPEED = 500
     # lifespan of bullet in seconds
     LIFESPAN = 1
+    AFFECTED_BY_BLOCKERS = False
     
     def __init__(self, location, direction, *groups):
         super().__init__(*groups)

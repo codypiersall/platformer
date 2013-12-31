@@ -8,14 +8,14 @@ import os
 import pygame
 
 # first-party imports
-from .base import AffectedByGravitySprite
+from .base import BaseSprite
 from .objects import Bullet
 from .. import pyganim
 
 # Path to sprites directory
 SPRITES = os.path.join('images','sprites')
 
-class Player(AffectedByGravitySprite):
+class Player(BaseSprite):
     """
     Create a player instance.
     Args:

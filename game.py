@@ -37,7 +37,6 @@ class Game():
     LIFEBAR_WIDTH = 10
     
     
-
     def change_state(self, key, event):
         """Change game's states based on player input"""
         if event.type == pygame.KEYDOWN:
