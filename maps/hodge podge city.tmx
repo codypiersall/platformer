@@ -4,38 +4,32 @@
   <property name="background" value="cityscape.jpeg"/>
   <property name="type" value="exit"/>
  </properties>
- <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
-  <image source="../images/tilesets/PencilMan.png" width="512" height="256"/>
- </tileset>
- <tileset firstgid="129" name="cave" tilewidth="32" tileheight="32">
-  <image source="../images/tilesets/pubdlcnt.php.png" width="320" height="224"/>
- </tileset>
- <tileset firstgid="199" name="open rpg" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="open rpg" tilewidth="32" tileheight="32">
   <image source="../images/tilesets/open rpg.php.png" width="960" height="960"/>
  </tileset>
- <tileset firstgid="1099" name="open rpg2" tilewidth="32" tileheight="32">
+ <tileset firstgid="901" name="open rpg2" tilewidth="32" tileheight="32">
   <image source="../images/tilesets/open rpg2.png" width="960" height="960"/>
  </tileset>
- <tileset firstgid="1999" name="open rpg3" tilewidth="32" tileheight="32">
+ <tileset firstgid="1801" name="open rpg3" tilewidth="32" tileheight="32">
   <image source="../images/tilesets/open rpg3.png" width="960" height="960"/>
  </tileset>
  <layer name="set" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
- <objectgroup name="triggers" width="100" height="25" visible="0">
+ <objectgroup name="triggers" width="100" height="25">
   <object name="blockers" x="0" y="672" width="1728" height="32">
    <properties>
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
-  <object name="reverse" x="512" y="608" width="32" height="32">
+  <object name="reverse" x="928" y="320" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="player" x="32" y="64" width="32" height="32">
+  <object name="player" x="160" y="64" width="32" height="32">
    <properties>
     <property name="player" value=""/>
    </properties>
@@ -90,12 +84,12 @@
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
-  <object name="reverse" x="608" y="608" width="32" height="32">
+  <object name="reverse" x="640" y="608" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="544" y="608" width="32" height="32">
+  <object name="enemy" x="576" y="608" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -190,22 +184,17 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="352" y="448" width="32" height="32">
+  <object name="enemy" x="448" y="416" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="416" y="448" width="32" height="32">
-   <properties>
-    <property name="enemy" value=""/>
-   </properties>
-  </object>
-  <object name="reverse" x="224" y="448" width="32" height="32">
+  <object name="reverse" x="224" y="416" width="32" height="64">
    <properties>
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="480" y="448" width="32" height="32">
+  <object name="reverse" x="800" y="416" width="32" height="64">
    <properties>
     <property name="reverse" value=""/>
    </properties>
@@ -215,7 +204,7 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="992" y="608" width="32" height="32">
+  <object name="enemy" x="960" y="416" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -235,12 +224,12 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="32" y="608" width="32" height="32">
+  <object name="reverse" x="224" y="608" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="480" y="608" width="32" height="32">
+  <object name="enemy" x="672" y="448" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -255,7 +244,7 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="1248" y="640" width="32" height="32">
+  <object name="reverse" x="1248" y="544" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
    </properties>
@@ -268,11 +257,6 @@
   <object name="reverse" x="1152" y="384" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
-   </properties>
-  </object>
-  <object name="enemy" x="1248" y="384" width="32" height="32">
-   <properties>
-    <property name="enemy" value=""/>
    </properties>
   </object>
   <object name="enemy" x="1312" y="384" width="32" height="32">
@@ -280,12 +264,7 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="1344" y="384" width="32" height="32">
-   <properties>
-    <property name="enemy" value=""/>
-   </properties>
-  </object>
-  <object name="enemy" x="1440" y="384" width="32" height="32">
+  <object name="enemy" x="1856" y="384" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -300,12 +279,12 @@
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="1536" y="576" width="32" height="32">
+  <object name="reverse" x="1504" y="576" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="1632" y="576" width="32" height="32">
+  <object name="enemy" x="1600" y="576" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -335,11 +314,6 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="2112" y="192" width="32" height="32">
-   <properties>
-    <property name="enemy" value=""/>
-   </properties>
-  </object>
   <object name="enemy" x="2176" y="192" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
@@ -360,7 +334,7 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="2016" y="608" width="32" height="32">
+  <object name="reverse" x="2016" y="544" width="32" height="96">
    <properties>
     <property name="reverse" value=""/>
    </properties>
@@ -375,21 +349,6 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="2688" y="480" width="32" height="32">
-   <properties>
-    <property name="reverse" value=""/>
-   </properties>
-  </object>
-  <object name="reverse" x="2624" y="480" width="32" height="32">
-   <properties>
-    <property name="reverse" value=""/>
-   </properties>
-  </object>
-  <object name="enemy" x="2656" y="480" width="32" height="32">
-   <properties>
-    <property name="enemy" value=""/>
-   </properties>
-  </object>
   <object name="enemy" x="3008" y="608" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
@@ -400,12 +359,12 @@
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="3168" y="608" width="32" height="32">
+  <object name="reverse" x="3168" y="544" width="32" height="96">
    <properties>
     <property name="reverse" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="3072" y="608" width="32" height="32">
+  <object name="enemy" x="3072" y="576" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -415,12 +374,12 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="2944" y="608" width="32" height="32">
+  <object name="enemy" x="2944" y="544" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="2816" y="608" width="32" height="32">
+  <object name="enemy" x="2816" y="576" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -430,12 +389,12 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="2688" y="608" width="32" height="32">
+  <object name="enemy" x="2720" y="544" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="2624" y="608" width="32" height="32">
+  <object name="enemy" x="2624" y="576" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -445,17 +404,17 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="2496" y="608" width="32" height="32">
+  <object name="enemy" x="2496" y="576" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="2368" y="608" width="32" height="32">
+  <object name="enemy" x="2400" y="544" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="enemy" x="2272" y="608" width="32" height="32">
+  <object name="enemy" x="2272" y="576" width="32" height="32">
    <properties>
     <property name="enemy" value=""/>
    </properties>
@@ -465,7 +424,7 @@
     <property name="enemy" value=""/>
    </properties>
   </object>
-  <object name="reverse" x="1568" y="544" width="32" height="32">
+  <object name="reverse" x="1536" y="544" width="32" height="32">
    <properties>
     <property name="reverse" value=""/>
    </properties>
@@ -478,7 +437,7 @@
  </objectgroup>
  <layer name="set 2" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJztlbFOwzAQhq9NTCGdGXiBDrDxCLRIsDJ17ghsSGygjoBEQWImEgzsMDOABA/RwMQzIJUycafYkps0iWniUJT7pF9/asVx4r++A2AYhmEYhmEYhmGYatDyzNR1ADZr4TVjD9rfjoEOZR4dzsMqlEdPasdJd8qjx3lYhfLoG0jVqz7nYRXKwzeQqld+iXlsibhsseKkqyz0nk11Kc0pj0ctjw383c5Qq5bv/W7EpN9azORj0WzMJia9vKPVq0DLw68DnOP4AHWR8B+ie/Jw4Ez6k8U8YMlwzCKql2dJ1Ssd2utLuU/Ko7nkzSOLexfgwY1f/1f0nk11Kc1N8ojmUlQeValX03r3pxv3ruH5iDrdszxjPwxw7hWu/V6fXq/u8HoPtY9aawCsorYb6c/c1ebEwNo0xLXepGjdsusV9eehF367egcai8q0XkV9vTl7Hl8yy++EM/aCe/q6AHD2izNzgveeiuQ5I1xrLJW0rk2oP4+88NvVO1B9Cry4J+XxLJLzuM5xPqpEu1mcjkTox6LY5zLMXzJw5tuZ+eIH8J+XTQ==
+   eJztlb9KA0EQxtfNGvTaRCufQYha+RIWvkCK2PkI5gRtrVKnVDvBTkklKhgD1h4oh73WFgrqDLdLNpfdu425DSfODz7mWPb/tzfDGEEQBEEQBEEQBEH8D5qLbupwxvZlf8IfeL+hg86lHyH54RX0oyt1xLMj+tElP7yCfvQcpPJVj/zwCvoROUjlq2iGfhyIcflim2drVug1G/NSVkQ/3jU/9kDtHDWn3N+TGI3PHj1ZWXBr84lLLQ+1fFUPhmOjOcbuoL0Pure8IewzDWd8NH549GPTcPemNp+oWp4nla908K4H8p5UTPsyrR95vFYYe6uMf/9V9JqNeSkruviR9qUoP/R8deX4Zl37KfLy1aTz/QZT7V4V47Gj/R9qX1l+DDQ/tnLqoe2cdRj3AO99mY/mq1j2f4HvE9ApaKfKWAt0WB2Ojw3zHmtj0mBuqsE6S1K4rp6vTPMVDdbnWpCcXe0B29LS81U8gR+7Qb4ftnOu8WTsBjf3/4I7/Z5n7NZSU0zzXkPfG2Ef04C11qVs6/oE63MjSM6u9oD5CdvT0ebHp7D78ejwf8zinGWnHRSnC5HES1HsvIQ/WkEiwk6flzsS5eIHy13NUQ==
   </data>
  </layer>
 </map>
