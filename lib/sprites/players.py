@@ -33,6 +33,8 @@ class Player(BaseSprite):
     # Player's jumping speed in pixels per second.
     JUMP_SPEED = -700
     
+    # Player goes 1.5 times faster when running.
+    RUNNING = 1.5
     # How much time passes between shots in seconds.
     COOLDOWN_TIME = 0.5
     

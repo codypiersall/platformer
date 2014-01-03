@@ -1,6 +1,7 @@
 import pygame
 
 class BaseSprite(pygame.sprite.Sprite):
+    """Sprite class from which all other sprites in the game inherit."""
     RIGHT = 1
     LEFT= -1
     
@@ -12,6 +13,7 @@ class BaseSprite(pygame.sprite.Sprite):
     # 1 second of invincibility after been hit.
     BEEN_HIT_TIME = 1
     
+    # These three constants affect how the sprite moves.
     AFFECTED_BY_GRAVITY = True
     AFFECTED_BY_BLOCKERS = True
     REVERSED_BY_BLOCKERS = False
