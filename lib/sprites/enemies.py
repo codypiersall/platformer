@@ -8,6 +8,7 @@ from .base import BaseSprite
 from .. import images
 
 class Knight(BaseSprite):
+    """This sprite just walks until it hits a blocker or a reverser, then turns around."""
     SPEED = 100
     attack = 1
     REVERSED_BY_BLOCKERS = True
@@ -23,7 +24,6 @@ class Knight(BaseSprite):
         
         
     def update(self, dt, game):
-        
         self.move(dt, game)
         for cell in game.tilemap.layers['triggers'].collide(self.rect, 'reverse'):
             if self.direction > 0:
