@@ -99,7 +99,7 @@ class PygAnimation(object):
 
 
     def reverse(self):
-        # Reverses the order of the animations.
+        # Reverses the order of the ground_images.
         self.elapsed = self._startTimes[-1] - self.elapsed
         self._images.reverse()
         self._transformedImages.reverse()
@@ -694,7 +694,7 @@ class PygConductor(object):
     def _propSetAnimations(self, val):
         self._animations = val
 
-    animations = property(_propGetAnimations, _propSetAnimations)
+    ground_images = property(_propGetAnimations, _propSetAnimations)
 
     def play(self, startTime=None):
         if startTime is None:

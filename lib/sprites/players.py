@@ -10,6 +10,7 @@ import pygame
 # first-party imports
 from .base import BaseSprite
 from .objects import Bullet
+from .. import images
 from .. import pyganim
 
 # Path to sprites directory
@@ -45,15 +46,22 @@ class Player(BaseSprite):
         # folder containing the character images.
         p = os.path.join(SPRITES, character)
         walk_anim_files = sorted(glob.glob(os.path.join(p, 'walk-[0-9][0-9].gif')))
+        jump_anim_files = sorted(glob.glob(os.path.join(p, 'jump-[0-9][0-9].gif')))
         
-        self.walk_left_anim = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])
-        self.walk_right_anim = self.walk_left_anim.getCopy()
-        self.walk_right_anim.flip(True, False)
-        self.walk_right_anim.makeTransformsPermanent()
-        self.face_left = pyganim.PygAnimation([(walk_anim_files[0], 10)])
-        self.face_right = self.face_left.getCopy()
-        self.face_right.flip(True, False)
-        self.face_right.makeTransformsPermanent()
+        self.anim_walk_left = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])
+        
+        self.anim_walk_right = self.anim_walk_left.getCopy()
+        self.anim_walk_right.flip(True, False)
+        self.anim_walk_right.makeTransformsPermanent()
+        
+        self.image_face_left = images.load(walk_anim_files[0])
+        self.image_face_right = images.load(walk_anim_files[0], flip=(True, False))
+                
+        self.anim_jump_left = pyganim.PygAnimation([(image, .1) for image in jump_anim_files])
+
+        self.anim_jump_right= self.anim_jump_left.getCopy()
+        self.anim_jump_right.flip(True, False)
+        self.anim_jump_right.makeTransformsPermanent()
 
 
     def init_keys(self, keymap):
@@ -113,17 +121,25 @@ class Player(BaseSprite):
         self.defense = 1 
         self.init_animations(character)
         
-        # assign all the animations that belong to the player.
-        self.animations = {self.LEFT:  {self.STILL: self.face_left,
-                                        self.WALKING: self.walk_left_anim},
-                           self.RIGHT: {self.STILL: self.face_right,
-                                        self.WALKING: self.walk_right_anim}
-                           }
+        # assign all the ground_images that belong to the player.
+        self.ground_images = {
+                self.LEFT:  
+                    {self.STILL: self.image_face_left,
+                     self.WALKING: self.anim_walk_left},
+                 
+                 self.RIGHT: 
+                    {self.STILL: self.image_face_right,
+                    self.WALKING: self.anim_walk_right}
+                 }
+        
+        self.jump_images = {
+                self.LEFT: self.anim_jump_left,
+                self.RIGHT: self.anim_jump_right}
         
         # the current animation that is playing
-        self.current_animation = self.face_right
+        self.current_animation = self.anim_walk_left
         
-        self.image = self.face_right.getCurrentFrame()
+        self.image = self.image_face_right
         self.rect = pygame.rect.Rect(location, self.image.get_size())
 
     def try_to_jump(self, game):
@@ -156,15 +172,39 @@ class Player(BaseSprite):
     def set_image(self):
         """Sets the appropriate image to self.image based on the player's state."""
         
-        last_anim = self.current_animation
-        next_anim = self.animations[self.direction][self.moving]
-        if next_anim != last_anim:
-            last_anim.stop()
-            next_anim.play()
-            self.current_animation = next_anim
-
-        self.image = next_anim.getCurrentFrame()
+        # if the player is shooting, the shooting animation should always play.
+        # unfortunately, the player has no shooting method yet.
         
+        # if the player is jumping, we can set the image to jump.
+        if not self.resting:
+            new = self.jump_images[self.direction]
+            
+        else:
+            new = self.ground_images[self.direction][self.moving]
+            
+        # if the correct animation is already playing, we just need to
+        # get the current frame.
+        if new == self.current_animation:
+            self.image = new.getCurrentFrame()
+            return
+        
+        # We want to catch the Exception for when self.current_animation == None
+        try:
+            self.current_animation.stop()
+        
+        except AttributeError:
+            pass
+        
+        # this will fail if it is a static image
+        try:
+            new.play()
+            self.current_animation = new
+            self.image = new.getCurrentFrame()
+            
+        except AttributeError:
+            self.image = new
+            self.current_animation = None
+
     def update(self, dt, game):
         
         # finds the right animation and displays it.
