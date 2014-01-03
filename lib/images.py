@@ -11,7 +11,6 @@ def image_cacher():
             image = pygame.transform.scale(image, size)
         if rotate:
             image = pygame.transform.rotate(image, rotate)
-            print('rotating')
         if flip:
             image = pygame.transform.flip(image, *flip)
         if convert:

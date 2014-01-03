@@ -2,6 +2,7 @@ import pygame
 from .base import BaseSprite
 from .. import images
 
+
 class Bullet(BaseSprite):
     SPEED = 500
     # lifespan of bullet in seconds
@@ -11,7 +12,7 @@ class Bullet(BaseSprite):
     
     def __init__(self, location, direction, *groups):
         super().__init__(*groups)
-        bullet_path = 'images/sprites/frog/Masamune.gif'
+        bullet_path = 'images/sprites/players/frog/Masamune.gif'
         self.image_right = images.load(bullet_path, rotate=270)
         self.image_left = images.load(bullet_path, rotate=90)
     
