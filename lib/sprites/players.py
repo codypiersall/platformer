@@ -14,7 +14,7 @@ from .. import images
 from .. import pyganim
 
 # Path to sprites directory
-SPRITES = os.path.join('images','sprites')
+PLAYERS = os.path.join('images','sprites', 'players')
 
 class Player(BaseSprite):
     """
@@ -44,7 +44,7 @@ class Player(BaseSprite):
 
     def init_animations(self, character):
         # folder containing the character images.
-        p = os.path.join(SPRITES, character)
+        p = os.path.join(PLAYERS, character)
         walk_anim_files = sorted(glob.glob(os.path.join(p, 'walk-[0-9][0-9].gif')))
         jump_anim_files = sorted(glob.glob(os.path.join(p, 'jump-[0-9][0-9].gif')))
         
