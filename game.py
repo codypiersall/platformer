@@ -105,7 +105,7 @@ class Game():
         self.enemies = tmx.SpriteLayer()
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
             
-            ENEMY_MAP[enemy['enemy']]((enemy.px, enemy.py), self.enemies)
+            ENEMY_MAP[enemy['enemy']]((enemy.px, enemy.py), enemy['enemy'], self.enemies)
         
         self.tilemap.layers.append(self.enemies)
         
