@@ -18,9 +18,7 @@ class Knight(BaseSprite):
 
     
     def init_animations(self, enemy):
-        print(os.path.join(ENEMIES, enemy,'walk-[0-9][0-9].gif'))
         images = sorted(glob.glob(os.path.join(ENEMIES, enemy, 'walk-[0-9][0-9].gif')))
-        print(images)
         self.anim_walk_left = pyganim.PygAnimation([(image, .2) for image in images])
         
         self.anim_walk_right = self.anim_walk_left.getCopy()
