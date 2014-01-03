@@ -40,20 +40,6 @@ class BaseSprite(pygame.sprite.Sprite):
     def update_hit_timer(self, dt):
         self.been_hit = max(self.been_hit - dt, 0)
 
-    def animate(self):
-        """Animate the player based on direction and movement.
-           
-        If the animation that should be playing is already playing, this basically does nothing."""
-        last_anim = self.current_animation
-        next_anim = self.animations[self.direction][self.moving]
-        if next_anim != last_anim:
-            last_anim.stop()
-            next_anim.play()
-            self.current_animation = next_anim
-
-        self.image = next_anim.getCurrentFrame()
-    
-
     def react_to_gravity(self, dt, game):
         """Adjust y direction and position based on game's gravity."""
         self.dy = min(self.MAX_FALL_SPEED, self.dy + game.GRAVITY * dt)

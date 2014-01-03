@@ -16,7 +16,7 @@ class Knight(BaseSprite):
         self.x_multiplier = 1
         self.direction = self.RIGHT
         image_path = 'images/sprites/enemies/Sentry-left.gif'
-        self.image_left = images.load(image_path)
+        self.image_left = images.load(image_path, convert=False)
         self.image = self.image_left
         self.image_right = images.load(image_path, flip=(True, False))
         self.rect = pygame.rect.Rect(location, self.image.get_size())

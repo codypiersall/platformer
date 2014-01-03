@@ -21,7 +21,7 @@ class Player(BaseSprite):
     Args:
         location: (x,y) pixel location.  Where to place the player.
         keymap: a keymap.Keys instance specifying which keys the player uses.
-        character: images to use for the player instance.  As long.
+        character: images to use for the player instance
                    A folder with the name character must exist in images/sprites.
                    Right now this has to be frog, since that is the only folder in
                    images/sprites.
@@ -126,6 +126,19 @@ class Player(BaseSprite):
         self.image = self.face_right.getCurrentFrame()
         self.rect = pygame.rect.Rect(location, self.image.get_size())
 
+    def animate(self):
+        """Animate the player based on direction and movement.
+           
+        If the animation that should be playing is already playing, this basically does nothing."""
+        last_anim = self.current_animation
+        next_anim = self.animations[self.direction][self.moving]
+        if next_anim != last_anim:
+            last_anim.stop()
+            next_anim.play()
+            self.current_animation = next_anim
+
+        self.image = next_anim.getCurrentFrame()
+
     def try_to_jump(self, game):
         """Tries to jump."""
         if self.jump:
@@ -153,11 +166,14 @@ class Player(BaseSprite):
         self.try_to_jump(game)
         self.try_to_shoot(game)
 
-
+    def set_image(self):
+        """Sets the appropriate image to self.image based on the player's state."""
+        self.animate()
+        
     def update(self, dt, game):
         
         # finds the right animation and displays it.
-        self.animate()
+        self.set_image()
         
         self.update_hit_timer(dt)
         # jump, shoot, whatever.
