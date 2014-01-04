@@ -15,6 +15,14 @@ class ExitError(Exception):
     pass
 
 class Menu(object):
+    """
+    Class for building a menu.  Initialize it with a Pygame surface object,
+    list of menu items (it's just a list of strings), a Pygame font object,
+    and a dict of settings.  The idea behind this class is that menus are 
+    for changing settings, which will be given to other Pygame objects.
+    
+    
+    """
     SPACE = 10
     UP = pygame.K_UP
     DOWN = pygame.K_DOWN
@@ -34,12 +42,28 @@ class Menu(object):
         self.actions = {}
         self.initial_repeat = pygame.key.get_repeat()
         self.repeat = (200, 70)
-        self.draw()
     
     def add_item(self, item):
+        """Add another item to the menu.  `item` should just be a string."""
         self.items.append(item)
     
     def add_submenu(self, index, items):
+        """
+        Create a new Menu instance, initialized with items, that can be
+        accessed by clicking on the index of the current menu.
+        
+        This makes the font and the settings refer to the same object,
+        so a submenu can change settings too.
+        
+        example:
+        ```
+        main_menu = Menu(screen, ['Start', 'Options', 'Back'], some_font)
+        options_menu = main_menu.add_submenu(1, ['Levels', 'Character Select'])
+        ```
+        
+        this will create a menu with "Start", "Options", and "Back" items first;
+        then clicking "Options" will start the `options_menu` main loop.
+        """
         
         submenu = Menu(self.screen, items, self.font, self.settings)
         
@@ -47,9 +71,14 @@ class Menu(object):
         return submenu
     
     def change_settings(self, index, setting, value):
+        """
+        When a menu item associated with the given index is clicked,
+        change the setting indicated to value.
+        """
         self.add_action(index, ('settings', setting, value))
     
     def draw(self):
+        """Menu layout and whatnot."""
         self.surfaces = [self.font.render(str(i), 1, self.FONT_COLOR) for i in self.items]
         
         num_items = len(self.items)
@@ -72,6 +101,7 @@ class Menu(object):
         pygame.draw.polygon(self.screen, self.SELECTOR_COLOR, ([sx,sy], [sx, sy + ind_height], [sx + 10, (2 *sy + ind_height) / 2]))
             
     def change_select(self, direction):
+        """Change the current menu selection."""
         if direction == self.UP:
             if self.selected == 0:
                 self.selected = len(self.items) - 1
@@ -85,7 +115,8 @@ class Menu(object):
                 self.selected += 1
 
 
-    def reset_repeat(self):
+    def _reset_repeat(self):
+        """Change key repeat back to what it was before the menu was called."""
         if self.initial_repeat == (0, 0):
             pygame.key.set_repeat()
         else:
@@ -93,14 +124,18 @@ class Menu(object):
 
     def seeya(self):
         """Clean up code when the menu is destroyed."""
-        self.reset_repeat()
+        self._reset_repeat()
     
-    def on_enter(self):        
+    def on_enter(self):
+        """Determine what to do when the enter key is pressed."""
+        
         action = self.actions[self.selected]
         if isinstance(action, Menu):
             action.mainloop()
             
         elif action == 'return':
+            # hokey way of getting back to the main loop.  I'm not proud
+            # of this.
             raise ReturnError
         
         elif isinstance(action, (tuple, list)):
@@ -111,7 +146,7 @@ class Menu(object):
             
             if action[0] == 'start':
                 game = action[1]()
-                self.reset_repeat()
+                self._reset_repeat()
                 game.main(self.screen, self.settings)
                 pygame.key.set_repeat(*self.repeat)
                 
@@ -121,6 +156,7 @@ class Menu(object):
             Change a value in the settings dict.
             Change the displayed item.
         """
+        
         if index < 0:
             index = len(self.items) + index
         self.actions.update({index: action})
