@@ -3,6 +3,7 @@
 # first-party imports
 import glob
 import os
+import re
 
 # third-party imports
 import pygame
@@ -15,6 +16,9 @@ from .. import pyganim
 
 # Path to sprites directory
 PLAYERS = os.path.join('images','sprites', 'players')
+
+WALK_IMAGE_FILE_PATTERN = re.compile('walk-[0-9][0-9].(gif)|(png)')
+JUMP_IMAGE_FILE_PATTERN = re.compile('jump-[0-9][0-9].(gif)|(png)')
 
 class Player(BaseSprite):
     """
@@ -41,12 +45,25 @@ class Player(BaseSprite):
     
     # Player's maximum health
     MAX_HEALTH = 5
-
+    
+    def _get_files(self, character):
+        """Return a tuple of the form (walk_files), (jump_files)"""
+        
+        p = os.path.join(PLAYERS, character)
+        files = os.listdir(p)
+        
+        walk = lambda f: re.match(WALK_IMAGE_FILE_PATTERN, f)
+        walk_files = [os.path.join(p, i) for i in filter(walk, files)]
+        
+        jump = lambda g: re.match(JUMP_IMAGE_FILE_PATTERN, g)
+        jump_files = [os.path.join(p, i) for i in filter(jump, files)]
+        
+        return walk_files, jump_files
+            
     def init_animations(self, character):
         # folder containing the character images.
-        p = os.path.join(PLAYERS, character)
-        walk_anim_files = sorted(glob.glob(os.path.join(p, 'walk-[0-9][0-9].gif')))
-        jump_anim_files = sorted(glob.glob(os.path.join(p, 'jump-[0-9][0-9].gif')))
+        
+        walk_anim_files, jump_anim_files = self._get_files(character)
         
         self.anim_walk_left = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])
         
