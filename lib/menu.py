@@ -67,7 +67,7 @@ class Menu(object):
         
         submenu = Menu(self.screen, items, self.font, self.settings)
         
-        self.add_action(index, submenu)
+        self.__add_action(index, submenu)
         return submenu
     
     def change_settings(self, index, setting, value):
@@ -75,7 +75,7 @@ class Menu(object):
         When a menu item associated with the given index is clicked,
         change the setting indicated to value.
         """
-        self.add_action(index, ('settings', setting, value))
+        self.__add_action(index, ('settings', setting, value))
     
     def draw(self):
         """Menu layout and whatnot."""
@@ -149,12 +149,21 @@ class Menu(object):
                 self._reset_repeat()
                 game.main(self.screen, self.settings)
                 pygame.key.set_repeat(*self.repeat)
-                
-    def add_action(self, index, action):
+    
+    def add_start_action(self, index, Game):
+        """Resets key repeat and calls `Game.main(self.screen, self.settings)`"""
+        self.__add_action(index, ('start', Game))
+        
+    def add_back_action(self, index):
+        """ 
+        Whenever `index` is selected, go to the previous mainloop.
         """
-        Supported actions:
-            Change a value in the settings dict.
-            Change the displayed item.
+        self.__add_action(-1, 'return')
+        
+    def __add_action(self, index, action):
+        """
+        Internal method used for adding an action to a menu item.
+        This should not be called directly.
         """
         
         if index < 0:
@@ -203,13 +212,13 @@ def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level'
     
     players_menu = options_menu.add_submenu(1, [1, 2, 'Back'])
     
-    main_menu.add_action(0, ('start', Game))
-    main_menu.add_action(2, 'return')
+    main_menu.add_start_action(0, Game)
+    main_menu.add_back_action(-1)
     
-    options_menu.add_action(-1, 'return')
+    options_menu.add_back_action(-1)
     
-    levels_menu.add_action(-1, 'return')
-    players_menu.add_action(-1, 'return')
+    levels_menu.add_back_action(-1)
+    players_menu.add_back_action(-1)
 
     [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
     [players_menu.change_settings(i, 'players', i+1) for i in range(2)]
@@ -224,7 +233,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((640, 480))
     font = pygame.font.Font('../coders_crux.ttf', 48)
     menu = Menu(screen, 'Some Good Items Exit'.split(), font)
-    menu.add_action(-1, 'return')
+    menu.__add_action(-1, 'return')
     menu.mainloop()
     
     
