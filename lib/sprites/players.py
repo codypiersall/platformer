@@ -9,7 +9,7 @@ import re
 import pygame
 
 # first-party imports
-from .base import BaseSprite
+from .base import BaseSprite, WALK_IMAGE_FILE_PATTERN, JUMP_IMAGE_FILE_PATTERN
 from .objects import Bullet
 from .. import images
 from .. import pyganim
@@ -17,8 +17,7 @@ from .. import pyganim
 # Path to sprites directory
 PLAYERS = os.path.join('images','sprites', 'players')
 
-WALK_IMAGE_FILE_PATTERN = re.compile('walk-[0-9][0-9].(gif)|(png)')
-JUMP_IMAGE_FILE_PATTERN = re.compile('jump-[0-9][0-9].(gif)|(png)')
+
 
 class Player(BaseSprite):
     """

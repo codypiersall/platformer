@@ -6,8 +6,9 @@ import glob
 import pygame
 
 # first-party imports
-from .base import BaseSprite
+from .base import BaseSprite, WALK_IMAGE_FILE_PATTERN, JUMP_IMAGE_FILE_PATTERN
 from .. import pyganim
+
 ENEMIES = os.path.join('images', 'sprites', 'enemies')
 
 class Knight(BaseSprite):
