@@ -12,8 +12,8 @@ class Bullet(BaseSprite):
     
     def __init__(self, location, direction, image_path, *groups):
         super().__init__(*groups)
-        self.image_right = images.load(image_path, rotate=270)
-        self.image_left = images.load(image_path, rotate=90)
+        self.image_left = images.load(image_path)
+        self.image_right = images.load(image_path, flip=(True, False))
     
         if direction == self.RIGHT:
             self.image = self.image_right
