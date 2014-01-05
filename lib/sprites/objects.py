@@ -10,11 +10,10 @@ class Bullet(BaseSprite):
     AFFECTED_BY_BLOCKERS = False
     AFFECTED_BY_GRAVITY = False
     
-    def __init__(self, location, direction, *groups):
+    def __init__(self, location, direction, image_path, *groups):
         super().__init__(*groups)
-        bullet_path = 'images/sprites/players/frog/Masamune.gif'
-        self.image_right = images.load(bullet_path, rotate=270)
-        self.image_left = images.load(bullet_path, rotate=90)
+        self.image_right = images.load(image_path, rotate=270)
+        self.image_left = images.load(image_path, rotate=90)
     
         if direction == self.RIGHT:
             self.image = self.image_right
