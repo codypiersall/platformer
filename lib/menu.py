@@ -1,5 +1,9 @@
 import pygame
 
+import glob
+import os
+CHARACTERS_DIRECTORY = os.path.join('images', 'sprites', 'players')
+
 pygame.init()
 if not pygame.display.get_init():
     pygame.display.init()
@@ -199,8 +203,6 @@ class Menu(object):
 def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level': 'maps/map1.tmx', 'players': 1},
               font='coders_crux.ttf'):
     
-    import glob
-    import os
     font = pygame.font.Font(font, 32)
     main_menu = Menu(screen, 'Start Options Quit'.split(), font=font)
     main_menu.add_start_action(0, Game)
@@ -212,17 +214,20 @@ def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level'
     levels = glob.glob(level_glob)
     level_items = [os.path.splitext(os.path.basename(l))[0] for l in levels] + ['Back']
     levels_menu = options_menu.add_submenu(0, level_items)
+    levels_menu.add_back_action(-1)
+    [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
     
     players_menu = options_menu.add_submenu(1, [1, 2, 'Back'])
-    
-    
-    
-    levels_menu.add_back_action(-1)
     players_menu.add_back_action(-1)
-
-    [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
     [players_menu.change_settings(i, 'players', i+1) for i in range(2)]
-
+    
+    
+    characters = os.listdir(CHARACTERS_DIRECTORY)
+    character_items = characters + ['Back']
+    character_select_menu = options_menu.add_submenu(2, character_items)
+    [character_select_menu.change_settings(i, 'character', character_items[i]) for i in range(len(characters))]
+    character_select_menu.add_back_action(-1)
+    
     try:
         main_menu.mainloop()
     except ExitError:
