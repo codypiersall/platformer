@@ -30,7 +30,7 @@ class Menu(object):
     BG_COLOR = (0,0,0)
     FONT_COLOR = (255,0,0)
     SELECTOR_COLOR = (0,255,0)
-    DEFAULT_SETTINGS = {'players': 1, 'level': 'maps/map1.tmx'}
+    DEFAULT_SETTINGS = {'players': 1, 'level': 'maps/map1.tmx', 'character': 'frog'}
     
     def __init__(self, screen, items, font, settings=DEFAULT_SETTINGS):
         self.settings = settings
@@ -203,8 +203,11 @@ def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level'
     import os
     font = pygame.font.Font(font, 32)
     main_menu = Menu(screen, 'Start Options Quit'.split(), font=font)
-    options_menu = main_menu.add_submenu(1,'Levels Players Back'.split())
-    # options_menu = Menu(screen, 'Levels Players Back'.split())
+    main_menu.add_start_action(0, Game)
+    main_menu.add_back_action(-1)
+
+    options_menu = main_menu.add_submenu(1,['Levels', 'Number of Players', 'Character Select', 'Back'])
+    options_menu.add_back_action(-1)
     
     levels = glob.glob(level_glob)
     level_items = [os.path.splitext(os.path.basename(l))[0] for l in levels] + ['Back']
@@ -212,10 +215,7 @@ def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level'
     
     players_menu = options_menu.add_submenu(1, [1, 2, 'Back'])
     
-    main_menu.add_start_action(0, Game)
-    main_menu.add_back_action(-1)
     
-    options_menu.add_back_action(-1)
     
     levels_menu.add_back_action(-1)
     players_menu.add_back_action(-1)

@@ -74,6 +74,7 @@ class Game():
     def main(self, screen, settings):
         level = settings['level']
         players = settings['players']
+        character = settings['character']
         
         self.level_beaten = False
         
@@ -91,9 +92,9 @@ class Game():
         
         self.players = []
         
-        self.players.append(sprites.Player((start_cell.px, start_cell.py), km1, 'frog', self.sprites))
+        self.players.append(sprites.Player((start_cell.px, start_cell.py), km1, character, self.sprites))
         if players == 2:    
-            self.players.append(sprites.Player((start_cell.px, start_cell.py), km2, 'frog', self.sprites))
+            self.players.append(sprites.Player((start_cell.px, start_cell.py), km2, character, self.sprites))
  
         self.tilemap.layers.append(self.sprites)
         
