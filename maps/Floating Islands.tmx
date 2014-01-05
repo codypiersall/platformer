@@ -21,7 +21,7 @@
     <property name="blockers" value="tlbr"/>
    </properties>
   </object>
-  <object name="player" x="32" y="192" width="32" height="32">
+  <object name="player" x="32" y="384" width="32" height="32">
    <properties>
     <property name="player" value=""/>
    </properties>
