@@ -3,18 +3,21 @@
 # first-party imports
 import glob
 import os
+import re
 
 # third-party imports
 import pygame
 
 # first-party imports
-from .base import BaseSprite
+from .base import BaseSprite 
+from .base import WALK_IMAGE_FILE_PATTERN, JUMP_IMAGE_FILE_PATTERN, WEAPON_FILE_PATTERN
 from .objects import Bullet
 from .. import images
 from .. import pyganim
 
 # Path to sprites directory
 PLAYERS = os.path.join('images','sprites', 'players')
+
 
 class Player(BaseSprite):
     """
@@ -41,12 +44,27 @@ class Player(BaseSprite):
     
     # Player's maximum health
     MAX_HEALTH = 5
-
+        
+    def _get_files(self, character):
+        """Return a tuple of the form (walk_files), (jump_files), weapon_file"""
+        
+        p = os.path.join(PLAYERS, character)
+        files = os.listdir(p)
+        
+        walk = lambda file: re.match(WALK_IMAGE_FILE_PATTERN, file)
+        walk_files = [os.path.join(p, i) for i in filter(walk, files)]
+        
+        jump = lambda file: re.match(JUMP_IMAGE_FILE_PATTERN, file)
+        jump_files = [os.path.join(p, i) for i in filter(jump, files)]
+        
+        weapon = lambda file: re.match(WEAPON_FILE_PATTERN, file)
+        weapon_file = [os.path.join(p, i) for i in filter(weapon, files)][0]
+        return walk_files, jump_files, weapon_file
+            
     def init_animations(self, character):
         # folder containing the character images.
-        p = os.path.join(PLAYERS, character)
-        walk_anim_files = sorted(glob.glob(os.path.join(p, 'walk-[0-9][0-9].gif')))
-        jump_anim_files = sorted(glob.glob(os.path.join(p, 'jump-[0-9][0-9].gif')))
+        
+        walk_anim_files, jump_anim_files, weapon_file = self._get_files(character)
         
         self.anim_walk_left = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])
         
@@ -62,7 +80,8 @@ class Player(BaseSprite):
         self.anim_jump_right= self.anim_jump_left.getCopy()
         self.anim_jump_right.flip(True, False)
         self.anim_jump_right.makeTransformsPermanent()
-
+        
+        self.weapon = weapon_file
 
     def init_keys(self, keymap):
         """Set player keys based on keymap."""
@@ -161,7 +180,7 @@ class Player(BaseSprite):
         if self.shoot:
             if not self.gun_cooldown:
                 game.shoot.play()
-                Bullet(self.rect.center, self.direction, game.sprites)
+                Bullet(self.rect.center, self.direction, self.weapon, game.sprites)
                 self.gun_cooldown = self.COOLDOWN_TIME
             self.shoot = False
 

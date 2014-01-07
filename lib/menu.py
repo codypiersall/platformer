@@ -1,5 +1,9 @@
 import pygame
 
+import glob
+import os
+CHARACTERS_DIRECTORY = os.path.join('images', 'sprites', 'players')
+
 pygame.init()
 if not pygame.display.get_init():
     pygame.display.init()
@@ -15,6 +19,14 @@ class ExitError(Exception):
     pass
 
 class Menu(object):
+    """
+    Class for building a menu.  Initialize it with a Pygame surface object,
+    list of menu items (it's just a list of strings), a Pygame font object,
+    and a dict of settings.  The idea behind this class is that menus are 
+    for changing settings, which will be given to other Pygame objects.
+    
+    
+    """
     SPACE = 10
     UP = pygame.K_UP
     DOWN = pygame.K_DOWN
@@ -22,7 +34,7 @@ class Menu(object):
     BG_COLOR = (0,0,0)
     FONT_COLOR = (255,0,0)
     SELECTOR_COLOR = (0,255,0)
-    DEFAULT_SETTINGS = {'players': 1, 'level': 'maps/map1.tmx'}
+    DEFAULT_SETTINGS = {'players': 1, 'level': 'maps/map1.tmx', 'character': 'frog'}
     
     def __init__(self, screen, items, font, settings=DEFAULT_SETTINGS):
         self.settings = settings
@@ -34,22 +46,43 @@ class Menu(object):
         self.actions = {}
         self.initial_repeat = pygame.key.get_repeat()
         self.repeat = (200, 70)
-        self.draw()
     
     def add_item(self, item):
+        """Add another item to the menu.  `item` should just be a string."""
         self.items.append(item)
     
     def add_submenu(self, index, items):
+        """
+        Create a new Menu instance, initialized with items, that can be
+        accessed by clicking on the index of the current menu.
+        
+        This makes the font and the settings refer to the same object,
+        so a submenu can change settings too.
+        
+        example:
+        ```
+        main_menu = Menu(screen, ['Start', 'Options', 'Back'], some_font)
+        options_menu = main_menu.add_submenu(1, ['Levels', 'Character Select'])
+        ```
+        
+        this will create a menu with "Start", "Options", and "Back" items first;
+        then clicking "Options" will start the `options_menu` main loop.
+        """
         
         submenu = Menu(self.screen, items, self.font, self.settings)
         
-        self.add_action(index, submenu)
+        self.__add_action(index, submenu)
         return submenu
     
     def change_settings(self, index, setting, value):
-        self.add_action(index, ('settings', setting, value))
+        """
+        When a menu item associated with the given index is clicked,
+        change the setting indicated to value.
+        """
+        self.__add_action(index, ('settings', setting, value))
     
     def draw(self):
+        """Menu layout and whatnot."""
         self.surfaces = [self.font.render(str(i), 1, self.FONT_COLOR) for i in self.items]
         
         num_items = len(self.items)
@@ -72,6 +105,7 @@ class Menu(object):
         pygame.draw.polygon(self.screen, self.SELECTOR_COLOR, ([sx,sy], [sx, sy + ind_height], [sx + 10, (2 *sy + ind_height) / 2]))
             
     def change_select(self, direction):
+        """Change the current menu selection."""
         if direction == self.UP:
             if self.selected == 0:
                 self.selected = len(self.items) - 1
@@ -85,7 +119,8 @@ class Menu(object):
                 self.selected += 1
 
 
-    def reset_repeat(self):
+    def _reset_repeat(self):
+        """Change key repeat back to what it was before the menu was called."""
         if self.initial_repeat == (0, 0):
             pygame.key.set_repeat()
         else:
@@ -93,14 +128,18 @@ class Menu(object):
 
     def seeya(self):
         """Clean up code when the menu is destroyed."""
-        self.reset_repeat()
+        self._reset_repeat()
     
-    def on_enter(self):        
+    def on_enter(self):
+        """Determine what to do when the enter key is pressed."""
+        
         action = self.actions[self.selected]
         if isinstance(action, Menu):
             action.mainloop()
             
         elif action == 'return':
+            # hokey way of getting back to the main loop.  I'm not proud
+            # of this.
             raise ReturnError
         
         elif isinstance(action, (tuple, list)):
@@ -111,16 +150,26 @@ class Menu(object):
             
             if action[0] == 'start':
                 game = action[1]()
-                self.reset_repeat()
+                self._reset_repeat()
                 game.main(self.screen, self.settings)
                 pygame.key.set_repeat(*self.repeat)
-                
-    def add_action(self, index, action):
+    
+    def add_start_action(self, index, Game):
+        """Resets key repeat and calls `Game.main(self.screen, self.settings)`"""
+        self.__add_action(index, ('start', Game))
+        
+    def add_back_action(self, index):
+        """ 
+        Whenever `index` is selected, go to the previous mainloop.
         """
-        Supported actions:
-            Change a value in the settings dict.
-            Change the displayed item.
+        self.__add_action(-1, 'return')
+        
+    def __add_action(self, index, action):
         """
+        Internal method used for adding an action to a menu item.
+        This should not be called directly.
+        """
+        
         if index < 0:
             index = len(self.items) + index
         self.actions.update({index: action})
@@ -154,30 +203,31 @@ class Menu(object):
 def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level': 'maps/map1.tmx', 'players': 1},
               font='coders_crux.ttf'):
     
-    import glob
-    import os
     font = pygame.font.Font(font, 32)
     main_menu = Menu(screen, 'Start Options Quit'.split(), font=font)
-    options_menu = main_menu.add_submenu(1,'Levels Players Back'.split())
-    # options_menu = Menu(screen, 'Levels Players Back'.split())
+    main_menu.add_start_action(0, Game)
+    main_menu.add_back_action(-1)
+
+    options_menu = main_menu.add_submenu(1,['Levels', 'Number of Players', 'Character Select', 'Back'])
+    options_menu.add_back_action(-1)
     
     levels = glob.glob(level_glob)
     level_items = [os.path.splitext(os.path.basename(l))[0] for l in levels] + ['Back']
     levels_menu = options_menu.add_submenu(0, level_items)
+    levels_menu.add_back_action(-1)
+    [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
     
     players_menu = options_menu.add_submenu(1, [1, 2, 'Back'])
-    
-    main_menu.add_action(0, ('start', Game))
-    main_menu.add_action(2, 'return')
-    
-    options_menu.add_action(-1, 'return')
-    
-    levels_menu.add_action(-1, 'return')
-    players_menu.add_action(-1, 'return')
-
-    [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
+    players_menu.add_back_action(-1)
     [players_menu.change_settings(i, 'players', i+1) for i in range(2)]
-
+    
+    
+    characters = os.listdir(CHARACTERS_DIRECTORY)
+    character_items = characters + ['Back']
+    character_select_menu = options_menu.add_submenu(2, character_items)
+    [character_select_menu.change_settings(i, 'character', character_items[i]) for i in range(len(characters))]
+    character_select_menu.add_back_action(-1)
+    
     try:
         main_menu.mainloop()
     except ExitError:
@@ -188,7 +238,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((640, 480))
     font = pygame.font.Font('../coders_crux.ttf', 48)
     menu = Menu(screen, 'Some Good Items Exit'.split(), font)
-    menu.add_action(-1, 'return')
+    menu.__add_action(-1, 'return')
     menu.mainloop()
     
     
