@@ -35,7 +35,7 @@ class Player(BaseSprite):
     SPEED = 225
     
     # Player's jumping speed in pixels per second.
-    JUMP_SPEED = -750
+    JUMP_SPEED = -725
     
     # Player goes 1.5 times faster when running.
     RUNNING = 1.5
