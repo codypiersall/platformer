@@ -45,20 +45,21 @@ class Player(BaseSprite):
     # Player's maximum health
     MAX_HEALTH = 5
         
+
     def _get_files(self, character):
         """Return a tuple of the form (walk_files), (jump_files), weapon_file"""
-        
         p = os.path.join(PLAYERS, character)
-        files = os.listdir(p)
+        files = os.listdir(p)        
         
-        walk = lambda file: re.match(WALK_IMAGE_FILE_PATTERN, file)
-        walk_files = [os.path.join(p, i) for i in filter(walk, files)]
+        def filter_files(pattern):
+            filter_function = lambda file:re.match(pattern, file)
+            filtered_files = [os.path.join(p, i) for i in filter(filter_function, files)]
+            return filtered_files
         
-        jump = lambda file: re.match(JUMP_IMAGE_FILE_PATTERN, file)
-        jump_files = [os.path.join(p, i) for i in filter(jump, files)]
+        walk_files = filter_files(WALK_IMAGE_FILE_PATTERN)
+        jump_files = filter_files(JUMP_IMAGE_FILE_PATTERN)
+        weapon_file = filter_files(WEAPON_FILE_PATTERN)[0]
         
-        weapon = lambda file: re.match(WEAPON_FILE_PATTERN, file)
-        weapon_file = [os.path.join(p, i) for i in filter(weapon, files)][0]
         return walk_files, jump_files, weapon_file
             
     def init_animations(self, character):
