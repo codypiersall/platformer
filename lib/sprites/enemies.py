@@ -1,25 +1,41 @@
 """Enemy classes"""
 
 import os
+import re
 import glob
 # third-party imports
 import pygame
 
 # first-party imports
-from .base import BaseSprite, WALK_IMAGE_FILE_PATTERN, JUMP_IMAGE_FILE_PATTERN
+from .base import BaseSprite, WALK_IMAGE_FILE_PATTERN
 from .. import pyganim
 
 ENEMIES = os.path.join('images', 'sprites', 'enemies')
 
-class Knight(BaseSprite):
+class Enemy(BaseSprite):
     """This sprite just walks until it hits a blocker or a reverser, then turns around."""
     SPEED = 100
     attack = 1
     REVERSED_BY_BLOCKERS = True
 
+    def _get_image_files(self, character):
+        """Return a tuple of the form (walk_files), (jump_files), weapon_file"""
+        p = os.path.join(ENEMIES, character)
+        files = os.listdir(p)        
+        
+        def filter_files(pattern):
+            filter_function = lambda file:re.match(pattern, file)
+            filtered_files = [os.path.join(p, i) for i in filter(filter_function, files)]
+            return filtered_files
+        
+        walk_files = filter_files(WALK_IMAGE_FILE_PATTERN)
+        
+        return walk_files
+            
+    
     
     def init_animations(self, enemy):
-        images = sorted(glob.glob(os.path.join(ENEMIES, enemy, 'walk-[0-9][0-9].gif')))
+        images = self._get_image_files(enemy)
         self.anim_walk_left = pyganim.PygAnimation([(image, .2) for image in images])
         
         self.anim_walk_right = self.anim_walk_left.getCopy()

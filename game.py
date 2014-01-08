@@ -10,7 +10,7 @@ from lib.keymap import km1, km2
 from lib import tmx, menu, images 
 from lib import sprites
 
-ENEMY_MAP = {'Knight': sprites.Knight}
+ENEMY_MAP = {'Knight': sprites.Enemy}
 SCREEN_SIZE = (640, 480)
 
 # Number of players by default.
