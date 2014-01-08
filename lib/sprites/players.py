@@ -32,7 +32,7 @@ class Player(BaseSprite):
         *groups: sprite group that the player belongs to.
     """
     # Player's left and right speed in pixels per second
-    SPEED = 250
+    SPEED = 225
     
     # Player's jumping speed in pixels per second.
     JUMP_SPEED = -750
