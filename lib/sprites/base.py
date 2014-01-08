@@ -6,7 +6,7 @@ SUPPORTED_IMAGE_FORMATS = '(gif)|(png)'
 WALK_IMAGE_FILE_PATTERN = re.compile('walk-[0-9][0-9].' + SUPPORTED_IMAGE_FORMATS)
 JUMP_IMAGE_FILE_PATTERN = re.compile('jump-[0-9][0-9].' + SUPPORTED_IMAGE_FORMATS)
 WEAPON_FILE_PATTERN = re.compile('weapon.' + SUPPORTED_IMAGE_FORMATS)
-
+STILL_FILE_PATTERN = re.compile('still.' + SUPPORTED_IMAGE_FORMATS)
 class BaseSprite(pygame.sprite.Sprite):
     """Sprite class from which all other sprites in the game inherit."""
     RIGHT = 1
@@ -17,6 +17,7 @@ class BaseSprite(pygame.sprite.Sprite):
     WALKING = 1
     RUNNING = 1
     NOT_RUNNING = 1.0
+    
     # 1 second of invincibility after been hit.
     BEEN_HIT_TIME = 1
     

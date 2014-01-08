@@ -10,7 +10,7 @@ import pygame
 
 # first-party imports
 from .base import BaseSprite 
-from .base import WALK_IMAGE_FILE_PATTERN, JUMP_IMAGE_FILE_PATTERN, WEAPON_FILE_PATTERN
+from .base import WALK_IMAGE_FILE_PATTERN, JUMP_IMAGE_FILE_PATTERN, WEAPON_FILE_PATTERN, STILL_FILE_PATTERN
 from .objects import Bullet
 from .. import images
 from .. import pyganim
@@ -46,7 +46,7 @@ class Player(BaseSprite):
     MAX_HEALTH = 5
         
 
-    def _get_files(self, character):
+    def _get_image_files(self, character):
         """Return a tuple of the form (walk_files), (jump_files), weapon_file"""
         p = os.path.join(PLAYERS, character)
         files = os.listdir(p)        
@@ -59,13 +59,17 @@ class Player(BaseSprite):
         walk_files = filter_files(WALK_IMAGE_FILE_PATTERN)
         jump_files = filter_files(JUMP_IMAGE_FILE_PATTERN)
         weapon_file = filter_files(WEAPON_FILE_PATTERN)[0]
+        try:
+            still_file = filter_files(STILL_FILE_PATTERN)[0]
+        except IndexError:
+            still_file = walk_files[0]
         
-        return walk_files, jump_files, weapon_file
+        return walk_files, jump_files, weapon_file, still_file
             
     def init_animations(self, character):
         # folder containing the character images.
         
-        walk_anim_files, jump_anim_files, weapon_file = self._get_files(character)
+        walk_anim_files, jump_anim_files, weapon_file, still_file = self._get_image_files(character)
         
         self.anim_walk_left = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])
         
@@ -73,8 +77,8 @@ class Player(BaseSprite):
         self.anim_walk_right.flip(True, False)
         self.anim_walk_right.makeTransformsPermanent()
         
-        self.image_face_left = images.load(walk_anim_files[0])
-        self.image_face_right = images.load(walk_anim_files[0], flip=(True, False))
+        self.image_face_left = images.load(still_file)
+        self.image_face_right = images.load(still_file, flip=(True, False))
                 
         self.anim_jump_left = pyganim.PygAnimation([(image, .1) for image in jump_anim_files])
 
