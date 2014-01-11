@@ -1,9 +1,9 @@
-Rift
-====
+Platformer
+==========
 
-This is a platformer game called Rift.  In order to run it, you need:
+This is a nameless platformer game.  In order to run it, you need:
 
-* [Python] (I don't think it matters whether you use 2 or 3, but it was developed using 3.)
+* [Python3.x] 
 * [Pygame]
 
 Most of the sprites used are from other games; I don't own them and I'm not
