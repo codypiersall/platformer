@@ -2,11 +2,11 @@ import pygame
 
 import re
 
-SUPPORTED_IMAGE_FORMATS = '(gif)|(png)'
-WALK_IMAGE_FILE_PATTERN = re.compile('walk-[0-9][0-9].' + SUPPORTED_IMAGE_FORMATS)
-JUMP_IMAGE_FILE_PATTERN = re.compile('jump-[0-9][0-9].' + SUPPORTED_IMAGE_FORMATS)
-WEAPON_FILE_PATTERN = re.compile('weapon.' + SUPPORTED_IMAGE_FORMATS)
-STILL_FILE_PATTERN = re.compile('still.' + SUPPORTED_IMAGE_FORMATS)
+SUPPORTED_IMAGE_FORMATS = '((gif)|(png))'
+WALK_IMAGE_FILE_PATTERN = re.compile(r'walk-[0-9][0-9]\.' + SUPPORTED_IMAGE_FORMATS)
+JUMP_IMAGE_FILE_PATTERN = re.compile(r'jump-[0-9][0-9]\.' + SUPPORTED_IMAGE_FORMATS)
+WEAPON_FILE_PATTERN = re.compile(r'weapon\.' + SUPPORTED_IMAGE_FORMATS)
+STILL_FILE_PATTERN = re.compile(r'still\.' + SUPPORTED_IMAGE_FORMATS)
 class BaseSprite(pygame.sprite.Sprite):
     """Sprite class from which all other sprites in the game inherit."""
     RIGHT = 1
