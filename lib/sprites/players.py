@@ -77,8 +77,8 @@ class Player(BaseSprite):
         self.anim_walk_right.flip(True, False)
         self.anim_walk_right.makeTransformsPermanent()
         
-        self.image_face_left = images.load(still_file)
-        self.image_face_right = images.load(still_file, flip=(True, False))
+        self.image_face_left = images.load(still_file, convert=False)
+        self.image_face_right = images.load(still_file, flip=(True, False), convert=False)
                 
         self.anim_jump_left = pyganim.PygAnimation([(image, .1) for image in jump_anim_files])
 
