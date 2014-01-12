@@ -12,5 +12,5 @@ it in any way, and all that legal stuff.
 
 The source code for this game is released under the BSD-3 license.
 
-[Python]: http://www.python.org/download/
+[Python3.x]: http://www.python.org/download/
 [Pygame]: http://www.pygame.org/download.shtml
