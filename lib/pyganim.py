@@ -36,7 +36,7 @@ SOUTHEAST = 'southeast'
 
 
 class PygAnimation(object):
-    def __init__(self, frames, loop=True):
+    def __init__(self, frames, loop=True, **kwargs):
         # Constructor function for the animation object. Starts off in the STOPPED state.
         #
         # @param frames
@@ -46,6 +46,8 @@ class PygAnimation(object):
         #     Note that the images and duration cannot be changed. A new PygAnimation object
         #     will have to be created.
         # @param loop Tells the animation object to keep playing in a loop.
+        # all other keyword arguments will be passed into images.load() on 
+        # loading the images.
 
         # _images stores the pygame.Surface objects of each frame
         self._images = []
@@ -83,7 +85,7 @@ class PygAnimation(object):
                 assert type(frame[0]) in (str, pygame.Surface), 'Frame %s image must be a string filename or a pygame.Surface' % (i)
                 assert frame[1] > 0, 'Frame %s duration must be greater than zero.' % (i)
                 if type(frame[0]) == str:
-                    frame = (images.load(frame[0], convert=False), frame[1])
+                    frame = (images.load(frame[0], **kwargs), frame[1])
                 self._images.append(frame[0])
                 self._durations.append(frame[1])
             self._startTimes = self._getStartTimes()
@@ -183,9 +185,9 @@ class PygAnimation(object):
         self._transformedImages = []
 
     def makeTransformsPermanent(self):
-        self._images = [pygame.Surface(surfObj.get_size(), 0, surfObj) for surfObj in self._transformedImages]
-        for i in range(len(self._transformedImages)):
-            self._images[i].blit(self._transformedImages[i], (0,0))
+        self._images = self._transformedImages
+        #for i in range(len(self._transformedImages)):
+        #    self._images[i].blit(self._transformedImages[i], (0,0))
 
     def blitFrameNum(self, frameNum, destSurface, dest):
         # Draws the specified frame of the animation object. This ignores the

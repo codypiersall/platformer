@@ -36,11 +36,9 @@ class Enemy(BaseSprite):
     
     def init_animations(self, enemy):
         images = self._get_image_files(enemy)
-        self.anim_walk_left = pyganim.PygAnimation([(image, .2) for image in images])
+        self.anim_walk_left = pyganim.PygAnimation([(image, .2) for image in images], convert=False)
+        self.anim_walk_right = pyganim.PygAnimation([(image, .2) for image in images], convert=False, flip=(True, False))
         
-        self.anim_walk_right = self.anim_walk_left.getCopy()
-        self.anim_walk_right.flip(True, False)
-        self.anim_walk_right.makeTransformsPermanent()
         self.image = self.anim_walk_left.getCurrentFrame()
     
     def __init__(self, location, enemy, *groups):

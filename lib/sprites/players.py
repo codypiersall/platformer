@@ -71,20 +71,14 @@ class Player(BaseSprite):
         
         walk_anim_files, jump_anim_files, weapon_file, still_file = self._get_image_files(character)
         
-        self.anim_walk_left = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])
-        
-        self.anim_walk_right = self.anim_walk_left.getCopy()
-        self.anim_walk_right.flip(True, False)
-        self.anim_walk_right.makeTransformsPermanent()
+        self.anim_walk_left = pyganim.PygAnimation([(image, .1) for image in walk_anim_files])   
+        self.anim_walk_right = pyganim.PygAnimation([(image, .1) for image in walk_anim_files], convert=False, flip=(True, False))
         
         self.image_face_left = images.load(still_file, convert=False)
         self.image_face_right = images.load(still_file, flip=(True, False), convert=False)
                 
         self.anim_jump_left = pyganim.PygAnimation([(image, .1) for image in jump_anim_files])
-
-        self.anim_jump_right= self.anim_jump_left.getCopy()
-        self.anim_jump_right.flip(True, False)
-        self.anim_jump_right.makeTransformsPermanent()
+        self.anim_jump_right = pyganim.PygAnimation([(image, .1) for image in jump_anim_files], convert=False, flip=(True,False))
         
         self.weapon = weapon_file
 

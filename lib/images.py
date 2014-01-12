@@ -2,7 +2,7 @@ import pygame
 
 def image_cacher():
     images = {}
-    def load(image_path, size=None, convert=True, flip=None, rotate=None):
+    def load(image_path, size=None, convert=False, flip=None, rotate=None):
         if (image_path, convert, size, flip, rotate) in images:
             return images[(image_path, convert, size, flip, rotate)]
         
