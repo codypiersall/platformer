@@ -2,7 +2,6 @@
 
 import os
 import re
-import glob
 # third-party imports
 import pygame
 

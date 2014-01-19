@@ -1,3 +1,9 @@
+# Copyright 2014 Cody Piersall
+
+"""
+This is a platformer game.  It's still a work in progress, you know?
+"""
+
 # builtins
 import argparse
 import os
@@ -10,7 +16,6 @@ from lib.keymap import km1, km2
 from lib import tmx, menu, images 
 from lib import sprites
 
-ENEMY_MAP = {'Knight': sprites.Enemy}
 SCREEN_SIZE = (640, 480)
 
 # Number of players by default.
@@ -106,7 +111,7 @@ class Game():
         self.enemies = tmx.SpriteLayer()
         for enemy in self.tilemap.layers['triggers'].find('enemy'):
             
-            ENEMY_MAP[enemy['enemy']]((enemy.px, enemy.py), enemy['enemy'], self.enemies)
+            sprites.Enemy((enemy.px, enemy.py), enemy['enemy'], self.enemies)
         
         self.tilemap.layers.append(self.enemies)
         
