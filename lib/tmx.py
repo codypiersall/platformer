@@ -9,7 +9,6 @@ from os import path
 import sys
 import struct
 import pygame
-from pygame.locals import *
 from pygame import Rect
 from xml.etree import ElementTree
 from base64 import b64decode
@@ -17,6 +16,17 @@ from zlib import decompress
 
 
 class Tile(object):
+    """
+    Every tile in the Tileset class is an instance of this class.
+    tile instances are usually accessed through the tileset instance
+    
+    
+    Args
+        gid: the tile's gid (given to it by Tiled)
+        surface: the Pygame surface for the tile
+        tileset: the tileset that it belongs to.
+    
+    """
     def __init__(self, gid, surface, tileset):
         self.gid = gid
         self.surface = surface
@@ -44,7 +54,7 @@ class Tile(object):
             name = c.attrib['name']
             value = c.attrib['value']
 
-            # TODO hax
+            #TODO: hax
             if value.isdigit():
                 value = int(value)
             self.properties[name] = value
@@ -54,6 +64,20 @@ class Tile(object):
 
 
 class Tileset(object):
+    """
+    def: A tileset is (generally) a single image composed of a bunch of smaller
+         images--tiles.
+    
+    Return a tileset.  Creates a Pygame surface for the tileset (the whole image), and also
+    a Pygame surface for each **used** tile in the tileset.
+    
+    Args
+        name: the name of the tileset.
+        tile_width: the width (in pixels) of the tiles.
+        tile_height: the height in pixels of the tiles.
+        firstgid: the first gid of the tileset.
+
+    """
     def __init__(self, name, tile_width, tile_height, firstgid):
         self.name = name
         self.tile_width = tile_width
@@ -64,11 +88,22 @@ class Tileset(object):
 
     @classmethod
     def fromxml(cls, tag, xml_filename, firstgid=None):
+        """ 
+        Return a Tileset() instance from a tmx file. 
+        
+        Args
+            tag: the xml tileset tag.
+            xml_filename: passed in so that the relative path to the image can
+                          be determined.
+            firstgid: the firstgid of the tileset.
+          
+        """
+        
         if 'source' in tag.attrib:
             firstgid = int(tag.attrib['firstgid'])
             with open(tag.attrib['source']) as f:
                 tileset = ElementTree.fromstring(f.read())
-            return cls.fromxml(tileset, firstgid)
+            return cls.fromxml(tileset, xml_filename, firstgid)
 
         name = tag.attrib['name']
         if firstgid is None:
@@ -91,9 +126,10 @@ class Tileset(object):
         return tileset
 
     def add_image(self, file):
+        """ Load a tileset image. """
         image = pygame.image.load(file).convert_alpha()
         if not image:
-            sys.exit("Error creating new Tileset: file %s not found" % file)
+            sys.exit("Error creating new Tileset: file {} not found".format(file))
         id_ = self.firstgid
         for line in range(image.get_height() // self.tile_height):
             for column in range(image.get_width() // self.tile_width):
@@ -107,6 +143,7 @@ class Tileset(object):
 
 
 class Tilesets(dict):
+    """Just a container for each Tileset"""
     def add(self, tileset):
         for i, tile in enumerate(tileset.tiles):
             i += tileset.firstgid

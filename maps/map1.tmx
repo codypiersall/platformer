@@ -9,7 +9,7 @@
  </tileset>
  <layer name="set" width="50" height="15">
   <data encoding="base64" compression="zlib">
-   eJzt0kEKACAIRFG33v/C7UNoRqUk5kGrIPyVmYgw/PUATdQxizpm+anj1OLBYs6/AZlt30NnY5srkHvOdGTergL5M2xH9g9WRB3dq9sCzDgCUw==
+   eJxjYBgFo2AUkAI4B9oBVALo/gDyHQbCHZSC4RofQxWM+mNwAU4Gwn7hxIJJMZ8egBi3YSnTSDKbHoCYcCbHH+TEHSWAmDRDqj/ITYOUAGz+oDamNgAA+6ICnA==
   </data>
  </layer>
  <objectgroup name="triggers" width="50" height="15" visible="0">
