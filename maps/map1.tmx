@@ -12,7 +12,7 @@
    eJztlFsKgCAQRefXz3QF5UZc2izFpXbDPiI0xgel4YELMorMUZEozYJoxIQwxowar0RuQyyCsUfNP2zzOeiR0C/ZEN6Cw+Hi4ORM8PG6cw8J8PPmBx49oxI1hBGnBjn/mMeITI++mB59cf5NojXX5Oz/BpLe7nPS3nKda5Ccc4lHyd3VIHkzuR6lb7CGmEfrtGYHdHYOhw==
   </data>
  </layer>
- <objectgroup name="triggers" width="50" height="15">
+ <objectgroup name="triggers" width="50" height="15" visible="0">
   <object name="blockers" x="160" y="448" width="800" height="32">
    <properties>
     <property name="blockers" value="tlbr"/>
