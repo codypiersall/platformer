@@ -328,26 +328,23 @@ class Layer(object):
                 # TODO: turn this into a function
                 # we'll come in here for flipped/rotated tiles.  We need to 
                 # add a new tile to the tilesets.
-                flipped_x = gid & FLIPPED_HORIZONTALLY_FLAG
-                flipped_y = gid & FLIPPED_VERTICALLY_FLAG
+                flipped_horizontally = gid & FLIPPED_HORIZONTALLY_FLAG
+                flipped_vertically = gid & FLIPPED_VERTICALLY_FLAG
                 flipped_diagonally = gid & FLIPPED_DIAGONALLY_FLAG
-                gid_part = gid & GID_PART   
-                new_surface = level.tilesets[gid_part].surface
+                tile_gid = gid & GID_PART   
                 
-                info = 'gid "{}" is a {} flipped '.format(gid, gid_part)
+                # get a copy of the surface in order to do transformations on it.
+                new_surface = level.tilesets[tile_gid].surface
+                
                 if flipped_diagonally: 
-                    info += 'diagonally'
                     new_surface = pygame.transform.rotate(new_surface, 270)
                     new_surface = pygame.transform.flip(new_surface, True, False)
-                if flipped_x: 
-                    info += 'horizontally '
+                if flipped_horizontally: 
                     new_surface = pygame.transform.flip(new_surface, True, False)
-                if flipped_y: 
-                    info += 'vertically '
+                if flipped_vertically: 
                     new_surface = pygame.transform.flip(new_surface, False, True)
                 
-                print(info)
-                tile = Tile(gid, new_surface, level.tilesets[gid_part].tileset)
+                tile = Tile(gid, new_surface, level.tilesets[tile_gid].tileset)
                 
             
             x = i % layer.width
