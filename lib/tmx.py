@@ -14,7 +14,13 @@ from xml.etree import ElementTree
 from base64 import b64decode
 from zlib import decompress
 
+# Constants for tile's orientation; in Tiled, you can flip the tile horizontally,
+# vertically, and "antidiagonally".  The latter is just a rotation.
 
+FLIPPED_HORIZONTALLY_FLAG = 0x80000000
+FLIPPED_VERTICALLY_FLAG   = 0x40000000
+FLIPPED_DIAGONALLY_FLAG   = 0x20000000
+GID_PART                  = 0X0FFFFFFF                  
 class Tile(object):
     """
     Every tile in the Tileset class is an instance of this class.
@@ -30,6 +36,7 @@ class Tile(object):
     def __init__(self, gid, surface, tileset):
         self.gid = gid
         self.surface = surface
+        self.tileset = tileset
         self.tile_width = tileset.tile_width
         self.tile_height = tileset.tile_height
         self.properties = {}
@@ -120,30 +127,42 @@ class Tileset(object):
                 image = path.normpath(image)
                 tileset.add_image(image)
             elif c.tag == 'tile':
-                
                 gid = tileset.firstgid + int(c.attrib['id'])
                 tileset.get_tile(gid).loadxml(c)
         return tileset
 
     def add_image(self, file):
-        """ Load a tileset image. """
+        """
+        Create a Tile() instance for every tile in a tileset and store it in self.tiles
+        
+        Args
+            file: path to tilseet image.
+        """
         image = pygame.image.load(file).convert_alpha()
         if not image:
             sys.exit("Error creating new Tileset: file {} not found".format(file))
         id_ = self.firstgid
+        
+        # set up all the individual tiles in the tileset.
         for line in range(image.get_height() // self.tile_height):
             for column in range(image.get_width() // self.tile_width):
                 pos = Rect(column * self.tile_width, line * self.tile_height,
                     self.tile_width, self.tile_height)
                 self.tiles.append(Tile(id_, image.subsurface(pos), self))
                 id_ += 1
-
+        
+        # Now iterate through the special rotated tiles, to store Tiles for them.
+        
     def get_tile(self, gid):
         return self.tiles[gid - self.firstgid]
 
 
 class Tilesets(dict):
-    """Just a container for each Tileset"""
+    """
+    All tiles go into the Tilesets class.  Then you go like this:
+    
+    
+    """
     def add(self, tileset):
         for i, tile in enumerate(tileset.tiles):
             i += tileset.firstgid
@@ -298,12 +317,37 @@ class Layer(object):
         data = data.text.strip()
         data = data.encode() # Convert to bytes
         # Decode from base 64 and decompress via zlib 
-        data = decompress(b64decode(data)) 
-        data = struct.unpack('<%di' % (len(data)/4,), data)
+        data = decompress(b64decode(data))
+        data = struct.unpack('<%dI' % (len(data)/4,), data)
         assert len(data) == layer.width * layer.height
         for i, gid in enumerate(data):
             if gid < 1: continue   # not set
-            tile = level.tilesets[gid]
+            try:            
+                tile = level.tilesets[gid]
+            except KeyError:
+                # we'll come in here for flipped/rotated tiles.  We need to 
+                # add a new tile to the tilesets.
+                flipped_x = gid & FLIPPED_HORIZONTALLY_FLAG
+                flipped_y = gid & FLIPPED_VERTICALLY_FLAG
+                flipped_diagonally = gid & FLIPPED_DIAGONALLY_FLAG
+                gid_part = gid & GID_PART   
+                new_surface = level.tilesets[gid_part].surface
+                
+                info = 'gid "{}" is a {} flipped '.format(gid, gid_part)
+                if flipped_diagonally: 
+                    info += 'diagonally'
+                    new_surface = pygame.transform.rotate(new_surface, 90)
+                if flipped_x: 
+                    info += 'horizontally '
+                    new_surface = pygame.transform.flip(new_surface, True, False)
+                if flipped_y: 
+                    info += 'vertically '
+                    new_surface = pygame.transform.flip(new_surface, False, True)
+                
+                print(info)
+                tile = Tile(gid, new_surface, level.tilesets[gid_part].tileset)
+                
+            
             x = i % layer.width
             y = i // layer.width
             layer.cells[x,y] = Cell(x, y, x*level.tile_width, y*level.tile_height, tile)
@@ -414,16 +458,19 @@ class Layer(object):
 
 
 class Object(object):
-    '''An object in a TMX object layer.
-name: The name of the object. An arbitrary string.
-object_type: The type of the object. An arbitrary string.
-x: The x coordinate of the object in pixels.
-y: The y coordinate of the object in pixels.
-width: The width of the object in pixels (defaults to 0).
-height: The height of the object in pixels (defaults to 0).
-gid: An reference to a tile (optional).
-visible: Whether the object is shown (1) or hidden (0). Defaults to 1.
-    '''
+    """
+    An object in a TMX object layer.
+    
+    Args 
+        object_type: The type of the object. An arbitrary string.
+        x: The x coordinate of the object in pixels.
+        y: The y coordinate of the object in pixels.
+        width: The width of the object in pixels (defaults to 0).
+        height: The height of the object in pixels (defaults to 0).
+        name: The name of the object. An arbitrary string.
+        gid: A reference to a tile (optional).
+        visible: Whether the object is shown (1) or hidden (0). Defaults to 1.
+    """
     def __init__(self, object_type, x, y, width=0, height=0, name=None,
             gid=None, tile=None, visible=1):
         self.type = object_type

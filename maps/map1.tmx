@@ -9,10 +9,10 @@
  </tileset>
  <layer name="set" width="50" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUkAI4B9oBVALo/gDyHQbCHZSC4RofQxWM+mNwAU4Gwn7hxIJJMZ8egBi3YSnTSDKbHoCYcCbHH+TEHSWAmDRDqj/ITYOUAGz+oDamNgAA+6ICnA==
+   eJxjYBgFo2AUkAI4cYgBcQMQLwBiBzo7iSyAzR9DEYz6Y3CBUX8MLgAtm4hSg4xJMZ8egBi3ocsR6zZS/UwJICacyfEHOXFHCSAmzZDqD3LTICUAmz+ojakNAIfDA9c=
   </data>
  </layer>
- <objectgroup name="triggers" width="50" height="15" visible="0">
+ <objectgroup name="triggers" width="50" height="15">
   <object name="blockers" x="160" y="448" width="800" height="32">
    <properties>
     <property name="blockers" value="tlbr"/>
@@ -146,6 +146,11 @@
   <object name="exit" x="928" y="256" width="32" height="32">
    <properties>
     <property name="exit" value=""/>
+   </properties>
+  </object>
+  <object name="blockers" x="320" y="128" width="128" height="32">
+   <properties>
+    <property name="blockers" value="tlbr"/>
    </properties>
   </object>
  </objectgroup>
