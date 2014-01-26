@@ -325,6 +325,7 @@ class Layer(object):
             try:            
                 tile = level.tilesets[gid]
             except KeyError:
+                # TODO: turn this into a function
                 # we'll come in here for flipped/rotated tiles.  We need to 
                 # add a new tile to the tilesets.
                 flipped_x = gid & FLIPPED_HORIZONTALLY_FLAG
@@ -336,7 +337,8 @@ class Layer(object):
                 info = 'gid "{}" is a {} flipped '.format(gid, gid_part)
                 if flipped_diagonally: 
                     info += 'diagonally'
-                    new_surface = pygame.transform.rotate(new_surface, 90)
+                    new_surface = pygame.transform.rotate(new_surface, 270)
+                    new_surface = pygame.transform.flip(new_surface, True, False)
                 if flipped_x: 
                     info += 'horizontally '
                     new_surface = pygame.transform.flip(new_surface, True, False)
