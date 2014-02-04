@@ -16,7 +16,7 @@ from .. import images
 from .. import pyganim
 
 # Path to sprites directory
-PLAYERS = os.path.join('images','sprites', 'players')
+DEFAULT_PLAYERS = os.path.join('images','sprites', 'players')
 
 
 class Player(BaseSprite):
@@ -48,7 +48,7 @@ class Player(BaseSprite):
 
     def _get_image_files(self, character):
         """Return a tuple of the form (walk_files), (jump_files), weapon_file"""
-        p = os.path.join(PLAYERS, character)
+        p = os.path.join(DEFAULT_PLAYERS, character)
         files = os.listdir(p)        
         
         def filter_files(pattern):

@@ -6,7 +6,7 @@ This is a platformer game.  It's still a work in progress, you know?
 
 # builtins
 import argparse
-import glob
+import configparser
 import os
 
 # Third-party
@@ -17,20 +17,24 @@ from lib.keymap import km1, km2
 from lib import tmx, menu, images 
 from lib import sprites
 
+__author__ = 'Cody Piersall'
+
+# screen size when '--small' option is passed via command line.s
 SCREEN_SIZE = (640, 480)
 
-# Number of players by default.
-PLAYERS = '1'
-
-# Default map
-DEFAULT_MAP = 'maps/map1.tmx'
+# Paths to maps directory
+MAPS_DIRECTORY = 'maps'
+CHARACTERS_DIRECTORY = os.path.join('images', 'sprites', 'players')
 
 # Path to backgrounds directory
-BACKGROUNDS = os.path.join('images', 'backgrounds')
+BACKGROUNDS_DIRECTORY = os.path.join('images', 'backgrounds')
 DEFAULT_BACKGROUND = 'black.bmp'
 
-# Path to characters directory.
-CHARACTERS_DIRECTORY = os.path.join('images', 'sprites', 'players')
+
+# Fallback defaults for when no .gameconfig file is available
+DEFAULT_PLAYERS = '1'
+DEFAULT_MAP = 'map1.tmx'
+DEFAULT_CHARACTER = 'frog'
 
 # colors
 GREEN = pygame.Color(0, 200, 0)
@@ -38,6 +42,7 @@ YELLOW = pygame.Color(150, 150, 0)
 RED = pygame.Color(100, 0, 0)
 DARK_GREY = pygame.Color(50, 50, 50)
 
+SETTINGS_FILE = '.gameconfig'
 class Game():
     GRAVITY = 2000
     FPS = 60
@@ -95,14 +100,14 @@ class Game():
         character = settings['character']
         
         self.level_beaten = False
-        self.tilemap = tmx.load(level, screen.get_size())
+        self.tilemap = tmx.load(os.path.join(MAPS_DIRECTORY,level), screen.get_size())
         try:
             background_file = self.tilemap.properties['background']
             
         except KeyError:
             background_file = DEFAULT_BACKGROUND
         
-        background = images.load(os.path.join(BACKGROUNDS, background_file), convert=True, size=screen.get_size())
+        background = images.load(os.path.join(BACKGROUNDS_DIRECTORY, background_file), convert=True, size=screen.get_size())
         
         self.sprites = tmx.SpriteLayer()
         start_cell = self.tilemap.layers['triggers'].find('player')[0]
@@ -196,27 +201,26 @@ class Game():
         pygame.draw.rect(screen, color, (12,12 + offset*25, (length), 16))
 
 
-def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level': 'maps/map1.tmx', 'players': 1},
+def main_menu(screen, Game, default_settings,
               font='coders_crux.ttf'):
     
     font = pygame.font.Font(font, 32)
-    main_menu = menu.Menu(screen, 'Start Options Quit'.split(), font=font)
+    main_menu = menu.Menu(screen, 'Start Options Quit'.split(), font=font, settings=default_settings)
     main_menu.add_start_action(0, Game)
     main_menu.add_back_action(-1)
 
     options_menu = main_menu.add_submenu(1,['Levels', 'Number of Players', 'Character Select', 'Back'])
     options_menu.add_back_action(-1)
     
-    levels = glob.glob(level_glob)
-    level_items = [os.path.splitext(os.path.basename(l))[0] for l in levels] + ['Back']
+    levels = [i for i in os.listdir(MAPS_DIRECTORY) if i.endswith('.tmx')]
+    level_items = [os.path.splitext(l)[0] for l in levels] + ['Back']
     levels_menu = options_menu.add_submenu(0, level_items)
     levels_menu.add_back_action(-1)
-    [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
+    [levels_menu.change_settings(i, 'level', os.path.join(MAPS_DIRECTORY, levels[i])) for i in range(len(levels))]
     
     players_menu = options_menu.add_submenu(1, [1, 2, 'Back'])
     players_menu.add_back_action(-1)
     [players_menu.change_settings(i, 'players', i+1) for i in range(2)]
-    
     
     characters = os.listdir(CHARACTERS_DIRECTORY)
     character_items = characters + ['Back']
@@ -229,20 +233,53 @@ def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level'
     except menu.Exit:
         pygame.quit()
             
-
-
+def get_settings():
+    """
+    Read in settings from .config file; otherwise, use constants
+    defined at the top of this module.
+    """
+    
+    settings = {'level': DEFAULT_MAP,
+                'character': DEFAULT_CHARACTER,
+                'players': DEFAULT_PLAYERS}
+    
+    parser = configparser.ConfigParser()
+    try:
+        with open(SETTINGS_FILE) as fr:
+            parser.read_file(fr)
+            
+        settings.update(parser['settings'])
+        settings['players'] = int(settings['players'])
+    except FileExistsError:
+        print('The file {} does not exist'.format())
+        
+    return settings
+    
+    
 def get_clargs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--small',
+                        help="Use a smaller screen.",
                         action='store_true',
                         default=False)
+    
+    parser.add_argument('-i', '--invincible',
+                        help="Start off invincible.",
+                        action='store_true',
+                        default=False)
+    
     return parser.parse_args()
+
 if __name__ == '__main__':
     pygame.init()
     args = get_clargs()
+    
     if args.small:
         screen = pygame.display.set_mode(SCREEN_SIZE)
     else:
         screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-    main_menu(screen, Game)
+    
+    settings = get_settings()
+    
+    main_menu(screen, Game, settings)
     

@@ -1,3 +1,6 @@
+"""
+A simple menu system for pygame. Probably a little too simple, unfortunately."""
+
 import pygame
 
 # This silly Exception is used to return from a menu.
@@ -16,6 +19,7 @@ class Menu(object):
     
     
     """
+    
     SPACE = 10
     UP = pygame.K_UP
     DOWN = pygame.K_DOWN
@@ -23,10 +27,9 @@ class Menu(object):
     BG_COLOR = (0,0,0)
     FONT_COLOR = (255,0,0)
     SELECTOR_COLOR = (0,255,0)
-    DEFAULT_SETTINGS = {'players': 1, 'level': 'maps/map1.tmx', 'character': 'frog'}
     
-    def __init__(self, screen, items, font, settings=DEFAULT_SETTINGS):
-        self.settings = settings
+    def __init__(self, screen, items, font, settings=None):
+        self.settings = settings if settings else {}
         self.screen = screen
         self.items = items
         self.selected = 0
