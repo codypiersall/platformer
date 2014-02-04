@@ -1,0 +1,17 @@
+# This is the main configuration file for the game.
+# There's not much you can do with it now; just set the default map, 
+# number of players, and default character.  Probably setting keymaps
+# will be happening here too in the future.
+
+
+[settings]
+
+# Default level has to be the name of a level in the maps directory.
+level = map1.tmx
+
+# Default number of players should probably be 1.
+players = 1
+
+# Default character has to be the name of a folder in 
+# images/sprites/players directory
+character = frog

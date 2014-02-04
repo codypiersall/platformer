@@ -77,12 +77,20 @@ class Game():
                     player.x_multiplier = player.NOT_RUNNING
 
     def main(self, screen, settings):
+        """ 
+        Start the game by passing it the screen and settings dict.
+        settings has to have these keys:
+            level: the level to start.
+            players: the number of players.
+            character: the selected character.
+            
+        """
+        
         level = settings['level']
         players = settings['players']
         character = settings['character']
         
         self.level_beaten = False
-        
         self.tilemap = tmx.load(level, screen.get_size())
         try:
             background_file = self.tilemap.properties['background']
