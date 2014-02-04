@@ -1,12 +1,5 @@
 import pygame
 
-pygame.init()
-if not pygame.display.get_init():
-    pygame.display.init()
-
-if not pygame.font.get_init():
-    pygame.font.init()    
-
 # This silly Exception is used to return from a menu.
 class ReturnError(Exception):
     pass
@@ -201,6 +194,13 @@ class Menu(object):
 
 if __name__ == '__main__':
     """Minimalist example for creating a menu."""
+    pygame.init()
+    if not pygame.display.get_init():
+        pygame.display.init()
+    
+    if not pygame.font.get_init():
+        pygame.font.init()    
+        
     screen = pygame.display.set_mode((640, 480))
     font = pygame.font.Font('../coders_crux.ttf', 48)
     menu = Menu(screen, 'Some Good Items Exit'.split(), font)
