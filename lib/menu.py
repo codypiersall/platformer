@@ -1,9 +1,5 @@
 import pygame
 
-import glob
-import os
-CHARACTERS_DIRECTORY = os.path.join('images', 'sprites', 'players')
-
 pygame.init()
 if not pygame.display.get_init():
     pygame.display.init()
@@ -15,7 +11,7 @@ if not pygame.font.get_init():
 class ReturnError(Exception):
     pass
 
-class ExitError(Exception):
+class Exit(Exception):
     pass
 
 class Menu(object):
@@ -132,8 +128,11 @@ class Menu(object):
     
     def on_enter(self):
         """Determine what to do when the enter key is pressed."""
-        
-        action = self.actions[self.selected]
+        try:
+            action = self.actions[self.selected]
+        except KeyError:
+            print("You should add an action for item #{}.".format(self.selected))
+            return
         if isinstance(action, Menu):
             action.mainloop()
             
@@ -182,7 +181,7 @@ class Menu(object):
             clock.tick(30)
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
-                    raise ExitError
+                    raise Exit
                 
                 if e.type == pygame.KEYDOWN:
                     if e.key == pygame.K_ESCAPE:
@@ -200,45 +199,12 @@ class Menu(object):
             self.draw()
             pygame.display.update()
 
-def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level': 'maps/map1.tmx', 'players': 1},
-              font='coders_crux.ttf'):
-    
-    font = pygame.font.Font(font, 32)
-    main_menu = Menu(screen, 'Start Options Quit'.split(), font=font)
-    main_menu.add_start_action(0, Game)
-    main_menu.add_back_action(-1)
-
-    options_menu = main_menu.add_submenu(1,['Levels', 'Number of Players', 'Character Select', 'Back'])
-    options_menu.add_back_action(-1)
-    
-    levels = glob.glob(level_glob)
-    level_items = [os.path.splitext(os.path.basename(l))[0] for l in levels] + ['Back']
-    levels_menu = options_menu.add_submenu(0, level_items)
-    levels_menu.add_back_action(-1)
-    [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
-    
-    players_menu = options_menu.add_submenu(1, [1, 2, 'Back'])
-    players_menu.add_back_action(-1)
-    [players_menu.change_settings(i, 'players', i+1) for i in range(2)]
-    
-    
-    characters = os.listdir(CHARACTERS_DIRECTORY)
-    character_items = characters + ['Back']
-    character_select_menu = options_menu.add_submenu(2, character_items)
-    [character_select_menu.change_settings(i, 'character', character_items[i]) for i in range(len(characters))]
-    character_select_menu.add_back_action(-1)
-    
-    try:
-        main_menu.mainloop()
-    except ExitError:
-        pygame.quit()
-            
 if __name__ == '__main__':
     """Minimalist example for creating a menu."""
     screen = pygame.display.set_mode((640, 480))
     font = pygame.font.Font('../coders_crux.ttf', 48)
     menu = Menu(screen, 'Some Good Items Exit'.split(), font)
-    menu.__add_action(-1, 'return')
+    menu.add_back_action(-1)
     menu.mainloop()
     
     

@@ -6,6 +6,7 @@ This is a platformer game.  It's still a work in progress, you know?
 
 # builtins
 import argparse
+import glob
 import os
 
 # Third-party
@@ -27,6 +28,9 @@ DEFAULT_MAP = 'maps/map1.tmx'
 # Path to backgrounds directory
 BACKGROUNDS = os.path.join('images', 'backgrounds')
 DEFAULT_BACKGROUND = 'black.bmp'
+
+# Path to characters directory.
+CHARACTERS_DIRECTORY = os.path.join('images', 'sprites', 'players')
 
 # colors
 GREEN = pygame.Color(0, 200, 0)
@@ -192,6 +196,41 @@ class Game():
         pygame.draw.rect(screen, color, (12,12 + offset*25, (length), 16))
 
 
+def main_menu(screen, Game, level_glob = 'maps/*.tmx', default_settings={'level': 'maps/map1.tmx', 'players': 1},
+              font='coders_crux.ttf'):
+    
+    font = pygame.font.Font(font, 32)
+    main_menu = menu.Menu(screen, 'Start Options Quit'.split(), font=font)
+    main_menu.add_start_action(0, Game)
+    main_menu.add_back_action(-1)
+
+    options_menu = main_menu.add_submenu(1,['Levels', 'Number of Players', 'Character Select', 'Back'])
+    options_menu.add_back_action(-1)
+    
+    levels = glob.glob(level_glob)
+    level_items = [os.path.splitext(os.path.basename(l))[0] for l in levels] + ['Back']
+    levels_menu = options_menu.add_submenu(0, level_items)
+    levels_menu.add_back_action(-1)
+    [levels_menu.change_settings(i, 'level', levels[i]) for i in range(len(levels))]
+    
+    players_menu = options_menu.add_submenu(1, [1, 2, 'Back'])
+    players_menu.add_back_action(-1)
+    [players_menu.change_settings(i, 'players', i+1) for i in range(2)]
+    
+    
+    characters = os.listdir(CHARACTERS_DIRECTORY)
+    character_items = characters + ['Back']
+    character_select_menu = options_menu.add_submenu(2, character_items)
+    [character_select_menu.change_settings(i, 'character', character_items[i]) for i in range(len(characters))]
+    character_select_menu.add_back_action(-1)
+    
+    try:
+        main_menu.mainloop()
+    except menu.Exit:
+        pygame.quit()
+            
+
+
 def get_clargs():
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--small',
@@ -205,5 +244,5 @@ if __name__ == '__main__':
         screen = pygame.display.set_mode(SCREEN_SIZE)
     else:
         screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
-    menu.main_menu(screen, Game)
+    main_menu(screen, Game)
     
