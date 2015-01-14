@@ -1,3 +1,4 @@
+from __future__ import division
 import pygame
 
 import re
@@ -11,32 +12,32 @@ class BaseSprite(pygame.sprite.Sprite):
     """Sprite class from which all other sprites in the game inherit."""
     RIGHT = 1
     LEFT= -1
-    
+
     # moving constants
     STILL = 0
     WALKING = 1
     RUNNING = 1
     NOT_RUNNING = 1.0
-    
+
     # 1 second of invincibility after been hit.
     BEEN_HIT_TIME = 1
-    
+
     # These three constants affect how the sprite moves.
     AFFECTED_BY_GRAVITY = True
     AFFECTED_BY_BLOCKERS = True
     REVERSED_BY_BLOCKERS = False
-    
+
     MAX_FALL_SPEED = 600
-    
+
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(BaseSprite, self).__init__(*args, **kwargs)
         self.moving = self.WALKING
         self.direction = self.RIGHT
         self.is_dead = False
         self.been_hit = False
         self.dy = 0
         self.x_multiplier = 1
-        
+
     def hit(self, other):
         """ This is a lame, unsophisticated way to do attacks."""
         if other.been_hit <= 0:
@@ -44,7 +45,7 @@ class BaseSprite(pygame.sprite.Sprite):
             other.been_hit = self.BEEN_HIT_TIME
             if other.health <= 0:
                 other.is_dead = True
-        
+
     def update_hit_timer(self, dt):
         self.been_hit = max(self.been_hit - dt, 0)
 
@@ -77,7 +78,7 @@ class BaseSprite(pygame.sprite.Sprite):
                     self.double_jumped = False
                     new.bottom = cell.top
                     if self.AFFECTED_BY_GRAVITY:
-                        self.dy = game.GRAVITY * dt 
+                        self.dy = game.GRAVITY * dt
             if 'b' in blockers and last_position.top >= cell.bottom and new.top < cell.bottom:
                 # this check makes sure you can't cling to blocks that you shouldn't be able to.
                 if new.right > cell.left and new.left < cell.right:
@@ -95,12 +96,12 @@ class BaseSprite(pygame.sprite.Sprite):
         last_position = self.rect.copy()
         if self.AFFECTED_BY_GRAVITY:
             self.react_to_gravity(dt, game)
-        
+
         self.rect.x += int(self.move_x(dt))
-        
+
         new = self.rect
         self.resting = False
         if self.AFFECTED_BY_BLOCKERS:
             self.react_to_blockers(dt, game, last_position, new)
-        
+
         return new

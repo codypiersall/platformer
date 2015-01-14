@@ -1,10 +1,11 @@
 # "Tiled" TMX loader/renderer and more
 # Copyright 2012 Richard Jones <richard@mechanicalcat.net>
 # This code is placed in the Public Domain.
-# 
+#
 # Changes (July 2013 by Renfred Harper):
 # Ported to Python 3
 # Added selective area support SpriteLayer.draw
+from __future__ import division
 from os import path
 import sys
 import struct
@@ -20,18 +21,18 @@ from zlib import decompress
 FLIPPED_HORIZONTALLY_FLAG = 0x80000000
 FLIPPED_VERTICALLY_FLAG   = 0x40000000
 FLIPPED_DIAGONALLY_FLAG   = 0x20000000
-GID_PART                  = 0X0FFFFFFF                  
+GID_PART                  = 0X0FFFFFFF
 class Tile(object):
     """
     Every tile in the Tileset class is an instance of this class.
     tile instances are usually accessed through the tileset instance
-    
-    
+
+
     Args
         gid: the tile's gid (given to it by Tiled)
         surface: the Pygame surface for the tile
         tileset: the tileset that it belongs to.
-    
+
     """
     def __init__(self, gid, surface, tileset):
         self.gid = gid
@@ -74,10 +75,10 @@ class Tileset(object):
     """
     def: A tileset is (generally) a single image composed of a bunch of smaller
          images--tiles.
-    
+
     Return a tileset.  Creates a Pygame surface for the tileset (the whole image), and also
     a Pygame surface for each **used** tile in the tileset.
-    
+
     Args
         name: the name of the tileset.
         tile_width: the width (in pixels) of the tiles.
@@ -95,17 +96,17 @@ class Tileset(object):
 
     @classmethod
     def fromxml(cls, tag, xml_filename, firstgid=None):
-        """ 
-        Return a Tileset() instance from a tmx file. 
-        
+        """
+        Return a Tileset() instance from a tmx file.
+
         Args
             tag: the xml tileset tag.
             xml_filename: passed in so that the relative path to the image can
                           be determined.
             firstgid: the firstgid of the tileset.
-          
+
         """
-        
+
         if 'source' in tag.attrib:
             firstgid = int(tag.attrib['firstgid'])
             with open(tag.attrib['source']) as f:
@@ -134,7 +135,7 @@ class Tileset(object):
     def add_image(self, file):
         """
         Create a Tile() instance for every tile in a tileset and store it in self.tiles
-        
+
         Args
             file: path to tilseet image.
         """
@@ -142,7 +143,7 @@ class Tileset(object):
         if not image:
             sys.exit("Error creating new Tileset: file {} not found".format(file))
         id_ = self.firstgid
-        
+
         # set up all the individual tiles in the tileset.
         for line in range(image.get_height() // self.tile_height):
             for column in range(image.get_width() // self.tile_width):
@@ -150,9 +151,9 @@ class Tileset(object):
                     self.tile_width, self.tile_height)
                 self.tiles.append(Tile(id_, image.subsurface(pos), self))
                 id_ += 1
-        
+
         # Now iterate through the special rotated tiles, to store Tiles for them.
-        
+
     def get_tile(self, gid):
         return self.tiles[gid - self.firstgid]
 
@@ -160,8 +161,8 @@ class Tileset(object):
 class Tilesets(dict):
     """
     All tiles go into the Tilesets class.  Then you go like this:
-    
-    
+
+
     """
     def add(self, tileset):
         for i, tile in enumerate(tileset.tiles):
@@ -316,37 +317,37 @@ class Layer(object):
 
         data = data.text.strip()
         data = data.encode() # Convert to bytes
-        # Decode from base 64 and decompress via zlib 
+        # Decode from base 64 and decompress via zlib
         data = decompress(b64decode(data))
         data = struct.unpack('<%dI' % (len(data)/4,), data)
         assert len(data) == layer.width * layer.height
         for i, gid in enumerate(data):
             if gid < 1: continue   # not set
-            try:            
+            try:
                 tile = level.tilesets[gid]
             except KeyError:
                 # TODO: turn this into a function
-                # we'll come in here for flipped/rotated tiles.  We need to 
+                # we'll come in here for flipped/rotated tiles.  We need to
                 # add a new tile to the tilesets.
                 flipped_horizontally = gid & FLIPPED_HORIZONTALLY_FLAG
                 flipped_vertically = gid & FLIPPED_VERTICALLY_FLAG
                 flipped_diagonally = gid & FLIPPED_DIAGONALLY_FLAG
-                tile_gid = gid & GID_PART   
-                
+                tile_gid = gid & GID_PART
+
                 # get a copy of the surface in order to do transformations on it.
                 new_surface = level.tilesets[tile_gid].surface
-                
-                if flipped_diagonally: 
+
+                if flipped_diagonally:
                     new_surface = pygame.transform.rotate(new_surface, 270)
                     new_surface = pygame.transform.flip(new_surface, True, False)
-                if flipped_horizontally: 
+                if flipped_horizontally:
                     new_surface = pygame.transform.flip(new_surface, True, False)
-                if flipped_vertically: 
+                if flipped_vertically:
                     new_surface = pygame.transform.flip(new_surface, False, True)
-                
+
                 tile = Tile(gid, new_surface, level.tilesets[tile_gid].tileset)
-                
-            
+
+
             x = i % layer.width
             y = i // layer.width
             layer.cells[x,y] = Cell(x, y, x*level.tile_width, y*level.tile_height, tile)
@@ -459,8 +460,8 @@ class Layer(object):
 class Object(object):
     """
     An object in a TMX object layer.
-    
-    Args 
+
+    Args
         object_type: The type of the object. An arbitrary string.
         x: The x coordinate of the object in pixels.
         y: The y coordinate of the object in pixels.
@@ -716,7 +717,7 @@ class SpriteLayer(pygame.sprite.AbstractGroup):
 
     def draw(self, screen):
         ox, oy = self.position
-        
+
         for sprite in self.sprites():
             sx, sy = sprite.rect.topleft
             # Only the sprite's defined width and height will be drawn
@@ -793,7 +794,7 @@ class TileMap(object):
     def load(cls, filename, viewport):
         with open(filename) as f:
             level = ElementTree.fromstring(f.read())
-            
+
         # get most general level informations and create a surface
         tilemap = TileMap(viewport)
         tilemap.width = int(level.attrib['width'])
@@ -803,11 +804,11 @@ class TileMap(object):
         tilemap.px_width = tilemap.width * tilemap.tile_width
         tilemap.px_height = tilemap.height * tilemap.tile_height
 
-        # append the map's properties to self.properties.    
+        # append the map's properties to self.properties.
         for tag in level.findall('properties'):
             for prop in tag.findall('property'):
                 tilemap.properties[prop.attrib['name']] = prop.attrib['value']
-        
+
         for tag in level.findall('tileset'):
             tilemap.tilesets.add(Tileset.fromxml(tag, filename))
 
@@ -941,11 +942,11 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((500 , 500))
 
     # tmx.load parses the myMap.tmx file and returns a tilemap with all of
-    # the appropriate attributes. Note you must also include the viewport size. 
+    # the appropriate attributes. Note you must also include the viewport size.
     tilemap = load(sys.argv[1], screen.get_size())
 
-    # You must set the focus of the tilemap view to an x, y coordinate. This 
-    # tells the tmx library where to center its view. Usually this would be set 
+    # You must set the focus of the tilemap view to an x, y coordinate. This
+    # tells the tmx library where to center its view. Usually this would be set
     # to the starting position of the main player's sprite.
     tilemap.set_focus(0, 0)
     clock = pygame.time.Clock()
@@ -953,11 +954,11 @@ if __name__ == '__main__':
     # Main game loop
     while 1:
         dt = clock.tick(10)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
-        
+
         # tilemap.update calls the update method on each layer in the map.
         # The update method can be customized for each layer to include logic
         # for animating sprite positions, and detecting collisions.
@@ -966,5 +967,5 @@ if __name__ == '__main__':
         screen.fill((0,0,0))
         # Draw all layers of the tilemap to the screen.
         tilemap.draw(screen)
-        # Refresh the display window. 
+        # Refresh the display window.
         pygame.display.flip()

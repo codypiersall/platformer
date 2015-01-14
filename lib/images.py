@@ -1,3 +1,4 @@
+from __future__ import division
 import pygame
 
 def image_cacher():
@@ -5,7 +6,7 @@ def image_cacher():
     def load(image_path, size=None, convert=False, flip=None, rotate=None):
         if (image_path, convert, size, flip, rotate) in images:
             return images[(image_path, convert, size, flip, rotate)]
-        
+
         image = pygame.image.load(image_path)
         if size:
             image = pygame.transform.scale(image, size)
@@ -16,7 +17,7 @@ def image_cacher():
         if convert:
             image = image.convert()
         images[(image_path, convert, size, flip, rotate)] = image
-        
+
         return image
     return load
 
@@ -29,8 +30,8 @@ if __name__ == '__main__':
     bamboo = load('../images/backgrounds/bamboo.png')
     bamboo2 = load('../images/backgrounds/bamboo.png')
     print('bamboo is bamboo2: {}'.format(bamboo is bamboo2))
-    
+
     bg1 = load('../images/backgrounds/bamboo.png', convert=True, size=(550, 323))
     bg2 = load('../images/backgrounds/bamboo.png', convert=True, size=(550, 323))
     print('bg1 is bg2: {}'.format(bg1 is bg2))
-    
+

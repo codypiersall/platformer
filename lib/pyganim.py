@@ -15,6 +15,7 @@
 
 # TODO: Feature idea: if the same image file is specified, re-use the Surface object. (Make this optional though.)
 
+from __future__ import division
 import pygame, time
 from . import images
 
@@ -46,7 +47,7 @@ class PygAnimation(object):
         #     Note that the images and duration cannot be changed. A new PygAnimation object
         #     will have to be created.
         # @param loop Tells the animation object to keep playing in a loop.
-        # all other keyword arguments will be passed into images.load() on 
+        # all other keyword arguments will be passed into images.load() on
         # loading the images.
 
         # _images stores the pygame.Surface objects of each frame
@@ -82,9 +83,9 @@ class PygAnimation(object):
                 # load each frame of animation into _images
                 frame = frames[i]
                 assert type(frame) in (list, tuple) and len(frame) == 2, 'Frame %s has incorrect format.' % (i)
-                assert type(frame[0]) in (str, pygame.Surface), 'Frame %s image must be a string filename or a pygame.Surface' % (i)
+                assert isinstance(frame[0], (str, pygame.Surface, unicode)), 'Frame %s image must be a string filename or a pygame.Surface' % (i)
                 assert frame[1] > 0, 'Frame %s duration must be greater than zero.' % (i)
-                if type(frame[0]) == str:
+                if isinstance(frame[0], (str, unicode)):
                     frame = (images.load(frame[0], **kwargs), frame[1])
                 self._images.append(frame[0])
                 self._durations.append(frame[1])
