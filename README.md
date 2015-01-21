@@ -3,7 +3,7 @@ Platformer
 
 This is a nameless platformer game.  In order to run it, you need:
 
-* [Python3.x] 
+* [Python2.7] 
 * [Pygame]
 
 Most of the sprites used are from other games; I don't own them and I'm not
@@ -29,5 +29,5 @@ Al Sweigart wrote pyganimation.py
 
 Special thanks to
 
-[Python3.x]: http://www.python.org/download/
+[Python2.7]: http://www.python.org/download/
 [Pygame]: http://www.pygame.org/download.shtml
