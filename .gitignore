@@ -1,6 +1,5 @@
-syntax: glob 
-
 *.pyc
 *.db
 *.bat
 *.orig
+*~
