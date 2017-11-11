@@ -83,9 +83,9 @@ class PygAnimation(object):
                 # load each frame of animation into _images
                 frame = frames[i]
                 assert type(frame) in (list, tuple) and len(frame) == 2, 'Frame %s has incorrect format.' % (i)
-                assert isinstance(frame[0], (str, pygame.Surface, unicode)), 'Frame %s image must be a string filename or a pygame.Surface' % (i)
+                assert isinstance(frame[0], (str, pygame.Surface)), 'Frame %s image must be a string filename or a pygame.Surface' % (i)
                 assert frame[1] > 0, 'Frame %s duration must be greater than zero.' % (i)
-                if isinstance(frame[0], (str, unicode)):
+                if isinstance(frame[0], str):
                     frame = (images.load(frame[0], **kwargs), frame[1])
                 self._images.append(frame[0])
                 self._durations.append(frame[1])
